@@ -1,0 +1,128 @@
+{% include 'heading-banner' with 
+    image: section.settings.banner_image,
+    mobile_image: section.settings.banner_mobile_image,
+    sub_title: section.settings.sub_title,
+    title: section.settings.title,
+    wide: section.settings.wide_display,
+    link: section.settings.button_link,
+    button: section.settings.button_title,
+    additional_class: 'scroll-button'
+%}
+
+<div class="container">
+    <div class="page-content flex">
+        {% for block in section.blocks %}
+            {% if block.type == 'content' %}
+                <div class="sixteen column">
+                    <h1 class="heading">{{block.settings.title}}</h1>
+                    {{ block.settings.text }}
+                </div>
+            {% endif %}
+            
+            {% if block.type == 'icon' %}
+                <div class="one-third medium-down--one-whole column border-box icon-block">
+                    {{ block.settings.icon }}
+                    <div class="info">
+                        <p class="title">{{block.settings.title}}</p>
+                        {{block.settings.text}}
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+    <div class="content" id="start-meanig">
+        <script type="text/javascript" src="https://cdn.refersion.com/iframe.js"></script>
+        <div id="refersion-iframe-goes-here" data-frame-url="https://optcorp.refersion.com/affiliate/registration"></div>
+    </div>
+    
+</div>  
+
+
+
+
+{% schema %}
+{
+    "name": "Affiliate section",
+    "class": "affiliate-section",
+    "settings": [
+        {
+            "type": "checkbox",
+            "id": "wide_display",
+            "label": "Wide dispay"
+        },
+        {
+            "type": "image_picker",
+            "id": "banner_image",
+            "label": "Banner image"
+        },
+        {
+            "type": "image_picker",
+            "id": "banner_mobile_image",
+            "label": "Mobile banner image"
+        },
+        {
+            "type": "text",
+            "id": "sub_title",
+            "label": "Sub title",
+            "default": "About us"
+        },
+        {
+            "type": "text",
+            "id": "title",
+            "label": "Title",
+            "default": "The telescopeauthority since 1947"
+        },
+        {
+            "type": "url",
+            "id": "button_link",
+            "label": "Button link"
+        },
+        {
+            "type": "text",
+            "id": "button_title",
+            "label": "Button title",
+            "default": "Get Started"
+        }
+    ],
+    "blocks": [
+        {
+            "type": "content",
+            "name": "Content",
+            "settings": [
+                {
+                    "type": "text",
+                    "id": "title",
+                    "label": "Title",
+                    "default": "Join Our Mission"
+                },
+                {
+                    "type": "richtext",
+                    "id": "text",
+                    "label": "Text"
+                }
+            ]
+        },
+        {
+            "type": "icon",
+            "name": "Icon block",
+            "settings": [
+                {
+                    "type": "html",
+                    "id": "icon",
+                    "label": "Icon"
+                },
+                {
+                    "type": "text",
+                    "id": "title",
+                    "label": "Title"
+                },
+                {
+                    "type": "richtext",
+                    "id": "text",
+                    "label": "Text"
+                }
+            ]
+        }
+    ]
+}
+{% endschema %}

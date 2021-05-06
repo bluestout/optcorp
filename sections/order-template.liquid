@@ -1,0 +1,76 @@
+<div class="container">
+  {% include 'account-sidebar' type: "account" %}
+  <div class="ten-twelfths medium-down--one-whole column">
+    <div class="header">
+      <p class="sub-title text-center uppercase text-black">{{'customer.account.sub_title' | t }}</p>
+      <h1 class="headline-large text-center">{{'customer.orders.title' | t }}</h1>
+    </div>
+    <div class="content">
+      <div class="order-field page-content">
+        <h4>{{ 'customer.order.title' | t: name: order.name }}</h4>
+        <p>{{ 'customer.order.date' | t: date: order.created_at | date: "%B %d, %Y %I:%M%p" }}</p>
+        {% if order.cancelled %}
+          <div class="errors">
+            {% assign cancelled_at = order.cancelled_at | date: "%B %d, %Y %I:%M%p" %}
+            <p class="h5">{{ 'customer.order.cancelled' | t: date: cancelled_at }}</p>
+            <p>{{ 'customer.order.cancelled_reason' | t: reason: order.cancel_reason }}</p>
+          </div>
+        {% endif %}
+        <div class="feature_divider"></div>
+
+        {% for item in order.line_items %}
+          <div id="line-{{forloop.index}}" class="border-box flex">
+            <div class="image medium-down--one-whole">
+              {% include 'image-element' 
+                image: item.image,
+                object_fit: 200,
+                max_height: 200
+              %}
+            </div>
+            <div class="info medium-down--one-whole">
+              <p class="title order-name">{{item.title}}</p>
+              <span>SKU : {{ item.sku }}</span>
+              <span> price :  {{ item.quantity }} X 
+                {% render 'price-element', price: item.final_price %}
+                {% if item.line_level_discount_allocations != blank %}
+                  <span class="money {% if item.line_level_discount_allocations != blank %}was_price{% endif %}">
+                    {% render 'price-element', price: item.original_price %}
+                  </span>
+
+                  <div class="order-details__discount-block">
+                    {% for discount_allocation in item.line_level_discount_allocations %}
+                      <strong>{{ 'customer.order.discount' | t }}:</strong> {{ discount_allocation.discount_application.title }} (-<span class="money">{% render 'price-element', price: discount_allocation.amount %}</span>)
+                    {% endfor %}
+                  </div>
+                {% endif %}
+              </span>
+
+
+              <p class="order-details__total title">
+                {% if item.line_level_discount_allocations != blank %}
+                  <span class="order-discount money">
+                    {% render 'price-element', price: item.final_line_price %}
+                  </span>
+                {% endif %}
+  
+                <span class="money {% if item.line_level_discount_allocations != blank %}was_price{% endif %}">
+                  {% render 'price-element', price: item.original_line_price %}
+                </span>
+              </p>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Account template",
+  "class": "account-template",
+  "settings": [
+    
+  ]
+}
+{% endschema %}

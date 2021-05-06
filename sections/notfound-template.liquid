@@ -1,0 +1,44 @@
+<div class="container">
+    <div class="page-content text-center">
+        <p class="title uppercase">{{section.settings.sub_title}}</p>
+        <h2 class="headline">{{section.settings.title}}</h2>
+        <p>{{ section.settings.content }}</p>
+    </div>
+</div>
+
+<style>
+    body{
+        background: url({{ section.settings.bg_image | img_url: '2048x' }}) no-repeat 50% 50% / cover;
+    }
+</style>
+
+{% schema %}
+{
+    "name": "404 template",
+    "class": "notfound-section",
+    "settings": [
+        {
+            "type": "image_picker",
+            "id": "bg_image",
+            "label": "Background image"
+        },
+        {
+            "type": "text",
+            "id": "title",
+            "label": "Title",
+            "default": "Ooops… Ended in space"
+        },
+        {
+            "type": "text",
+            "id": "sub_title",
+            "label": "Sub title",
+            "default": "PAGE NOT FOUND"
+        },
+        {
+            "type": "richtext",
+            "id": "content",
+            "label": "Content"
+        }
+    ]
+}
+{% endschema %}

@@ -4,11 +4,11 @@
 
 {% section 'article-template' %}
 
-<script type="application/ld+json">
+<script type="application/json">
 {
   "@context": "http://schema.org",
   "@type": "Article",
-  "articleBody": "{{ article.content | strip_html | escape }}",
+  "articleBody": "{{ article.content | strip_html | escape | truncatewords: 20 }}",
   "mainEntityOfPage": {
     "@type": "WebPage",
     "@id": "{{ shop.url }}{{ page.url }}"

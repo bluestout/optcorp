@@ -14,15 +14,60 @@
 {%- if section.settings.show_locale_selector and shop.published_locales.size > 1 -%}
   {%- assign locale_selector = true -%}
 {%- endif -%}
-
-<footer class="footer">
+{% assign image = section.settings.image %}
+<footer class="footer {% if image != nil %}newsletter-bgr-true{% endif %}">
+  {% for block in section.blocks %}
+    {% if block.type == 'newsletter' %}
+      {% include 'include-newsletter' with type: 'block' %}
+    {% endif %}
+  {% endfor %}
+  
+  
   <div class="container footer-menu-wrap">
+      <div class="feature_divider"></div>
+
       {% for block in section.blocks %}
-        <div class="{% if forloop.length >= 5 %}one-fifth column{% elsif forloop.length == 4 %}one-fourth column{% elsif forloop.length == 3 %}one-third column{% elsif forloop.length == 2 %}one-half column{% endif %} medium-down--one-whole" {{ block.shopify_attributes }}>
+        {% if block.type == 'text' %}
+          <div class="footer-text address-info medium-up--hide {% if block.settings.title == blank %}no-footer-title{% endif %}">
+            {% if block.settings.title != blank %}
+              <p class="title">{{ block.settings.title }}</p>
+            {% endif %}
+            {% if block.settings.content %}
+                <p class="box">
+                  {% if block.settings.phone != blank %}
+                  <a href="tel:{{block.settings.phone}}"><span class="border-box">{% include 'icon-pack' with icon: 'phone-blue' %}{{block.settings.phone}}</span></a>
+                  {% endif %}
+                  <a href="/contact-us"><span class="border-box">{% include 'icon-pack' with icon: 'chart-blue' %}Start Chat</span></a>
+                  {% if block.settings.email != blank %}
+                  <a href="mailto:{{block.settings.email}}"><span class="border-box">{% include 'icon-pack' with icon: 'mail-blue' %}{{block.settings.email}}</span></a>
+                  {% endif %}
+                    
+                  {% if block.settings.address != blank %}
+                    <span>{{block.settings.address}}</span>
+                  {% endif %}
+                </p>
+                {{ block.settings.content }}
+            {% endif %}
+          </div>
+        {% endif %}
+        {% if block.settings.social_icons_footer  %}
+          <div class="footer-social-icons--mobile sixteen columns">
+            {% render 'social-icons' %}
+          </div>
+        {% endif %}
+      {% endfor %}
+
+      {% for block in section.blocks %}
+        {% if block.type == 'empty' %}
+          {% assign cls = 'empty' %}
+        {% elsif block.type == 'text' %}
+          {% assign cls = 'text' %}
+        {% endif %}
+        <div class="{{cls}} {% if forloop.length >= 6 %}one-sixth column{% elsif forloop.length >= 5 %}one-fifth column{% elsif forloop.length == 4 %}one-fourth column{% elsif forloop.length == 3 %}one-third column{% elsif forloop.length == 2 %}one-half column{% endif %} medium-down--one-whole" {{ block.shopify_attributes }}>
           {% if block.type == 'logo' %}
             <div class="text-align--{{block.settings.text_align}}">
               {% if block.settings.image %}
-                <img  alt="{{ block.settings.image.alt | escape }}"
+                <img  alt="{{ shop.name | escape }}"
                       class="footer-logo lazyload {{ settings.image_loading_style }}"
                       data-sizes="25vw"
                       style="max-width: {{- block.settings.image.width -}}px"
@@ -38,60 +83,6 @@
                 <div class="logo">{{ shop.name }}</div>
               {% endif %}
             </div>
-
-          {% elsif block.type == 'newsletter' %}
-
-          <div class="newsletter_section">
-
-            {% if block.settings.title != blank %}
-              <h6>{{ block.settings.title }}</h6>
-            {% endif %}
-            {% if block.settings.newsletter_text != blank %}
-              {{ block.settings.newsletter_text }}
-            {% endif %}
-
-            <div class="newsletter">
-              <span class="message"></span>
-              {% if settings.mailchimp_link != blank %}
-                <form action="{{ settings.mailchimp_link }}" method="post" name="mc-embedded-subscribe-form" id="contact_form" target="_blank">
-                  {% if block.settings.show_firstname %}
-                    <input type="text" value="" class="firstName" name="FNAME" placeholder="{{ 'general.newsletter_form.subscriber_first_name' | t }}">
-                  {% endif %}
-                  {% if block.settings.show_lastname %}
-                    <input type="text" value="" name="LNAME" placeholder="{{ 'general.newsletter_form.subscriber_last_name' | t }}">
-                  {% endif %}
-                  <input type="email" value="" name="EMAIL" class="contact_email" placeholder="{{ 'general.newsletter_form.placeholder' | t }}">
-                  <input type="submit" value="{{ 'general.newsletter_form.submit' | t }}" class="action_button sign_up" name="subscribe" />
-                </form>
-              {% else %}
-                {% form 'customer' %}
-                  {% if form.posted_successfully? %}
-                    <p><em>{{ 'general.newsletter_form.success_text_html' | t }}</em></p>
-                  {% elsif form.errors %}
-                    {% for field in form.errors %}
-                      <p><em>{{ field }} - {{ form.errors.messages[field] }}</em></p>
-                    {% endfor %}
-                  {% endif %}
-
-                  <input type="hidden" name="contact[tags]" value="prospect,newsletter"/>
-                  {% if block.settings.show_firstname %}
-                    <input type="text" class="firstName" name="contact[first_name]" placeholder="{{ 'general.newsletter_form.subscriber_first_name' | t }}" />
-                  {% endif %}
-                  {% if block.settings.show_lastname %}
-                    <input type="text" name="contact[last_name]" placeholder="{{ 'general.newsletter_form.subscriber_last_name' | t }}" />
-                  {% endif %}
-
-                  <input type="hidden" name="challenge" value="false" />
-                  <input type="email" class="contact_email" name="contact[email]" required placeholder="{{ 'general.newsletter_form.placeholder' | t }}" />
-                  <input type='submit' class="action_button sign_up" value="{{ 'general.newsletter_form.submit' | t }}" />
-                {% endform %}
-              {% endif %}
-            </div>
-            {% if block.settings.show_social %}
-              {% render 'social-icons' %}
-            {% endif %}
-          </div>
-
           {% elsif block.type == 'link_list' %}
             <div class="footer_menu">
               {% if block.settings.menu != blank %}
@@ -114,12 +105,23 @@
             </div>
 
           {% elsif block.type == 'text' %}
-            <div class="footer_content footer-text {% if block.settings.title == blank %}no-footer-title{% endif %}">
+            <div class="footer_content footer-text medium-down--hide {% if block.settings.title == blank %}no-footer-title{% endif %}">
               {% if block.settings.title != blank %}
                 <h6>{{ block.settings.title }}<span class="right icon-down-arrow"></span></h6>
               {% endif %}
               {% if block.settings.content %}
                 <div class="toggle_content">
+                  <p>
+                    {% if block.settings.phone != blank %}
+                      <a href="tel:{{block.settings.phone}}"><span>{% include 'icon-pack' with icon: 'phone-blue' %}{{block.settings.phone}}</span></a>
+                    {% endif %}
+                    {% if block.settings.email != blank %}
+                      <a href="mailto:{{block.settings.email}}"><span>{% include 'icon-pack' with icon: 'mail-blue' %}{{block.settings.email}}</span></a>
+                    {% endif %}
+                    {% if block.settings.address != blank %}
+                      <span>{{block.settings.address}}</span>
+                    {% endif %}
+                  </p>
                   {{ block.settings.content }}
                 </div>
               {% endif %}
@@ -155,11 +157,7 @@
           {% endif %}
 
         </div>
-        {% if forloop.last and social_icons %}
-          <div class="footer-social-icons--mobile sixteen columns">
-            {% render 'social-icons' %}
-          </div>
-        {% endif %}
+
       {% endfor %}
 
       <div class="sixteen columns row footer_credits">
@@ -180,7 +178,6 @@
           {% if section.settings.display_designed_by %}
             {{ 'layout.general.designer_credits_html' | t }}
           {% endif %}
-          {{ powered_by_link | split: '" ' | join: '&ref=out-of-the-sandbox" ' | split: '">' | join: '&ref=out-of-the-sandbox">' }}
         </p>
 
         {% if section.settings.display_payment_methods %}
@@ -194,14 +191,19 @@
     </div>
   </div>
 </footer>
-
+{% include 'popup' %}
 {% schema %}
 
 {
   "name": "Footer",
   "class": "footer-section",
-  "max_blocks": 5,
   "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Background image",
+      "info":"1600 x 300px recommended"
+    },
     {
      "type": "header",
      "content": "Sub footer"
@@ -290,7 +292,7 @@
       "settings": [
         {
           "type": "text",
-          "id": "title",
+          "id": "newsletter_title",
           "label": "Heading",
           "default": "Subscribe today!"
         },
@@ -310,9 +312,24 @@
           "label": "Show last name"
         },
         {
-          "type": "checkbox",
-          "id": "show_social",
-          "label": "Show social media icons"
+          "type": "select",
+          "id": "newsletter_section_text_align",
+          "label": "Text alignment",
+          "options": [
+             {
+              "value": "left",
+              "label": "Left"
+            },
+            {
+              "value": "center",
+              "label": "Center"
+            },
+            {
+              "value": "right",
+              "label": "Right"
+            }
+         ],
+          "default": "center"
         }
       ]
     },
@@ -320,6 +337,11 @@
       "type": "link_list",
       "name": "Menu",
       "settings": [
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        },
         {
           "type": "link_list",
           "id": "menu",
@@ -367,6 +389,24 @@
           "id": "content",
           "label": "Text",
           "default": "<p>Use this text to share information about your brand with your customers. Describe a product, share announcements, or welcome customers to your store.</p>"
+        },
+        {
+          "type": "text",
+          "id": "phone",
+          "label": "Phone number",
+          "default": "800-483-6287"
+        },
+        {
+          "type": "text",
+          "id": "address",
+          "label": "Address",
+          "default": "M-F 7AM-7PM PST"
+        },
+        {
+          "type": "text",
+          "id": "email",
+          "label": "Email address",
+          "default": "InternetSales@optcorp.com"
         },
         {
           "type": "checkbox",

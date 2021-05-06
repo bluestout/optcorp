@@ -1,0 +1,382 @@
+{% if section.blocks.size > 0 %}
+    {% assign sidebar = true %}
+{% else %}
+    {% assign sidebar = false %}
+{% endif %}
+
+<div class="container">
+    {% if sidebar %}
+        <div class="four medium-down--one-whole column sidebar">
+            {% for block in section.blocks %}
+                {% if block.type == 'sidebar' %}
+                    <div class="sidebar-block sidebar-menu wrapper">
+                    {% if block.settings.links != blank %}
+                        <div class="select-box hide medium-down--show">
+                        {% for link in linklists[block.settings.links].links %}
+                            {% if link.url contains page.handle %}
+                                {{link.title}}
+                            {% endif %} 
+                        {% endfor %}
+                        </div>
+                        <ul class="links">
+                            {% for link in linklists[block.settings.links].links %}
+                                {% if link.url contains page.handle %}
+                                    {% assign cls = 'active' %}
+                                {% else %}
+                                    {% assign cls = '' %}
+                                {% endif %} 
+                                <li class="{{cls}}"><a href="{{link.url}}">{{link.title}}</a></li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    {% endif %}
+    <div class="{% if sidebar %}twelve medium-down--one-whole relative flex {% else %}sixteen{% endif %} column main-content">
+        
+        {% if block.settings.title != blank %}
+            {% assign title = block.settings.title %}
+        {% else %}
+            {% assign title = page.title %}
+        {% endif %}
+
+        {% include 'heading-banner' with 
+            image: section.settings.image,
+            mobile_image: section.settings.banner_mobile_image,
+            sub_title: section.settings.sub_title,
+            title: title,
+            wide: section.settings.wide_display,
+        %}
+        {% assign faq_exist = true %}
+        {% capture faq_block %}
+            {% for block in section.blocks %}
+                {% if block.type == 'faq' %}
+                    <li>
+                        <p class="title">{{block.settings.title}}</p>
+                        <p>{{block.settings.text}}</p>
+                    </li>
+                {% endif %}
+            {% endfor %}
+        {% endcapture %}
+        <div class="twelve medium-down--one-whole column offset-by-two content">
+            <div class="subtext">
+                {{ section.settings.text }}
+            </div>
+            {% for block in section.blocks %}
+                {% case block.type %}
+                    {% when 'title' %}
+                        <h3 class="title">{{ block.settings.title }}</h3>
+                    {% when 'subtext' %}
+                        <div class="subtext">
+                            {{ block.settings.sub_title }}
+                        </div>
+                    {% when 'content' %}
+                        <div class="content-block sidebar-block">
+                            <h1 class="title toggle">{{block.settings.title}}</h1>
+                            <div class="desc toggle_list">
+                                {{ page.content }}
+                            </div>
+                        </div>
+                    {% when 'categroy' %}
+                        {% assign feature_collection = block.settings.collection %}
+                        {% assign collection = collections[feature_collection] %}
+                    
+                        {% if block.settings.image %}
+                        {% assign collection_image = block.settings.image %}
+                        {% elsif collection.image != blank %}
+                        {% assign collection_image = collection.image %}
+                        {% else collection.empty? == false %}
+                        {% assign collection_image = collection.products.first.featured_image %}
+                        {% endif %}
+                    
+                        {% if block.settings.title != blank %}
+                        {% assign collection_title = block.settings.title %}
+                        {% assign collection_image_alt = block.settings.title | escape %}
+                        {% elsif collection.title != blank %}
+                        {% assign collection_title = collection.title %}
+                        {% assign collection_image_alt = collection.title %}
+                        {% else collection.empty? == false %}
+                        {% assign collection_title = collection.products.first.title %}
+                        {% assign collection_image_alt = collection.products.first.title %}
+                        {% endif %}
+                    
+                        {% if block.settings.link != blank %}
+                        {% assign collection_url = block.settings.link %}
+                        {% elsif collection.url != blank %}
+                        {% assign collection_url = collection.url %}
+                        {% else collection.empty? == false %}
+                        {% assign collection_url = collection.products.first.url %}
+                        {% endif %}
+                        <div class="one-third small-down--one-half column category-column">
+                            <div class="product-wrap border-box">
+                                {% if collection_image != nil %}
+                                  <div class="image__container">
+                                    {% render 'image-element',
+                                            image: collection_image.src,
+                                            alt: collection_image_alt,
+                                            object_fit: section.settings.align_height,
+                                            max_height: section.settings.collection_height
+                                    %}
+                                  </div>
+                                {% else %}
+                                  {% capture num %}{% cycle "1", "2", "3", "4", "5", "6" %}{% endcapture %}
+                                  {{ 'collection-' | append: num | placeholder_svg_tag: 'placeholder-svg' }}
+                                {% endif %}
+                        
+                                <a href="{{ collection_url }}" class="hidden-product-link">
+                                  {% if collection_title != blank %}
+                                    {{ collection_title }}
+                                  {% else %}
+                                    {{ "homepage.onboarding.collection_title" | t }}
+                                  {% endif %}
+                                </a>
+                                {% if settings.thumbnail_hover_enabled %}
+                                  <div class="thumbnail-overlay">
+                                    <a href="{{ collection_url }}" class="hidden-product-link">
+                                      {% if collection_title != blank %}
+                                        {{ collection_title }}
+                                      {% else %}
+                                        {{ "homepage.onboarding.collection_title" | t }}
+                                      {% endif %}
+                                    </a>
+                                    <div class="info">
+                                      <div class="collection-details">
+                                        <span class="title">
+                                          {% if collection_title != blank %}
+                                            {{ collection_title }}
+                                          {% else %}
+                                            {{ "homepage.onboarding.collection_title" | t }}
+                                          {% endif %}
+                                        </span>
+                                      </div>
+                                      <a href="{{ collection_url }}"><span class="view_all">{{ 'collections.general.view_all' | t }}</span></a>
+                                    </div>
+                                  </div>
+                                {% endif %}
+                                <a class="collection-info__caption {% if settings.thumbnail_hover_enabled %}hidden{% endif %}" href="{{ collection_url }}">
+                                  <span class="title">
+                                    {% if collection_title != blank %}
+                                      {{ collection_title }}
+                                    {% else %}
+                                      {{ "homepage.onboarding.collection_title" | t }}
+                                    {% endif %}
+                                  </span>
+                                </a>
+                              </div>
+                        </div>
+                    {% when 'image' %}
+                        <div class="image-text-block {% if block.settings.border_box %} border-box {% endif %}">
+                            {% include 'image-element' with
+                                image: block.settings.image,
+                                alt: page.title
+                            %}
+                            <div class="info-caption">
+                                {% if block.settings.title_1 != blank or block.settings.text_1 !=blank %}
+                                    <div class="one-third small-down--one-whole small-down--text-center column">
+                                        <p class="title">{{block.settings.title_1}}</p>
+                                        <p>{{block.settings.text_1}}</p>
+                                    </div>
+                                {% endif %}
+                                {% if block.settings.title_2 != blank or block.settings.text_2 != blank %}
+                                    <div class="one-third small-down--one-whole small-down--text-center column">
+                                        <p class="title">{{block.settings.title_2}}</p>
+                                        <p>{{block.settings.text_2}}</p>
+                                    </div>
+                                {% endif %}
+                                {% if block.settings.title_3 != blank or block.settings.text_3 != blank %}
+                                    <div class="one-third small-down--one-whole small-down--text-center column">
+                                        <p class="title">{{block.settings.title_3}}</p>
+                                        <p>{{block.settings.text_3}}</p>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% when 'faq' %}
+                        {% if faq_exist %}
+                            <ul class="faq-block">
+                                {{ faq_block }}
+                            </ul>
+                            {% assign faq_exist = false %}
+                        {% endif %}
+                {% endcase %}                
+            {% endfor %}
+        </div>
+    </div>
+</div>
+ 
+{% schema %}
+{
+    "name": "Page template",
+    "class": "page-section product-warranty-section",
+    "settings": [
+        {
+            "type": "checkbox",
+            "id": "wide_display",
+            "label": "Wide display"
+        },
+        {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Image"
+        },
+        {
+            "type": "image_picker",
+            "id": "banner_mobile_image",
+            "label": "Mobile banner image"
+        },
+        {
+            "type": "text",
+            "id": "sub_title",
+            "label": "Sub title",
+            "default": "customer help"
+        },
+        {
+            "type": "text",
+            "id": "title",
+            "label": "Title"
+        },
+        {
+            "type": "richtext",
+            "id": "text",
+            "label": "Sub text"
+        }
+    ],
+    "blocks": [
+        {
+            "type": "sidebar",
+            "name": "Sidebar",
+            "settings": [
+                {
+                    "type": "link_list",
+                    "id": "links",
+                    "label": "Links"
+                }
+            ]
+        },
+        {
+            "type": "title",
+            "name": "Title",
+            "settings": [
+                {
+                    "type": "text",
+                    "id": "title",
+                    "label": "Title"
+                }
+            ]
+        },
+        {
+            "type": "subtext",
+            "name": "Sub title",
+            "settings": [
+                {
+                    "type": "richtext",
+                    "id": "sub_title",
+                    "label": "Sub title"
+                }
+            ]
+        },
+        {
+            "type": "categroy",
+            "name": "Category block",
+            "settings": [
+                {
+                    "type": "collection",
+                    "id": "collection",
+                    "label": "Collection"
+                },
+                {
+                    "type": "image_picker",
+                    "id": "image",
+                    "label": "Image"
+                },
+                {
+                    "type": "text",
+                    "id": "title",
+                    "label": "Title"
+                },
+                {
+                    "type": "url",
+                    "id": "url",
+                    "label": "Link"
+                }
+            ]
+        },
+        {
+            "type": "faq",
+            "name": "faq block",
+            "settings": [
+                {
+                    "type": "text",
+                    "id": "title",
+                    "label": "Title"
+                },
+                {
+                    "type": "richtext",
+                    "id": "text",
+                    "label": "Text"
+                }
+            ]
+        },
+        {
+            "type": "image",
+            "name": "Image text",
+            "settings": [
+                {
+                    "type": "checkbox",
+                    "id": "border_box",
+                    "label": "Border box"
+                },
+                {
+                    "type": "image_picker",
+                    "id": "image",
+                    "label": "Banner image"
+                },
+                {
+                    "type": "text",
+                    "id": "title_1",
+                    "label": "Title 1"
+                },
+                {
+                    "type": "richtext",
+                    "id": "text_1",
+                    "label": "Text 1"
+                },
+                {
+                    "type": "text",
+                    "id": "title_2",
+                    "label": "Title 2"
+                },
+                {
+                    "type": "richtext",
+                    "id": "text_2",
+                    "label": "Text 2"
+                },
+                {
+                    "type": "text",
+                    "id": "title_3",
+                    "label": "Title 3"
+                },
+                {
+                    "type": "richtext",
+                    "id": "text_3",
+                    "label": "Text 3"
+                }
+            ]
+        },
+        {
+            "type": "content",
+            "name": "Content",
+            "settings": [
+                {
+                    "type": "text",
+                    "id": "title",
+                    "label": "Title",
+                    "default": "Read a complete warranty text"
+                }
+            ]
+        }
+    ]
+}
+{% endschema %}

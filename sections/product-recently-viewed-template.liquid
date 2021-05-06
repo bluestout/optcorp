@@ -3,7 +3,7 @@
 {% endcomment %}
 
 <div class="js-recently-viewed-product clearfix">
-  <div class="product-wrap {% if settings.collection_secondary_image != blank and product.media[1] != blank %}has-secondary-media-swap{% endif %}">
+  <div class="product-wrap quick-shop-style--{{ settings.quick_shop_style }} {% if settings.collection_secondary_image != blank and product.media[1] != blank %}has-secondary-media-swap{% endif %}">
       <div class="relative product_image">
         <a href="{{ product.url | within: collection }}">
           <div class="image__container">
@@ -38,6 +38,13 @@
       <a class="product-info__caption {% if settings.thumbnail_hover_enabled %}hidden{% endif %}" href="{{ product.url | within: collection }}">
         {% render "product-info", product: product %}
       </a>
+      <div class="inline-quickshop js-product_section product-{{ product.id }}">
+        {% render 'product-form',
+                product: product,
+                collection_handles: collection_handles,
+                show_payment_button_quickshop: settings.show_payment_button
+        %}
+      </div>
       </div>
     {% render 'collection-swatch', product: product %}
   </div>

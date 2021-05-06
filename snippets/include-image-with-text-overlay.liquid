@@ -1,7 +1,7 @@
 {% if type == 'block' %}
   {% assign id = block.id %}
-  {% assign wide_display = block.settings.wide_display %}
   {% assign image = block.settings.image %}
+  {% assign mobile_image = block.settings.mobile_image %}
   {% assign pretext = block.settings.pretext %}
   {% assign title = block.settings.title %}
   {% assign subtitle = block.settings.subtitle %}
@@ -20,8 +20,8 @@
   {% assign mobile_text_color = block.settings.mobile_text_color %}
 {% else %}
   {% assign id = section.id %}
-  {% assign wide_display = section.settings.wide_display %}
   {% assign image = section.settings.image %}
+  {% assign mobile_image = section.settings.mobile_image %}
   {% assign pretext = section.settings.pretext %}
   {% assign title = section.settings.title %}
   {% assign subtitle = section.settings.subtitle %}
@@ -60,19 +60,20 @@
 {% endstyle %}
 
 
-{% if wide_display == false %}
-<div class="container">
-  <div class="sixteen columns">
-{% endif %}
-
-<section id="banner-{{id}}" class="banner full-width--{{ wide_display }}">
+<section id="banner-{{id}}" aria-label="{{title}}"  class="banner {% if block.settings.set_max_height %}
+  set_max_height
+{% endif %}">
   {% if image != nil %}
-    {% render 'image-element',
-            image: image,
-            alt: image.alt,
-            stretch_width: true,
-            additional_classes: mobile_crop
-    %}
+    <style>
+      #banner-{{id}}{
+        background: url({{ image | img_url: '1024x' }}) 50% 50% / cover no-repeat;
+      }
+      @media screen and (max-width: 767px) {
+        #banner-{{id}}{
+        background: url({{ mobile_image | img_url: '1024x' }}) 50% 50% / cover no-repeat;
+      }
+      }
+    </style>
   {% else %}
     {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg placeholder-svg--banner' }}
   {% endif %}
@@ -103,7 +104,12 @@
         {% endif %}
         {% if subtitle != blank %}
           <div class="subtitle">
-            {{ subtitle }}
+            {% if button1 == blank and button1_link != blank%}
+              {{ subtitle | truncate: 250, '...' }}
+              <a {% if block.settings.modal_button %} class="modal_button" {% endif %} href="{{ button1_link }}" >{{ 'homepage.more' | t }}</a>
+            {% else %}
+              {{ subtitle }}
+            {% endif %}
           </div>
         {% endif %}
         {% if button1 != blank %}
@@ -116,12 +122,12 @@
             {{ button2 }}
           </a>
         {% endif %}
+        <div class="icons">
+          {{ icons }}
+        </div>
+        
       </div>
     </div>
   {% endunless %}
 </section>
 
-{% if wide_display == false %}
-  </div>
-</div>
-{% endif %}

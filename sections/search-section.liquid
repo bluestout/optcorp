@@ -1,46 +1,107 @@
+<!-- Do NOT edit this page. Searchanise shows the search results here -->
+
 {% comment %}
-** Search - homepage partial **
-- Draggable section
+** Search results - default view **
+- Template section
+- Uses blocks
 {% endcomment %}
 
-{% render 'include-search' %}
+{% assign search_pagination = section.settings.pagination_limit %}
+
+
+{% if section.settings.image != blank %}
+  <header class="banner center page-banner dark-overlay-{{ section.settings.image_darken }}">
+    {% render 'image-element',
+            image: section.settings.image,
+            alt: section.settings.image.alt,
+            stretch_width: true
+    %}
+    <div class="caption captionOverlay--true">
+      <h1 class="headline">{{ 'general.search.title' | t }}</h1>
+    </div>
+  </header>
+{% endif %}
+
+
+<div class="container">
+
+  <div class="clearfix breadcrumb-collection medium-down--hide">
+    {% if section.settings.search_breadcrumb %}
+      <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "item": {
+                "@id": "{{ shop.url }}",
+                "name": "{{ 'general.breadcrumbs.home' | t }}"
+              }
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "item": {
+                "@id": "{{ routes.search_url }}",
+                "name": "{{ 'general.search.title' | t }}"
+              }
+            }
+          ]
+        }
+      </script>
+
+      <div class="eight columns breadcrumb_text medium-down--one-whole">
+        <a href="{{ routes.root_url }}" title="{{ shop.name | escape }}" class="breadcrumb_link">
+          <span>{% render 'icon-pack' with icon: 'home' %}</span>
+        </a>
+        <span class="breadcrumb-divider"></span>
+        <a href="{{ routes.search_url }}" class="breadcrumb_link">
+          <span>{{ 'general.search.title' | t }}</span>
+        </a>
+      </div>
+    {% endif %}
+  </div>
+  
+  <div class="sixteen columns">
+    <div class="snize" id="snize_results"></div>
+  </div>
+
+</div>
+
 
 {% schema %}
 
 {
   "name": "Search",
-  "class": "search-section",
+  "class": "search-template-section",
   "settings": [
     {
-      "type": "text",
-      "id": "search_title",
-      "label": "Heading",
-      "default": "Search our shop"
+      "type": "header",
+      "content": "Banner image"
     },
     {
-      "type": "richtext",
-      "id": "search_text",
-      "label": "Subheading"
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image",
+      "info": "1600 x 1000px recommended"
     },
     {
-      "type": "select",
-      "id": "search_section_text_align",
-      "label": "Text alignment",
-      "options": [
-         {
-          "value": "left",
-          "label": "Left"
-        },
-        {
-          "value": "center",
-          "label": "Center"
-        },
-        {
-          "value": "right",
-          "label": "Right"
-        }
-     ],
-      "default": "center"
+      "type": "checkbox",
+      "id": "image_darken",
+      "label": "Darken banner image",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Search"
+    },
+    {
+      "type": "checkbox",
+      "id": "search_breadcrumb",
+      "label": "Show breadcrumb",
+      "default": true
     },
     {
       "type": "text",
@@ -49,18 +110,142 @@
       "default": "Search..."
     },
     {
-      "type": "image_picker",
-      "id": "image",
-      "label": "Background image",
-      "info":"1600 x 300px recommended"
+      "type": "range",
+      "id": "products_per_row",
+      "label": "Products per row",
+      "min": 2,
+      "max": 5,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "range",
+      "id": "pagination_limit",
+      "label": "Products per page",
+      "min": 2,
+      "max": 50,
+      "step": 1,
+      "default": 48
+    },
+    {
+      "type": "header",
+      "content": "Blog results"
+    },
+    {
+      "type": "checkbox",
+      "id": "blog_author",
+      "label": "Show author"
+    },
+    {
+      "type": "checkbox",
+      "id": "read_more_link",
+      "label": "Show continue reading link",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "blog_date",
+      "label": "Show date",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Sidebar"
+    },
+    {
+      "type": "paragraph",
+      "content": "Create search sidebar by adding content blocks."
+    },
+    {
+      "type": "checkbox",
+      "id": "toggle",
+      "label": "Toggle sidebar content",
+      "default": false
     }
   ],
-  "presets": [{
-    "name": "Search",
-    "category": "Content",
-    "settings": {
+  "blocks": [
+    {
+      "type": "filter_by_collection",
+      "name": "Collection list",
+      "limit": 1
+    },
+    {
+      "type": "menu",
+      "name": "Menu",
+      "settings": [
+        {
+          "type": "link_list",
+          "id": "custom_menu_linklist",
+          "label": "Menu"
+        }
+      ]
+    },
+    {
+      "type": "page",
+      "name": "Page",
+      "settings": [
+        {
+          "type": "page",
+          "id": "content_page",
+          "label": "Page"
+        }
+      ]
+    },
+    {
+      "type": "recently_viewed",
+      "name": "Recently viewed products",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "paragraph",
+          "content": "To test the recently viewed products, view your online store outside of the Editor and visit multiple product pages. [Learn more](https:\/\/help.outofthesandbox.com\/hc\/en-us\/articles\/115008765228)"
+        },
+        {
+          "type": "text",
+          "id": "sidebar_rv_title",
+          "label": "Title",
+          "default": "Recently Viewed"
+        },
+        {
+          "type": "range",
+          "id": "sidebar_rv_per",
+          "label": "Products limit",
+          "min": 1,
+          "max": 4,
+          "step": 1,
+          "default": 3
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "name": "Text",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Heading",
+          "default": "Heading"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "<p>Text area can be used for special announcements or general information.</p>"
+        }
+      ]
+    },
+    {
+      "type": "filter_by_type",
+      "name": "Type list",
+      "limit": 1
+    },
+    {
+      "type": "filter_by_vendor",
+      "name": "Vendor list",
+      "limit": 1
     }
-  }]
+  ]
 }
 
 {% endschema %}

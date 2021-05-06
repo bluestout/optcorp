@@ -1,0 +1,42 @@
+
+{% assign per_slide = section.settings.frontpage_collections_per_row %}
+{% for block in section.blocks %}
+    {% assign feature_collection = block.settings.feature_collection %}
+    {% assign collection = collections[feature_collection] %}
+    {% if block.settings.image %}
+      {% assign collection_image = block.settings.image %}
+      {% assign collection_image_alt = block.settings.title | escape %}
+    {% elsif collection.image != blank %}
+      {% assign collection_image = collection.image %}
+      {% assign collection_image_alt = collection.title | escape %}
+    {% else collection.empty? == false %}
+      {% assign collection_image = collection.products.first.featured_image %}
+      {% assign collection_image_alt = collection.products.first.featured_image.alt | escape %}
+    {% endif %}
+  <div class="one-fifth thumbnail column small-down--one-half">
+    <div class="product-wrap border-box">
+      {% if collection_image != nil %}
+        <div class="image__container">
+          {% render 'image-element',
+                  image: collection_image.src,
+                  alt: collection_image_alt,
+                  object_fit: section.settings.align_height,
+                  max_height: section.settings.collection_height
+          %}
+        </div>
+      {% else %}
+        {% capture num %}{% cycle "1", "2", "3", "4", "5", "6" %}{% endcapture %}
+        {{ 'collection-' | append: num | placeholder_svg_tag: 'placeholder-svg' }}
+      {% endif %}
+      <a class="collection-info__caption {% if settings.thumbnail_hover_enabled %}hidden{% endif %}" href="{{ collection.url }}">
+        <span class="title">
+          {% if block.settings.title != blank %}
+            {{ block.settings.title }}
+          {% else %}
+            {{ "homepage.onboarding.collection_title" | t }}
+          {% endif %}
+        </span>
+      </a>
+    </div>
+  </div>
+{% endfor %}

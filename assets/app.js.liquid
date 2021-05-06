@@ -31,6 +31,7 @@ $(function() {
   videoFeature.setupVideoPlayer();
   featuredPromotions.init();
   featuredCollectionSection.init();
+  CollectionListSection.init();
   collectionSidebarFilter.init();
   cart.init();
   mapFunction.init();
@@ -152,6 +153,8 @@ $(function() {
   //Add featured divider beneath page title
   $('.shopify-policy__title').append('<div class="feature_divider"></div>');
 
+ 
+
   //Search input hiding
   //get current input
   var currentValue = $(".search_form input[name='q']").val()
@@ -195,6 +198,14 @@ $(function() {
   $('body').on('click', '[data-reset-filters]', function(){
     collectionSidebarFilter.clearAllFilters();
   });
+
+  $('.scroll-button').on('click', function (e) {
+    e.preventDefault();
+    id = $(this).attr('href');
+    $("html, body").animate({
+      scrollTop: ($(id).offset().top)
+    }, 500);
+  })
 
   $('body').on('click', '[data-clear-filter]', function(){
     var selectedOption = $(this).parents('.filter-active-tag');
@@ -544,24 +555,18 @@ $(function() {
         var line_id = index + 1;
 
         cart_items_html += '<li class="mini-cart__item clearfix" data-cart-item data-line-id="' + line_id + '" data-variant-id="' + item.id + '">' +
-          '<a href="' + item.url +'">';
+          '<a class="image_link" href="' + item.url +'">';
         if (item.image) {
-          cart_items_html += '<div class="cart_image">' +
+          cart_items_html += '<div class="cart_image mini-cart__item-image">' +
               '<img src="' + item.image.replace(/(\.[^.]*)$/, "_compact$1").replace('http:', '') + '" alt="' + htmlEncode(item.title) + '" />' +
             '</div></a>';
         }
 
-        cart_items_html += '<div class="mini-cart__item--content"><div class="mini-cart__item__title"><div class="item_title"><a href="' + item.url + '">' + item.title + '</a></div>';
-
-        if(item.properties) {
-          $.each(item.properties, function(title, value) {
-            if (value) {
-              cart_items_html += '<div class="line-item">' + title +': ' + value + ' </div>';
-            }
-          });
-        }
-
-        cart_items_html += '<strong class="right price">';
+        cart_items_html += '<div class="mini-cart__item--content"><div class="mini-cart__item__title"><div class="item_title"><a href="' + item.url + '">' + item.title + '</a></div></div>';
+        cart_items_html += '<div class="sub-title"><div class="property">';
+        cart_items_html += '<p class="sku">SKU: '+item.sku+'</p></div>';
+        cart_items_html += '<a href="/cart/change?line=' + line_id + '&amp;quantity=0" class="js-cart-remove-btn cart__remove-btn" data-line-id="' + line_id + '" data-remove-item="mini-cart">Remove</a></div>';
+        cart_items_html += '<strong class="left price">';
 
         $.ajax({
           dataType: "json",
@@ -597,7 +602,7 @@ $(function() {
 
         if(productHasSale == true) {
           //puts the slash through the old item price
-          var itemPrice = Shopify.formatMoney(productFinalPrice, $('body').data('money-format')) + ' </span><span class="money was_price">' + Shopify.formatMoney(productCompareAtPrice, $('body').data('money-format')) + '</span>';
+          var itemPrice = Shopify.formatMoney(productFinalPrice, $('body').data('money-format')) + ' </span>';
           cart_items_html += '<span class="money sale">' + itemPrice + '</strong>';
 
           // Total savings
@@ -606,14 +611,14 @@ $(function() {
         } else {
           if (item.price > item.final_price) {
             //puts the slash through the old item price
-            var itemPrice = Shopify.formatMoney(item.final_price, $('body').data('money-format')) + ' </span><span class="money was_price">' + Shopify.formatMoney(item.price, $('body').data('money-format')) + '</span>';
+            var itemPrice = Shopify.formatMoney(item.final_price, $('body').data('money-format')) + ' </span>';
             cart_items_html += '<span class="money sale">' + itemPrice + '</strong>';
           } else {
             var itemPrice = Shopify.formatMoney(item.price, $('body').data('money-format'));
             cart_items_html += '<span class="money">' + itemPrice + '</span></strong>';
           }
         }
-
+        
         if (item.price > item.final_price) {
           cart_items_html += discountMessage;
         }
@@ -622,9 +627,22 @@ $(function() {
         cart_items_html += '<span class="ss-icon product-minus js-change-quantity" data-func="minus"><span class="icon-minus"></span></span>';
         cart_items_html += '<input type="number" min="0" class="quantity" name="updates[]" id="updates_' + item.id + '" value="' + item.quantity + '" data-cart-quantity-input="mini-cart" />';
         cart_items_html += '<span class="ss-icon product-plus js-change-quantity" data-func="plus"><span class="icon-plus"></span></span>';
-        cart_items_html += '</div></div></div>';
-        cart_items_html += '<a href="/cart/change?line=' + line_id + '&amp;quantity=0" class="js-cart-remove-btn cart__remove-btn" data-line-id="' + line_id + '" data-remove-item="mini-cart"><span class="remove-icon"></span></a>';
-
+        cart_items_html += '</div><ul class="product-flags">';
+        if(item.properties) {
+          $.each(item.properties, function(title, values) {
+            if (title == 'product_flag') {
+              for (let i = 0; i < values.length; i++) {
+                let value = values[i];
+                var value_array = value.split(',');
+                var title = value_array[0];
+                var color = value_array[1];
+                cart_items_html += '<li class="flag" style="background-color: '+color+';">' + title + ' </li>';
+              }
+              
+            }
+          });
+        }
+        cart_items_html += '</ul></div>';
       });
 
       var cartDiscounts = cart.cart_level_discount_applications;
@@ -658,8 +676,49 @@ $(function() {
     if (Currency.show_multiple_currencies) {
       currencyConverter.convertCurrencies();
     }
+    if (cart.items.length > 0) {
+      var freeShippingLimit = $('.cart-message').data('limit')*100;
+      var total_price = cart.total_price;
+      if (freeShippingLimit > total_price) {
+        const leftMoney = freeShippingLimit - total_price
+        console.log(leftMoney);
+        $('.cart-message h5 span').text(`Only ${Shopify.formatMoney(leftMoney, $('body').data('money-format'))} away from FREE shipping!`);
+      } else {
+        $('.cart-message h5 span').text("This item qualifies for free shipping");
+      }
+      $('.cart-message').removeClass('hidden');
+    } else {
+      $('.cart-message').addClass('hidden');
+    }
+    
 
   }
+  
+  $('body').on('mwGroupedProducts', function (event, action) {
+    if (action === 'end-add-to-cart') {
+      $.ajax({
+        url: '/cart.js',
+        dataType: "json",
+        cache: false,
+        success: function(cart) {
+          setTimeout(function() {
+            refreshCart(cart);
+            if($('body').hasClass('fancybox-active')) {
+              $.fancybox.close();
+            }
+
+            $('#mini-cart').addClass('active')
+
+            //block scrolling on mobile
+            if (Shopify.media_queries.medium.matches) {
+              var $cart_container = $(this).parent();
+              $('body').addClass('blocked-scroll');
+            }
+          }, 500)
+        }
+      });
+    }
+  })
 
   $('body').on('change', '[data-cart-quantity-input]', function() {
     var cartItem = {
@@ -674,6 +733,7 @@ $(function() {
     $(this).parents('.product-quantity-box').find('.js-change-quantity').addClass('is-disabled');
     updateCartItemQuantity(cartItem);
   });
+
 
   $('body').on('click', '[data-remove-item]', function(e) {
     e.preventDefault();
@@ -721,6 +781,7 @@ $(function() {
           $addToCartBtn.find('span').removeClass("fadeInDown").addClass('animated zoomOut');
         },
         success: function(itemData) {
+
           $addToCartBtn.find('.checkmark').addClass('checkmark-active');
 
           window.setTimeout(function(){
@@ -740,22 +801,12 @@ $(function() {
                   $.fancybox.close();
                 }
 
-                if($('#header').is(':visible')) {
-                  $('#header .cart-container').addClass('active_link');
-                } else if ($('.sticky_nav--stick').length) {
-                  $('.sticky_nav .cart-container').addClass('active_link');
-                } else {
-                  $('.top-bar .cart-container').addClass('active_link');
-                }
+                $('#mini-cart').addClass('active')
 
                 //block scrolling on mobile
                 if (Shopify.media_queries.medium.matches) {
                   var $cart_container = $(this).parent();
-                  if($cart_container.hasClass('active_link')) {
-                    $('body').addClass('blocked-scroll');
-                  } else {
-                    $('body').addClass('blocked-scroll');
-                  }
+                  $('body').addClass('blocked-scroll');
                 }
               }, 500)
             }
@@ -1171,3 +1222,1170 @@ $(document)
       $('a.mega-menu-parent[data-dropdown-rel="' + megaMenuParent + '"]').parents('header').removeClass('editor-hover--true');
     }
 });
+
+$(window).on('load', function () {
+  $('.newleaf-warranty-heading .heading').click(function () {
+    if ($(window).width() < 768) {
+      $(this).toggleClass('active');
+      $(this).parent().parent().find('.ws_button').toggleClass('active');
+    }
+  });
+});
+
+$(document).ready(function () {
+  
+  $(document).on( 'change', function () {
+    var header_height = $('#header.mobile_nav-fixed--true').height();
+    $('#pagecontent').css('padding-bottom', header_height);
+  })
+  
+  if($("#instafeed").length){
+    var feed = new Instafeed({
+      accessToken: code,
+      templateBoundaries: ['<','>'],
+      template: '<a href="<link>" target="_blank"><img title="<caption>" src="<image>" /></a>',
+      limit: limit
+    });
+    feed.run();
+  }
+
+  $('.checkbox').click(function () {
+    var checkBoxes = $(this).find('input');
+    checkBoxes.prop("checked", !checkBoxes.prop("checked"));
+  });
+  $('.toggle_btn').click(function (e) {
+    e.preventDefault();
+    $(this).find('.toggle_content').toggleClass('hide');
+  });
+  $('.sidebar-block .toggle').click(function (e) {
+    e.preventDefault();
+    $(this).toggleClass('active');
+    $('.sidebar-block .toggle_list').slideToggle();
+  })
+  $('.article_content .border-box').each(function () {
+    var url = $(this).find('h3').find('a').attr('href');
+    if (url != '') {
+      var html = `<a href="${url}" class="button border-button">Shop Now</a>`;
+      $(this).append(html);
+    }
+  });
+
+  // Add smooth scrolling to all links
+  $(".brand-azlist a , .brand-btn a").on('click', function(event) {
+
+    // Make sure this.hash has a value before overriding default behavior
+    if (this.hash !== "") {
+      // Prevent default anchor click behavior
+      event.preventDefault();
+
+      // Store hash
+      var hash = this.hash;
+    
+      // Using jQuery's animate() method to add smooth page scroll
+      // The optional number (800) specifies the number of milliseconds it takes to scroll to the specified area
+      $('#inline').animate({
+        scrollTop: $(hash).offset().top
+      }, 200, function(){
+  
+        // Add hash (#) to URL when done scrolling (default click behavior)
+        window.location.hash = hash;
+      });
+    } // End if
+  });
+
+  $('.mega-menu-2 .dropdown_content .heading-menu-bar li').on('mouseenter', function () {
+    $('.mega-menu-2 .dropdown_content .active').removeClass('active')
+    if(!$(this).hasClass('active')){
+      var id = `#${$(this).data('target')}`;
+      $(id).addClass('active');
+      $(this).addClass('active');
+    }
+  });
+
+  $('.mini_cart').click(function (e) {
+    
+    if (!Shopify.theme_settings.redirect_cart){
+      e.preventDefault();
+      $('body').addClass('stop-scroll');
+      $('.cart_content ').addClass('active');
+      $('.dark-bg').addClass('active');
+    }
+  });
+
+  $('.dark-bg').click(function () {
+    $('body').removeClass('stop-scroll');
+    if ($('.cart_content').hasClass('active')) {
+      $('.cart_content').removeClass('active');
+    }
+    $('.dark-bg').removeClass('active');
+  });
+
+  $('.search-box').on('keyup', function (e) {
+    e.preventDefault();
+    var value = $(this).val().toLowerCase();
+    
+    $('.brand-content ul').each(function () {
+      var status = false;
+
+      $(this).find('li').each(function () {
+        var data = $(this).find('a').text();
+        if (data.indexOf(value) >= 0) {
+          $(this).removeClass('hide');
+          $(this).addClass('show');
+          status = true;
+        } else {
+          $(this).removeClass('show');
+          $(this).addClass('hide');
+        }
+      });
+
+      if (!status) {
+        $(this).parent().hide();
+      } else{
+        $(this).parent().show();
+      }
+    })
+  })
+  
+  $(document).on('click', '.chat_button', function (e) {
+    e.preventDefault();
+    if ($('.mobile_nav ').find('.open').length > 0) {
+      $('.mobile_nav ').trigger('click');
+    }
+    GorgiasChat.open();
+  })
+
+  $('.contanct-field .scroll-pannel a').on('click', function (e) {
+    e.preventDefault();
+    var id = $(this).attr('href');
+    $(window).scrollTop($(id).offset().top - 158);
+  })
+
+  $('.sidebar-menu .select-box').on('click',function(){
+    $(this).next('ul').slideToggle(280);
+  });
+
+  $(document).on('click', '.modal_button', function (e) {
+    e.preventDefault();
+    let id = $(this).attr('href');
+    $(id).toggleClass('active');
+  });
+
+  $(document).on('click', '.close', function (e) {
+    e.preventDefault()
+    $('body').removeClass('stop-scroll');
+    $('body').removeClass('blocked-scroll');
+    var id = $(this).attr('href');
+    if (id == '#mini-cart') {
+      $(this).parent().parent().removeClass('active');
+    }
+
+    $(id).hide();
+    $(id).removeClass('active');
+    $('.dark-bg').removeClass('active');
+  });
+
+  $(window).on('load', function(e) {
+    $(".pageloader").fadeOut("slow");
+  });
+
+  $('.logo-slider').flickity({
+    "draggable": true,
+    "prevNextButtons": false,
+    "wrapAround": true,
+    "cellAlign": "left",
+    "pageDots": false,
+    "contain": true,
+    "freeScroll": true,
+    "prevNextButtons": true
+  });
+
+  $('.banner-slider').flickity({
+    "draggable": true,
+    "prevNextButtons": false,
+    "wrapAround": true,
+    "cellAlign": "left",
+    "pageDots": false,
+    "contain": true,
+    "hash": true
+  });
+
+
+  $('.indicator-item').on('click', function (e) {
+    e.preventDefault();
+    $('.indicator-item').removeClass('active');
+    $(this).addClass('active');
+  })
+
+  $(".form-btn").on('click ',function(e){
+    e.preventDefault();
+  	var id =$(this).attr('zota-id');
+    id = Number(id);   
+    Zotabox.show(id);
+  });
+  
+  $('.toggle_content .switch').on('click', function (e) {
+    e.preventDefault();
+    $(this).parent().find('.content_box').toggleClass('hide');
+  })
+
+
+  $("#clickform").on('click ',function(){
+  	var id =$(this).attr('zota-id');
+    id = Number(id);   
+    Zotabox.show(id);
+  });
+
+  $(document).on('click', '#globo-formbuilder-33223 .submit', function () {
+    
+    var tid = setInterval(() => {
+      if ( $('#globo-formbuilder-33223 .globo-form-app > .message.success').css('display') == 'block' ) {
+        var top = $('#globo-formbuilder-33223').offset().top - 160;
+        $(window).scrollTop(top)
+        clearInterval( tid );
+      }
+    }, 500);
+  })
+
+  $(document).on('focus', '#globo-formbuilder-33223 input', function () {
+    var top = $(this).offset().top - 160;
+    $(window).scrollTop(top)
+  });
+
+  if (template == 'pro-services') {
+    var bombMap = new Datamap({
+      element: document.getElementById('container1'),
+      projection: 'mercator',
+      responsive: true,
+      scope: 'world',
+      geographyConfig: {
+          popupOnHover: false,
+          highlightOnHover: false,
+          borderColor: '#DEDEDE',
+          highlightBorderWidth: 2,
+      },
+      fills: {
+          red:"red",
+          defaultFill: '#FFF'
+      },
+      data: {
+          'RUS': {fillKey: 'RUS'},
+          'PRK': {fillKey: 'PRK'},
+          'PRC': {fillKey: 'PRC'},
+          'IND': {fillKey: 'IND'},
+          'GBR': {fillKey: 'GBR'},
+          'FRA': {fillKey: 'FRA'},
+          'PAK': {fillKey: 'PAK'},
+          'USA': {fillKey: 'USA'}
+      },
+    });
+
+    var bombs = [{
+          name: 'International Space University ',
+          radius: 10,
+          yield: "A neutral, international university striving to develop future leaders in space science and a forum for the intercultural exchange of knowledge.",
+          country: 'France',
+          fillKey: 'red',
+          significance: '',
+          date: '1953-08-12',
+          latitude: 48.5230,
+          longitude: 7.7369
+        },{
+          name: 'Bundang Astro Camp',
+          radius: 10,
+          yield: "Specializing in astronomy and natural sciences, the Astro Camp fosters creative problem-solving skills in youth and prepares them for the future of science.",
+          country: 'South Korea',
+          fillKey: 'red',
+          significance: 'so many EQ mounts',
+          date: '1955-11-22',
+          latitude: 37.3827,
+          longitude: 127.1189
+
+        },{
+          name: 'Pontificia Universidad Católica de Chile',
+          radius: 10,
+          yield: "Chilean university specializing in astrophysics with heavy research in theoretical and observational astronomy.",
+          country: 'Chile',
+          fillKey: 'red',
+          significance: 'Chilean university specializing in astrophysics with heavy research in theoretical and observational astronomy.',
+          date: '1961-10-31',
+          latitude: -33.4411,
+          longitude: -70.6408
+        },{
+          name: 'University of Canterbury',
+          radius: 10,
+          yield: "Historic university erected more than a century ago and consistently ranked among the top institutions in the world.",
+          country: 'New Zealand ',
+          fillKey: 'red',
+          significance: 'so many EQ mounts',
+          date: '1961-10-31',
+          latitude: -43.379688,
+          longitude:  172.598053
+          
+          
+        },{
+          name: 'Brisbane Girls Grammar School',
+          radius: 10,
+          yield: "Founded in 1875, this institute is a haven for the education of young women studying the arts and sciences.",
+          country: 'Australia',
+          fillKey: 'red',
+          significance: 'so many EQ mounts',
+          date: '1961-10-31',
+          latitude:  -27.458688,
+          longitude: 153.019703
+        },{
+          name: 'New Era University',
+          radius: 10,
+          yield: "A private university in the Phillippines established in 1975 with worldwide accreditation.",
+          country: 'Phillippines',
+          fillKey: 'red',
+          significance: 'so many EQ mounts',
+          date: '1961-10-31',
+          latitude: 14.6639 ,
+          longitude: 121.0580
+        },{
+          name: 'York University',
+          radius: 10,
+          yield: "One of the largest universities in Canada with nearly a dozen faculties, this institution has gained recognition on an international scale.",
+          country: 'Canada',
+          fillKey: 'red',
+          significance: 'One of the largest universities in Canada with nearly a dozen faculties, this institution has gained recognition on an international scale.',
+          date: '1961-10-31',
+          latitude:  43.7735,
+          longitude: -79.5019
+        },{
+          name: 'Altair Astro LTD',
+          radius: 10,
+          yield: "Created by astronomers, for astronomers, Altair Astro strives to bring astronomy to the masses.",
+          country: 'UK',
+          fillKey: 'red',
+          significance: 'so many EQ mounts',
+          date: '1961-10-31',
+          latitude:  52.796260,
+          longitude: 1.252325
+        },{
+          name: 'Robtics',
+          radius: 10,
+          yield: "Robtics provides astronomical equipment and services to the Netherlands and surrounding areas.",
+          country: 'Netherlands',
+          fillKey: 'red',
+          significance: 'so many EQ mounts',
+          date: '1961-10-31',
+          latitude:  6.836640,
+          longitude: 7.352868
+        },{
+          name: 'Nasrda-Centre For Basic Space Science',
+          radius: 10,
+          yield: "Founded to carry out research in astronomy and other space-related sciences for the benefit of national and international projects.",
+          country: 'Nigeria',
+          fillKey: 'red',
+          significance: 'so many EQ mounts',
+          date: '1961-10-31',
+          latitude:  6.836640,
+          longitude: 7.352868
+        },{
+          name: 'Astronomical Institute of Slovak Academy of Sciences',
+          radius: 10,
+          yield: "Founding institute in the Slovakian Academy of Sciences focusing on astrophysical and interplanetary research.",
+          country: 'Slovakia',
+          fillKey: 'red',
+          significance: 'so many EQ mounts',
+          date: '1961-10-31',
+          latitude:  49.152202, 
+          longitude: 20.288099
+        },{
+          name: 'Science City CO, LTD ',
+          radius: 10,
+          yield: "Astronomical product supplier for public and private sectors in Thailand.",
+          country: 'Thailand ',
+          fillKey: 'red',
+          significance: 'so many EQ mounts',
+          date: '1961-10-31',
+          latitude:  13.796285, 
+          longitude: 100.708382 
+        },{
+          name: 'Rigel Astronomia ',
+          radius: 10,
+          yield: "Telescope and astronomy equipment supplier based in Italy.",
+          country: 'Italy',
+          fillKey: 'red',
+          significance: 'so many EQ mounts',
+          date: '1961-10-31',
+          latitude:  41.796276, 
+          longitude: 12.451548  
+        },{
+          name: 'Galaxy Scientific Group',
+          radius: 10,
+          yield: "Hong Kong-based company promoting astronomical services and construction in the region.",
+          country: 'Hong Kong',
+          fillKey: 'red',
+          significance: 'so many EQ mounts',
+          date: '1961-10-31',
+          latitude:  22.397294, 
+          longitude: 114.196431 
+        },{
+          name: 'Konkoly Observatory',
+          radius: 10,
+          yield: "Hungarian Observatory established in 1871 which is both the largest research institute in the country and houses the largest telescopes in Hungary.",
+          country: 'Hungarian',
+          fillKey: 'red',
+          significance: 'so many EQ mounts',
+          date: '1961-10-31',
+          latitude:  47.500495,
+          longitude: 18.964254 
+        },{
+          name: 'Indian Center for Space Physics ',
+          radius: 10,
+          yield: "A non-profit research center in India. Primary research is for astronomy and astrophysics",
+          country: 'India',
+          fillKey: 'red',
+          significance: 'so many EQ mounts',
+          date: '1961-10-31',
+          latitude:   22.465857, 
+          longitude: 88.386908
+        } ,{
+          name: 'UNIVERSIDAD NACIONAL DE CORDOBA ',
+          radius: 10,
+          yield: "The oldest standing university in Argentina. Located Cordoba and offering more than a dozen educational disciplines.",
+          country: 'Argentina',
+          fillKey: 'red',
+          significance: 'so many EQ mounts',
+          date: '1961-10-31',
+          latitude:   -31.435510,  
+          longitude: -64.185835
+        },{
+          name: 'European Southern Observatory',
+          radius: 10,
+          yield: "Headquartered in Germany, this Chilean observatory is situated among the most ideal astronomical observation locations in the southern hemisphere.",
+          country: ' Chile',
+          fillKey: 'red',
+          significance: 'so many EQ mounts',
+          date: '1961-10-31',
+          latitude:   -33.126985, 
+          longitude: -70.675857 
+        },{
+          name: 'Kosmos Scientific de Mexico ',
+          radius: 10,
+          yield: "Primary distributor of astronomy and optics equipment in Mexico.",
+          country: 'Mexico',
+          fillKey: 'red',
+          significance: 'so many EQ mounts',
+          date: '1961-10-31',
+          latitude:   25.591157, 
+          longitude: -100.253967 
+        },{
+          name: 'McDonald Observatory, TX ',
+          radius: 10,
+          yield: "McDonald Observatory, a research unit of The University of Texas at Austin, is one of the world's leading centers for astronomical research, teaching, and public education and outreach. ",
+          country: 'USA',
+          fillKey: 'red',
+          significance: 'so many EQ mounts',
+          date: '1961-10-31',
+          latitude:   30.673039,
+          longitude:  -104.022058 
+        },{
+          name: 'Palomar Observatory',
+          radius: 10,
+          yield: "Observatory operated by California Institute of Technology known for the 200-inch Hale Telescope. ",
+          country: 'USA',
+          fillKey: 'red',
+          significance: 'so many EQ mounts',
+          date: '1961-10-31',
+          latitude: 33.358380, 
+          longitude: -116.866346 
+        },{
+          name: 'Griffith Observatory',
+          radius: 10,
+          yield: "This art deco landmark from 1935 features a high-tech planetarium, public telescopes & city views. ",
+          country: 'USA',
+          fillKey: 'red',
+          significance: 'so many EQ mounts',
+          date: '1961-10-31',
+          latitude: 34.118709, 
+          longitude: -118.300372 
+        },{
+          name: 'Mt. Wilson Observatory',
+          radius: 10,
+          yield: "Celebrated observatory complex featuring powerful solar & nighttime telescopes, with tours & more.",
+          country: 'USA',
+          fillKey: 'red',
+          significance: 'so many EQ mounts',
+          date: '1961-10-31',
+          latitude: 34.225553, 
+          longitude:-118.057275 
+        },{
+          name: 'Lick Observatory',
+          radius: 10,
+          yield: "Storied astronomy center on Mount Hamilton featuring powerful telescopes, exhibits & valley views.",
+          country: 'USA',
+          fillKey: 'red',
+          significance: 'so many EQ mounts',
+          date: '1961-10-31',
+          latitude: 37.341609, 
+          longitude:-121.642910
+        },{
+          name: 'Keck Observatory',
+          radius: 10,
+          yield: "Site of twin optical & infrared telescopes on top of Mauna Kea used for astronomy research.",
+          country: 'USA',
+          fillKey: 'red',
+          significance: 'so many EQ mounts',
+          date: '1961-10-31',
+          latitude: 19.826193, 
+          longitude:-155.474704 
+        },{
+          name: 'Saddleback College',
+          radius: 10,
+          yield: "",
+          country: 'USA',
+          fillKey: 'red',
+          significance: 'so many EQ mounts',
+          date: '1961-10-31',
+          latitude: 33.554211,
+          longitude: -117.664112  
+        },{
+          name: 'San Diego State University',
+          radius: 10,
+          yield: "Since its founding in 1897, the university has grown to become a leading public research university.",
+          country: 'USA',
+          fillKey: 'red',
+          significance: 'so many EQ mounts',
+          date: '1961-10-31',
+          latitude: 32.775767, 
+          longitude: -117.071771 
+        },{
+          name: 'Technological University of the Philippines',
+          radius: 10,
+          yield: "The Technological University of the Philippines was first established as the Manila Trade School in 1901",
+          country: ' Philippines',
+          fillKey: 'red',
+          significance: 'so many EQ mounts',
+          date: '1961-10-31',
+          latitude: 14.510743,
+          longitude:  121.035173  
+        },{
+          name: 'Macquarie University',
+          radius: 10,
+          yield: "Sydney's 3rd university, founded in 1964 and occupying an area of lawns and natural bushland.",
+          country: 'USA',
+          fillKey: 'red',
+          significance: 'so many EQ mounts',
+          date: '1961-10-31',
+          latitude: -33.773536, 
+          longitude:  151.112624 
+        },{
+          name: 'The University of Texas at Dallas',
+          radius: 10,
+          yield: "The William B. Hanson Center for Space Sciences at UT Dallas focuses on theoretical and empirical studies of the Earth’s atmosphere, ionosphere and magnetosphere.",
+          country: 'USA',
+          fillKey: 'red',
+          significance: 'so many EQ mounts',
+          date: '1961-10-31',
+          latitude: 32.985843, 
+          longitude: -96.749938 
+        },{
+          name: 'University of New Mexico',
+          radius: 10,
+          yield: "Big public research school known for its many museums, Pueblo Revival buildings & medical programs.",
+          country: 'USA',
+          fillKey: 'red',
+          significance: 'so many EQ mounts',
+          date: '1961-10-31',
+          latitude: 35.084406, 
+          longitude: -106.619804 
+        },{
+          name: 'University of California, San Diego',
+          radius: 10,
+          yield: "#1 ranked research school in the US",
+          country: 'USA',
+          fillKey: 'red',
+          significance: 'so many EQ mounts',
+          date: '1961-10-31',
+          latitude: 38.648764, 
+          longitude: -90.310614  
+        },{
+          name: 'Washington University in St. Louiso',
+          radius: 10,
+          yield: "Large, research-centric private school known for its medicine & engineering programs.",
+          country: 'USA',
+          fillKey: 'red',
+          significance: 'so many EQ mounts',
+          date: '1961-10-31',
+          latitude: 32.880078, 
+          longitude: -117.233949  
+        },{
+          name: 'The University of Hong Kong',
+          radius: 10,
+          yield: "University with a colonial-style main building and multidisciplinary programs across 10 faculties.",
+          country: 'Hong Kong',
+          fillKey: 'red',
+          significance: 'so many EQ mounts',
+          date: '1961-10-31',
+          latitude: 22.284461, 
+          longitude: 114.137056  
+        },{
+          name: 'The University of Toledo',
+          radius: 10,
+          yield: "public metropolitan research university with 20,500 students and picturesque campuses recognized nationally for their beauty.",
+          country: 'USA',
+          fillKey: 'red',
+          significance: 'so many EQ mounts',
+          date: '1961-10-31',
+          latitude: 41.659104,  
+          longitude: -83.614387 
+        },{
+          name: 'Georgia State University',
+          radius: 10,
+          yield: "Public research university located in the Downtown area & known for its sports & business programs.",
+          country: 'USA',
+          fillKey: 'red',
+          significance: 'so many EQ mounts',
+          date: '1961-10-31',
+          latitude: 33.753274, 
+          longitude:-84.385326 
+        },{
+          name: 'University of Waterloo',
+          radius: 10,
+          yield: "Expansive public research university known for its engineering, math, psychology & science programs.",
+          country: 'USA',
+          fillKey: 'red',
+          significance: 'so many EQ mounts',
+          date: '1961-10-31',
+          latitude: 43.465748,  
+          longitude:-80.521302
+        },{
+          name: 'Mercer University',
+          radius: 10,
+          yield: "Founded by early 19th century Baptists, Mercer — while no longer formally denominationally affiliated — remains committed to an educational environment that embraces the historic Baptist principles of intellectual and religious freedom",
+          country: 'USA',
+          fillKey: 'red',
+          significance: 'so many EQ mounts',
+          date: '1961-10-31',
+          latitude: 32.828623,  
+          longitude:-83.649424 
+        },{
+          name: 'Biola University',
+          radius: 10,
+          yield: "Biola University is a nationally ranked Christian university in the heart of Southern California. ",
+          country: 'USA',
+          fillKey: 'red',
+          significance: 'so many EQ mounts',
+          date: '1961-10-31',
+          latitude: 33.905412,  
+          longitude: -118.015190 
+        },{
+          name: 'University of Southern California',
+          radius: 10,
+          yield: "Founded in 1880, this private research school is known for journalism, cinematic arts & medicine. ",
+          country: 'USA',
+          fillKey: 'red',
+          significance: 'so many EQ mounts',
+          date: '1961-10-31',
+          latitude: 34.022156, 
+          longitude: -118.284967  
+        },{
+          name: 'University of North Texas',
+          radius: 10,
+          yield: "Expansive public research university founded in 1890 & known for its music school, among others.",
+          country: 'USA',
+          fillKey: 'red',
+          significance: 'so many EQ mounts',
+          date: '1961-10-31',
+          latitude: 33.207551, 
+          longitude: -97.152522
+        },{
+          name: 'Texas A&M University',
+          radius: 10,
+          yield: "Texas A&M opened its doors in 1876 as the state's first public institution of higher learning.",
+          country: 'USA',
+          fillKey: 'red',
+          significance: 'so many EQ mounts',
+          date: '1961-10-31',
+          latitude: 30.618448,  
+          longitude: -96.336574
+        },{
+          name: 'University of North Dakota',
+          radius: 10,
+          yield: "Known for its aerospace, engineering & education programs, this public school was founded in 1883.",
+          country: 'USA',
+          fillKey: 'red',
+          significance: 'so many EQ mounts',
+          date: '1961-10-31',
+          latitude: 47.922797, 
+          longitude: -97.076608 
+        },{
+          name: 'Utah State University',
+          radius: 10,
+          yield: "Set at the mouth of a canyon, this scenic 1888 research university is near trails & climbing routes.",
+          country: 'USA',
+          fillKey: 'red',
+          significance: 'so many EQ mounts',
+          date: '1961-10-31',
+          latitude: 41.745137,  
+          longitude: -111.809753 
+        },{
+          name: 'Eastern Kentucky University',
+          radius: 10,
+          yield: "",
+          country: 'USA',
+          fillKey: 'red',
+          significance: 'so many EQ mounts',
+          date: '1961-10-31',
+          latitude: 37.735101, 
+          longitude: -84.298736  
+        },{
+          name: 'Wayne State University',
+          radius: 10,
+          yield: "Located in Midtown Detroit, this 1868 research school is known for law, business & health sciences",
+          country: 'USA',
+          fillKey: 'red',
+          significance: 'so many EQ mounts',
+          date: '1961-10-31',
+          latitude: 42.359163,
+          longitude:  -83.066224   
+        },{
+          name: 'University of Cape Town',
+          radius: 10,
+          yield: "Founded in 1829, this university is known for its research and location in front of Table Mountain.",
+          country: 'SA',
+          fillKey: 'red',
+          significance: 'so many EQ mounts',
+          date: '1961-10-31',
+          latitude:-33.957688,
+          longitude:   18.461187
+        },{
+          name: 'Arecibo Observatory',
+          radius: 10,
+          yield: "Renowned observatory & research center boasting a 1,000-foot-wide radio telescope.",
+          country: 'USA',
+          fillKey: 'red',
+          significance: 'so many EQ mounts',
+          date: '1961-10-31',
+          latitude:18.346453, 
+          longitude: -66.752841
+        },{
+          name: 'University of Southern Queensland',
+          radius: 10,
+          yield: "We are the number 1 University in Queensland for graduate employability. A recognised leader in online and blended education, we are renowned for our supportive environment and student-focused commitment to learning and teaching.",
+          country: ' Australia',
+          fillKey: 'red',
+          significance: 'so many EQ mounts',
+          date: '1961-10-31',
+          latitude:-27.601086, 
+          longitude:  151.929232
+        },{
+          name: 'Ido, Bareket observatory',
+          radius: 10,
+          yield: "",
+          country: ' Israel',
+          fillKey: 'red',
+          significance: 'so many EQ mounts',
+          date: '1961-10-31',
+          latitude:31.888557,
+          longitude:  35.031245
+        },{
+          name: 'Siding Spring Observatory',
+          radius: 10,
+          yield: "Siding Spring Observatory (SSO), on the edge of the Warrumbungle National Park near Coonabarabran, NSW, is Australia's premier optical and infrared astronomical observatory.",
+          country: ' Australia',
+          fillKey: 'red',
+          significance: 'so many EQ mounts',
+          date: '1961-10-31',
+          latitude:-31.274854, 
+          longitude: 149.068427
+        },{
+          name: 'Siding Spring Observatory',
+          radius: 10,
+          yield: "Siding Spring Observatory (SSO), on the edge of the Warrumbungle National Park near Coonabarabran, NSW, is Australia's premier optical and infrared astronomical observatory.",
+          country: ' Australia',
+          fillKey: 'red',
+          significance: 'so many EQ mounts',
+          date: '1961-10-31',
+          latitude:-31.274854, 
+          longitude: 149.068427
+        },{
+          name: 'National Astronomical Observatory of Japan ',
+          radius: 10,
+          yield: "The heart of Japan’s research in astronomy, the National Astronomical Observatory in Japan (NAOJ) drives forward the development of space science and science as a whole.",
+          country: 'Japan',
+          fillKey: 'red',
+          significance: 'so many EQ mounts',
+          date: '1961-10-31',
+          latitude:35.675534,  
+          longitude: 139.537670
+        }
+      ];
+  //draw bubbles for bombs
+    bombMap.bubbles(bombs, {
+      popupTemplate: function (geo, data) {
+        return ['<div class="hoverinfo" style="display:none">' +  data.name,
+              '<br/>Payload: ' +  data.yield ,
+              '<br/>Country: ' +  data.country + '',
+              '<br/>Stuff: ' +  data.significance + '',
+              '</div>'].join('');
+      }
+    });
+      //handle bubble clicks
+    bombMap.svg.selectAll('.datamaps-bubble').on('click', function(){
+      $(".bubble-container").addClass('bubshow')
+      var databub = this.__data__;
+      $(".bubble-container").addClass('animate').on("animationend", function(){
+        $(this).removeClass('animate');
+      });
+
+      $("#bub1").text(databub.country);
+      $("#bub2").text(databub.name);
+      $("#bub3").text(databub.yield);
+    
+    });
+    
+    
+    window.addEventListener('resize', function() {
+          bombMap.resize();
+    });
+  }
+
+ 
+  let label = $('.collection_content').data('label');
+  if (label) {
+    waitUntilDefined();
+  }
+
+});
+
+function breadCalc(id) {
+  var ammount = $('.snize-price', '#snize-product-'+id)[0].innerHTML;
+  ammount = ammount.substring(1);
+  ammount = ammount.replace(/,/g, '');
+
+  var calc = calculate(ammount);
+
+  if (!$('.snize-as-low-as', '#snize-product-'+id).length) {
+    $(`#snize-product-${id} .snize-overhidden .snize-reviews`).after(`
+      <div class="snize-as-low-as">As low as $<span id="1316765302848">${calc}</span>/Month</div>
+    `);
+  }
+}
+
+function calculate(amount) {
+  var productPrice = amount;
+  var apr = .0999;
+  var loanTerm = 36;
+  var monthlyPayment = Math.round((productPrice * (apr / 12)) / (1 - Math.pow((1 + (apr / 12)), (-1 * loanTerm))) * 100) / 100;
+
+  return monthlyPayment;
+}
+
+function mainCode($) {
+  $(document).on('Searchanise.ResultsUpdated', function(event, results) {
+    $('.snize-product', results).each(function() {
+      setTimeout(() => {
+      if ($(this).data('snize_item_data') && $(this).data('snize_item_data').product_id) {
+        
+        breadCalc($(this).data('snize_item_data').product_id);
+        
+        AddLabel($(this).data('snize_item_data').product_id);
+        $('.snize-product').each(function () {
+          var html = $(this).find('.total-reviews').html();
+          if (html != '' & html != undefined) {
+            var num = html.replace(' review(s)','');
+            $(this).find('.total-reviews').html(num);
+            $(this).find('.total-reviews').css('display', 'flex');
+
+          }
+        })
+        
+        var html = $('.spr-badge-caption').html();
+        var interval = setInterval(() => {
+          html = $('.spr-badge-caption').html();
+          if (html != undefined ) {
+            if (html == 'No reviews') {
+              var num = `(0)`;
+            } else {
+              var num = `(${html.replace(' review','')})`;
+            }
+            
+            $('.spr-badge-caption').html(num.replace('s',''));
+            clearInterval(interval);
+          }
+        }, 500);
+      }
+    }, 500);
+    });
+  });
+}
+
+function waitUntilDefined() {
+  if (typeof Searchanise !== "undefined" && typeof Searchanise.$ !== "undefined") {
+    mainCode(Searchanise.$);
+  } else {
+    setTimeout(waitUntilDefined, 400);
+  }
+}
+
+function AddLabel(id) {
+  if ($('.snize-product-label', '#snize-product-'+id)[0]) {
+    var ammount = $('.snize-product-label', '#snize-product-'+id)[0].innerHTML;
+    ammount = ammount.substring(1);
+    ammount = ammount.replace(/,/g, '');
+  
+    var calc = calculate(ammount);
+  
+    if (!$('.snize-as-low-as', '#snize-product-'+id).length) {
+      $(`#snize-product-${id} .snize-overhidden .snize-reviews`).after(`
+        <div class="snize-as-low-as">As low as $<span id="1316765302848">${calc}</span>/Month</div>
+      `);
+    }
+  }
+  
+}      
+              
+function checkpart(){
+jQuery.getJSON('/cart.js', function(cart) {
+ // now have access to Shopify cart object
+ var flagpart = false;
+ $(cart.items).each(function(){
+  var str = this.handle;
+  if(str.match('stellarvue') && str.match('telescope')){
+flagpart = true;
+  }
+   
+ 
+ 
+ });
+if(flagpart == false){
+ jQuery.post('/cart/change.js', { quantity: 0, id:12618703765568 }); 
+
+location.reload();
+}
+
+
+} ); 
+
+}
+
+$(window).on('load', function () {
+  $('.product-info .snize-product').each(function () {
+    var html = $(this).find('.total-reviews').html();
+    if (html != '' & html != undefined) {
+      var num = html.replace(' review(s)','');
+      $(this).find('.total-reviews').html(num);
+      $(this).find('.total-reviews').show();
+    }
+  });
+
+  var html = $('.spr-badge-caption').html();
+  var interval = setInterval(() => {
+    html = $('.spr-badge-caption').html();
+    if (html != undefined ) {
+      if (html == 'No reviews') {
+        var num = `(0)`;
+      } else {
+        var num = `(${html.replace(' review','')})`;
+      }
+      
+      $('.spr-badge-caption').html(num.replace('s',''));
+      clearInterval(interval);
+    }
+  }, 500);
+  $('.swiper-container').show();
+  var myapprovedvendor = new Swiper('.swiper-container', {
+    speed: 400,
+    spaceBetween: 10,
+    initialSlide: 5,
+    //truewrapper adoptsheight of active slide
+    autoHeight: false,
+    // Optional parameters
+    direction: 'horizontal',
+    loop: true,
+    // delay between transitions in ms
+    autoplay: 5000,
+    autoplayStopOnLast: false, // loop false also
+    // If we need pagination
+    pagination: '.swiper-pagination',
+    paginationType: "bullets",
+    draggable: true,
+    // And if we need scrollbar
+    scrollbar: {
+      el: '.swiper-scrollbar',
+      draggable: true
+    },
+    // "slide", "fade", "cube", "coverflow" or "flip"
+    effect: 'slide',
+    // Distance between slides in px.
+    //
+    slidesPerView: 5,
+    //
+    //
+    slidesOffsetBefore: 0,
+    //
+    grabCursor: true,
+   
+    breakpoints: {
+      // when window width is <= 320px
+      375: {
+        slidesPerView: 1,
+        spaceBetween: 5
+      },
+      // when window width is <= 480px
+      480: {
+        slidesPerView: 2,
+        spaceBetween: 5,
+        centeredSlides: false
+      },
+      // when window width is <= 640px
+      640: {
+        slidesPerView: 3,
+        spaceBetween: 10,
+        centeredSlides: false
+      },
+      1080: {
+        slidesPerView: 4,
+        spaceBetween: 5
+      },
+      1200: {
+        slidesPerView: 5,
+        spaceBetween: 5
+      }
+    }
+  });
+
+  
+});
+
+
+jQuery(window).on('load', function(){
+  var priceholder = 0; 
+
+  $(".iwishMeta-title").each(function(e, val){
+
+    var handle = val.getAttribute("data-handle");
+    var holdr = $(val).children('span');  
+
+    jQuery.getJSON("https://optcorp.com/products/"+handle, function(product) {
+
+      var ic = product.product.variants[0].inventory_quantity;
+      priceholder += parseFloat(product.product.variants[0].price);
+
+      var ict =product.product.tags;
+      if(ic > 1){
+        holdr.text('In Stock');
+        holdr.addClass("flag2");
+      }else if(ic == 1){
+        holdr.text('One Left');
+        holdr.addClass("flag2");
+      } else if(ict.indexOf("Drop Ship") > 0 ){
+        holdr.text("Dropship");
+        holdr.addClass("flag3");
+      }else{
+        holdr.text('Backorder');
+      } 
+      $('#totalinList').text(priceholder.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+    });
+  });
+  $("#addAllbtn").click(function(){addAll();});
+  $("#rmAll").click(function(){rmAll();});
+
+});
+  
+
+
+  function addAll(){
+    $('form.iwish-product-form').each(function(el){
+    console.log(this);
+    var id = $(this).find("input[name='id']").attr('value');
+
+    $.ajax({
+
+      type:"POST",
+      url:'https://optcorp.com/cart/add.js',
+      data:{
+
+        quantity:1,
+        id:id 
+      },
+      async:false
+    })
+
+
+    }).promise().done( window.location.href = "https://optcorp.com/cart");
+
+  }
+
+  function rmAll(){
+    $(".iwishRemoveBtn").each(function(){ 
+      $(this).trigger('click')
+    });
+  };
+
+  jQuery(window).on('load', function(){
+    setTimeout(() => {
+      var img = "{{'images.svg' | asset_url }}";
+      var html = `<a class="drag_file"><img src="${img}">Click to upload one or more images</a>`;
+      $('.finance-two-template .globo-formbuilder .g-container input[type="file"]').before(html);
+      $('.finance-two-template .globo-formbuilder .message.success a').addClass('active');
+      $('.finance-two-template .globo-formbuilder .message.success a').removeAttr('target')
+      $('.drag_file').on('click', function (e) {
+        e.preventDefault();
+        $(this).parent().find('input[type="file"]').trigger('click').bind('change', function () {
+          var filename = $("#chooseFile").val();
+          
+          if (/^\s*$/.test(filename)) {
+            console.log("no file")
+          }
+          else {
+            var img = "{{'images.svg' | asset_url }}";
+            var html = `<img src="${img}">One file added!`;
+            $('.drag_file').html(html);
+            $('.drag_file').addClass('disable');
+          }
+        });;
+      })
+    }, 2500);
+    
+  })
+
+  $(document).ready(function () {
+    
+
+    var navListItems = $('div.setup-panel div a'),
+            allWells = $('.setup-content'),
+            allNextBtn = $('.nextBtn'),
+            allPrevBtn = $('.prevBtn');
+
+    allWells.hide();
+
+    navListItems.click(function (e) {
+        e.preventDefault();
+        var $target = $($(this).attr('href')),
+                $item = $(this);
+
+        if (!$item.hasClass('disabled')) {
+            navListItems.removeClass('btn-primary').addClass('btn-default');
+            $item.addClass('btn-primary');
+            allWells.hide();
+            $target.show();
+            $target.find('input:eq(0)').focus();
+        }
+    });
+
+    allNextBtn.click(function(){
+        var curStep = $(this).closest(".setup-content"),
+            curStepBtn = curStep.attr("id"),
+            nextStepWizard = $('div.setup-panel div a[href="#' + curStepBtn + '"]').parent().next().children("a");
+        nextStepWizard.removeAttr('disabled').trigger('click');
+    });
+
+    allPrevBtn.click(function(){
+        var curStep = $(this).closest(".setup-content"),
+            curStepBtn = curStep.attr("id"),
+            prevStepWizard = $('div.setup-panel div a[href="#' + curStepBtn + '"]').parent().prev().children("a");
+        prevStepWizard.removeAttr('disabled').trigger('click');
+    });
+
+    $('div.setup-panel div a.btn-primary').trigger('click');
+
+    
+    
+});
+

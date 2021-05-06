@@ -42,7 +42,6 @@
   {% endif %}
 {% endif %}
 
-<a name="pagecontent" id="pagecontent"></a>
 
 <div class="container">
   {% paginate collection.products by section.settings.pagination_limit %}
@@ -90,7 +89,7 @@
 
         <div class="eight columns breadcrumb_text medium-down--one-whole">
           <a href="{{ routes.root_url }}" title="{{ shop.name | escape }}">
-            <span>{{ 'general.breadcrumbs.home' | t }}</span>
+            <span>{% render 'icon-pack' with icon: 'home' %}</span>
           </a>
           <span class="breadcrumb-divider">/</span>
           <a href="{{ collection.url }}" title="{{ collection.title | escape }}" class="breadcrumb_link">

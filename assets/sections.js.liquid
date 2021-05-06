@@ -15,6 +15,99 @@
   Featured collection
 ==============================================================================*/
 
+var CollectionListSection = {
+  init: function(){
+    $('.js-collection-slider .products-slider').each(function (index, value) {
+      var products_per_slide = $(this).data('products-per-slide');
+      var products_limit = $(this).data('products-limit');
+      var products_available = $(this).data('products-available');
+      var cellAlign,
+          draggable,
+          prevNext,
+          wrapAround,
+          initialIndex;
+
+    // function to check if browser is IE
+    var isIE11 = !!navigator.userAgent.match(/Trident.*rv\:11\./);
+
+    // Ensure product media libraries are present
+    if (!isIE11) {
+      window.Shopify.loadFeatures([
+        {
+          name: 'model-viewer',
+          version: '0.8'
+        },
+        {
+          name: 'shopify-xr',
+          version: '1.0',
+        },
+        {
+          name: 'model-viewer-ui',
+          version: '1.0',
+        }
+      ], productMedia.setupMedia)
+    }
+
+      if (products_per_slide == "2" && products_available > products_per_slide && products_limit > products_per_slide || products_per_slide == "4" && products_available > products_per_slide && products_limit > products_per_slide || products_per_slide == "6" && products_available > products_per_slide && products_limit > products_per_slide){
+        cellAlign = "left";
+      } else {
+        cellAlign = "center";
+      }
+
+      if (products_available > products_per_slide && products_limit > products_per_slide) {
+        draggable = true;
+        prevNext = true;
+        wrapAround = true;
+      } else {
+        draggable = false;
+        prevNext = false;
+        wrapAround = false;
+      }
+
+      if (products_per_slide == "2" && products_available > products_per_slide || products_per_slide == "4" && products_available > products_per_slide || products_per_slide == "6" && products_available > products_per_slide){
+        initialIndex = 0;
+      } else if (products_per_slide == "3" && products_available) {
+        initialIndex = 1;
+      } else if (products_per_slide == "5" && products_available) {
+        initialIndex = 2;
+      } else if (products_per_slide == "7" && products_available) {
+        initialIndex = 3;
+      }
+
+      if (Shopify.media_queries.medium.matches) {
+        cellAlign = "center";
+        draggable = true;
+        prevNext = true;
+        wrapAround = true;
+        initialIndex = 1;
+
+        $(this).parents('.even-num-slides').removeClass('even-num-slides');
+      }
+      $(this).flickity({
+        "lazyLoad": 2,
+        "imagesLoaded": true,
+        "draggable": true,
+        "prevNextButtons": prevNext,
+        "wrapAround": wrapAround,
+        "cellAlign": cellAlign,
+        "pageDots": usePageDots,
+        "contain": true,
+        "freeScroll": true,
+        "arrowShape": arrowSize,
+        "initialIndex": initialIndex
+      });
+
+      $(this).addClass('slider-initialized');
+    });
+  },
+  unload: function($target){
+    var $slider = $target.find('.js-collection-slider');
+    if ($slider.hasClass('flickity-enabled')){
+      $slider.flickity('destroy');
+    }
+  }
+}
+
 var featuredCollectionSection = {
   init: function(){
     $('.js-product-slider .products-slider').each(function (index, value) {
@@ -241,7 +334,7 @@ var testimonial = {
                         imagesLoaded: true,
                         prevNextButtons: arrowShow,
                         draggable: arrowShow,
-                        pageDots: usePageDots,
+                        pageDots: true,
                         autoPlay: settings.slideshowSpeed,
                         arrowShape: arrowSize
                       });
@@ -1080,9 +1173,9 @@ var productPage = {
       adaptiveHeight: true,
       dragThreshold: 10,
       imagesLoaded: true,
-      pageDots: false,
+      pageDots: true,
       prevNextButtons: $productGallery.data('media-count') > 1 || $slides.length > 1 ? true : false,
-      autoPlay: slideshowSpeed * 1000,
+      autoPlay: false,
       fade: slideshowAnimation === 'fade' ? true : false,
       watchCSS: false,
       arrowShape: arrowSize
@@ -1285,10 +1378,12 @@ var productPage = {
     // Thumbnail gallery logic begins
     if (thumbnailsEnabled == true && thumbnailsSliderEnabled == true && $slides.length > 1) {
       // If desktop determine which slider we build
+
       if (Shopify.media_queries.large.matches) {
         // If thumbnail position is left/right then vertical slider gets enabled
         if (thumbnailsPosition == 'left' || thumbnailsPosition == 'right') {
-          $thumbnailProductGallery.css('max-height', $productGallery.closest('.product-gallery').outerHeight());
+          console.log($productGallery.outerHeight());
+          $thumbnailProductGallery.css('max-height', $productGallery.outerHeight());
           $thumbnailProductGallery.addClass('vertical-slider-enabled');
 
           $thumbnails.on('click', function(event) {
@@ -1296,6 +1391,7 @@ var productPage = {
             $productGallery.flickity('select', index);
           });
 
+  
           var navCellHeight = $thumbnails.height();
           var navHeight = $thumbnailProductGallery.height();
 
@@ -1311,6 +1407,8 @@ var productPage = {
               scrollTop: scrollY
             });
           });
+
+          
         } else {
             $thumbnailProductGallery.flickity({
               cellAlign: 'center',
@@ -1320,7 +1418,8 @@ var productPage = {
               pageDots: false,
               prevNextButtons: $thumbnails.length > 5 ? thumbnailsArrows : false,
               asNavFor: $productGallery[0],
-              arrowShape: arrowSize
+              arrowShape: arrowSize,
+              autoPlay: false
             });
 
             // Ensures Flickity is not collapsed when loaded
@@ -1352,7 +1451,8 @@ var productPage = {
           pageDots: false,
           prevNextButtons: $thumbnails.length > 5 ? thumbnailsArrows : false,
           asNavFor: $productGallery[0],
-          arrowShape: arrowSize
+          arrowShape: arrowSize,
+          autoPlay: false
         });
       }
     } else if (thumbnailsEnabled == true ) {
@@ -1486,65 +1586,65 @@ var productPage = {
     }
   },
   recommendedProductsSlider: function(){
-    $('.js-recommended-products-slider .products-slider').each(function (index, value) {
-      var products_per_slide = $(this).data('products-per-slide');
-      var products_limit = $(this).data('products-limit');
-      var products_available = $(this).data('products-available');
-      var cellAlign,
-          draggable,
-          prevNext,
-          wrapAround,
-          initialIndex;
-
-      if (products_per_slide == "2" && products_available > products_per_slide && products_limit > products_per_slide || products_per_slide == "4" && products_available > products_per_slide && products_limit > products_per_slide || products_per_slide == "6" && products_available > products_per_slide && products_limit > products_per_slide){
-        cellAlign = "left";
-      } else {
-        cellAlign = "center";
+    var myapprovedvendor = new Swiper ('.js-recommended-products-slider .swiper-container', {
+      speed: 400,
+      spaceBetween: 10,
+      initialSlide: 5,
+      //truewrapper adoptsheight of active slide
+      autoHeight: false,
+      // Optional parameters
+      direction: 'horizontal',
+      loop: true,
+      // delay between transitions in ms
+      autoplay: 5000,
+      autoplayStopOnLast: false, // loop false also
+      // If we need pagination
+      pagination: '.swiper-pagination',
+      paginationType: "bullets",
+      mousewheel: {
+        invert: false
+      },
+      // And if we need scrollbar
+      scrollbar: {
+        el: '.swiper-scrollbar',
+        draggable: true
+      },
+      // "slide", "fade", "cube", "coverflow" or "flip"
+      effect: 'slide',
+      // Distance between slides in px.
+      //
+      slidesPerView: 5,
+      //
+      //
+      slidesOffsetBefore: 0,
+      //
+      grabCursor: true,
+     
+      breakpoints: {
+        // when window width is <= 320px
+        320: {
+          slidesPerView: 1,
+          spaceBetween: 10,
+          centeredSlides: false
+        },
+        // when window width is <= 480px
+        480: {
+          slidesPerView: 2,
+          spaceBetween: 5,
+          centeredSlides: false
+        },
+        // when window width is <= 640px
+        640: {
+          slidesPerView: 3,
+          spaceBetween: 10,
+          centeredSlides: false
+        },
+        1080: {
+          slidesPerView: 6,
+          spaceBetween: 30
+        }
+      
       }
-
-      if (products_available > products_per_slide && products_limit > products_per_slide) {
-        draggable = true;
-        prevNext = true;
-        wrapAround = true;
-      } else {
-        draggable = false;
-        prevNext = false;
-        wrapAround = false;
-      }
-
-      if (products_per_slide == "2" && products_available > products_per_slide || products_per_slide == "4" && products_available > products_per_slide || products_per_slide == "6" && products_available > products_per_slide){
-        initialIndex = 0;
-      } else if (products_per_slide == "3" && products_available) {
-        initialIndex = 1;
-      } else if (products_per_slide == "5" && products_available) {
-        initialIndex = 2;
-      } else if (products_per_slide == "7" && products_available) {
-        initialIndex = 3;
-      }
-
-      if (Shopify.media_queries.medium.matches) {
-        cellAlign = "center";
-        draggable = true;
-        prevNext = true;
-        wrapAround = true;
-        initialIndex = 1;
-
-        $(this).parents('.even-num-slides').removeClass('even-num-slides');
-      }
-
-      $(this).flickity({
-        "lazyLoad": 2,
-        "imagesLoaded": true,
-        "draggable": draggable,
-        "cellAlign": cellAlign,
-        "prevNextButtons": prevNext,
-        "wrapAround": wrapAround,
-        "pageDots": usePageDots,
-        "contain": true,
-        "freeScroll": true,
-        "arrowShape": arrowSize,
-        "initialIndex": initialIndex
-      });
     });
   },
   initializeQuantityBox: function(){
@@ -1845,11 +1945,11 @@ var header = {
     }
 
     //avoid cart_content duplicating for mobile screen sizes
-    if($('#header .cart_content').length < 1) {
+    
+    if($('#header .cart_content').length < 1 & $(window).width() < 768) {
       $('#header .cart-container').append($('.header .cart_content').clone());
     }
-
-    if ( is_touch_device() && Shopify.media_queries.medium.matches || Shopify.media_queries.medium.matches ) {
+    if ($(window).width() < 1024) {
 
       $('.dropdown_link').attr('data-no-instant', true);
 
@@ -1894,10 +1994,16 @@ var header = {
 
       $('body').on("click", '.mobile_nav', function() {
         $(this).find('div').toggleClass('open');
+        if ($(this).find('.menu_title').text() == 'Menu') {
+          $(this).find('.menu_title').text('Close');
+        } else {
+          $(this).find('.menu_title').text('Menu');
+        }
+        
       });
 
       //Toggle mini-cart with menu icon
-      if(Shopify.theme_settings.cart_action != 'redirect_cart') {
+      if(Shopify.theme_settings.cart_action != 'redirect_cart' && !Shopify.theme_settings.redirect_cart) {
         $(".mini_cart").on("click", function(e) {
           var $cart_container = $(this).parent();
           if($cart_container.hasClass('active_link')) {
@@ -2027,80 +2133,13 @@ var header = {
       })
     }
   },
-  loadMegaMenu: function(){
 
-    //Remove old mega-menus so that theme-editor works properly
-    $('.sticky_nav .mega-menu').remove();
-    $('.header .mega-menu').remove();
-
-    //Clone the mega menu from section into sticky_nav
-    $('.mega-menu-container .mega-menu')
-      .clone()
-      .appendTo('.sticky_nav .main-nav');
-    //Remove theme-editor data-attributes
-    header.removeDataAttributes('.sticky_nav .mega-menu.dropdown_container .dropdown_column');
-
-    //Loop through mega-menus to add arrow to parent
-    $('.mega-menu-container .mega-menu').each(function(index){
-      var megaMenuValue = $(this).data("dropdown");
-      $('[data-dropdown-rel="' + megaMenuValue + '"]')
-        .find('span')
-        .remove();
-
-      $('[data-dropdown-rel="' + megaMenuValue + '"]')
-        .not('.icon-search')
-        .append(' <span class="icon-down-arrow"></span>')
-        .addClass('mega-menu-parent')
-        .addClass('dropdown_link')
-        .removeClass('top_link');
-
-      $('[data-dropdown="' + megaMenuValue + '"]').each(function(index){
-        if (!$(this).hasClass('mega-menu')) {
-          $(this).remove();
-        }
-      });
-
-      $(this).clone().appendTo('.header .main-nav');
-    });
-
-    //Remove default mega menus if vertical menus are selected
-    if ($('.dropdown_link--vertical').length){
-      $('.dropdown_link--vertical.mega-menu-parent + .vertical-menu_submenu').remove();
-      $('.dropdown_link--vertical:not(.mega-menu-parent)').each(function(index){
-        var megaMenuValue = $(this).data('dropdown-rel');
-        $('[data-dropdown="' + megaMenuValue + '"]').remove();
-      })
-    }
-    var $openDropdownOnClick = $('.main-nav__wrapper').find('[data-show-dropdown-on-click]');
-
-    if ($openDropdownOnClick.length) {
-      $('.mega-menu-parent').on('click', function(e) {
-
-        if(!$(this).hasClass('active_link')) {
-          $('.dropdown_container').hide();
-          $(this).parents('.main-nav').find('[data-dropdown="' + $(this).data('dropdown-rel') + '"]').toggle();
-
-          $(this).addClass('active_link');
-          $('.is-absolute').parent().removeClass('feature_image');
-        }
-      });
-    }
-
-    //Remove theme-editor data-attributes
-    header.removeDataAttributes('.header .mega-menu.dropdown_container .dropdown_column');
-
-    if (is_touch_device() || Shopify.media_queries.medium.matches) {
-      $('.dropdown_link').attr('data-no-instant', true);
-    }
-
-    header.loadMobileMegaMenu();
-  },
   loadMobileMegaMenu: function() {
 
     //Loop through mega menus and add to mobile menu
     $('.mega-menu-container .mobile-mega-menu').each(function(index){
       $('[data-mobile-dropdown-rel="' + $(this).data("mobile-dropdown") + '"]').find('span').remove();
-      $('[data-mobile-dropdown-rel="' + $(this).data("mobile-dropdown") + '"] > a').append(' <span class="right icon-down-arrow"></span>').attr('data-no-instant', 'true');
+      $('[data-mobile-dropdown-rel="' + $(this).data("mobile-dropdown") + '"] > a').append(' <span class="left icon-down-arrow"></span>').attr('data-no-instant', 'true');
       $('[data-mobile-dropdown-rel="' + $(this).data("mobile-dropdown") + '"]').addClass('mobile-mega-menu-parent sublink');
       $('[data-mobile-dropdown-rel="' + $(this).data("mobile-dropdown") + '"]').append(this);
       $('[data-mobile-dropdown-rel="' + $(this).data("mobile-dropdown") + '"] > ul').each(function(index){

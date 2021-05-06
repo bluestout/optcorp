@@ -49,7 +49,7 @@
             <i class="image-{{ block.id }}"></i>
             {% render 'image-element',
                     image: block.settings.image,
-                    alt: block.settings.image.alt
+                    alt: block.settings.title
             %}
             {% if section.settings.enable_lightbox and block.settings.image_link == nil %}
               <div class="overlay">

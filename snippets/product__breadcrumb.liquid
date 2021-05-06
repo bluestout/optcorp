@@ -1,4 +1,4 @@
-<script type="application/ld+json">
+<script type="application/json">
   {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -17,7 +17,7 @@
         "item": {
           {% if collection %}
             "@id": "{{ collection.url }}",
-            "name": "{{ collection.title }}"
+            "name": "{{ collection.title | escape }}"
           {% else %}
             "@id": "{{ routes.all_products_collection_url }}",
             "name": "{{ collections.all.title }}"
@@ -38,9 +38,9 @@
 
 <div class="breadcrumb_text">
   <a href="{{ routes.root_url }}" title="{{ shop.name | escape }}" class="breadcrumb_link">
-    <span>{{ 'general.breadcrumbs.home' | t }}</span>
+    <span>{% render 'icon-pack' with icon: 'home' %}</span>
   </a>
-  <span class="breadcrumb-divider">/</span>
+  <span class="breadcrumb-divider"></span>
   {% if collection %}
     <a href="{{ collection.url }}" title="{{ collection.title | escape }}" class="breadcrumb_link">
       <span>{{ collection.title }}</span>
@@ -50,7 +50,7 @@
       <span>{{ collections.all.title }}</span>
       </a>
   {% endif %}
-  <span class="breadcrumb-divider">/</span>
+  <span class="breadcrumb-divider"></span>
   <a href="{{ product.url }}" class="breadcrumb_link">
     <span>{{ product.title }}</span>
   </a>

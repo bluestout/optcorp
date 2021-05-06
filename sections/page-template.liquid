@@ -1,0 +1,107 @@
+{% if section.blocks.size > 0 %}
+    {% assign sidebar = true %}
+{% else %}
+    {% assign sidebar = false %}
+{% endif %}
+
+<div class="container">
+    {% if sidebar %}
+        <div class="four medium-down--one-whole column sidebar">
+            {% for block in section.blocks %}
+                {% if block.type == 'sidebar' %}
+                    <div class="sidebar-block sidebar-menu wrapper">
+                    {% if block.settings.links != blank %}
+                        <div class="select-box hide medium-down--show">
+                        {% for link in linklists[block.settings.links].links %}
+                            {% if link.url contains page.handle %}
+                                {{link.title}}
+                            {% endif %} 
+                        {% endfor %}
+                        </div>
+                        <ul class="links">
+                            {% for link in linklists[block.settings.links].links %}
+                                {% if link.url contains page.handle %}
+                                    {% assign cls = 'active' %}
+                                {% else %}
+                                    {% assign cls = '' %}
+                                {% endif %} 
+                                <li class="{{cls}}"><a href="{{link.url}}">{{link.title}}</a></li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    {% endif %}
+    <div class="{% if sidebar %}twelve medium-down--one-whole relative flex {% else %}sixteen{% endif %} column main-content">
+        
+        {% if block.settings.title != blank %}
+            {% assign title = block.settings.title %}
+        {% else %}
+            {% assign title = page.title %}
+        {% endif %}
+        {% include 'heading-banner' with 
+            image: section.settings.image,
+            mobile_image: section.settings.banner_mobile_image,
+            sub_title: section.settings.sub_title,
+            title: title,
+            wide: section.settings.wide_display,
+        %}
+        
+        <div class="twelve medium-down--one-whole column offset-by-two content">
+            {{page.content}}
+            {% if page.handle contains 'privacy' %}<p class="created_date"><span>Last Updated: {{ page.published_at | date: format: 'abbreviated_date' }}</span></p>{% endif %}
+        </div>
+        
+        
+    </div>
+</div>
+
+{% schema %}
+{
+    "name": "Page template",
+    "class": "page-section",
+    "settings": [
+        {
+            "type": "checkbox",
+            "id": "wide_display",
+            "label": "Wide display"
+        },
+        {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Image"
+        },
+        {
+            "type": "image_picker",
+            "id": "banner_mobile_image",
+            "label": "Mobile banner image"
+        },
+        {
+            "type": "text",
+            "id": "sub_title",
+            "label": "Sub title",
+            "default": "customer help"
+        },
+        {
+            "type": "text",
+            "id": "title",
+            "label": "Title"
+        }
+    ],
+    "blocks": [
+        {
+            "type": "sidebar",
+            "name": "Sidebar",
+            "settings": [
+                {
+                    "type": "link_list",
+                    "id": "links",
+                    "label": "Links"
+                }
+            ]
+        }
+    ]
+}
+{% endschema %}

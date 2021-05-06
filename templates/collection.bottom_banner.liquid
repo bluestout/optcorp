@@ -1,0 +1,21 @@
+{% comment %}
+  The contents of the collection.liquid template can be found in /sections/collection-template.liquid
+{% endcomment %}
+
+{% section 'collection-template-bottom-caption' %}
+{% section 'collection-blog-template' %}
+{% section 'collection-faq-template' %}
+
+<style>
+  @media screen and (max-width: 760px){
+    #gorgias-web-messenger-container{
+      bottom: 36px!important;
+      max-height: calc(100% - 36px)!important;
+    }
+  }
+
+  #bread-clippy-iframe{
+    z-index: 100!important;
+    bottom: 63px!important;
+  }
+</style>

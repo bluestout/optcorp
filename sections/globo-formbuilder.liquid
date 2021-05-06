@@ -1,0 +1,31 @@
+<div class="globo-formbuilder" data-id={{section.settings.form_id}} ></div>
+{% schema %}
+  {
+    "name": "Form",
+    "settings": [
+        {
+          "type": "select",
+          "id": "form_id",
+          "label": "Select form to display",
+          "default": "24706",
+          "options": [{"label":"Sales Contact form","value":"24706"},{"label":"return form","value":"24707"},{"label":"Inquiries Contact form","value":"24817"},{"label":"Professional Contact form","value":"24818"},{"label":"Price match form","value":"26097"},{"label":"buy-pack","value":"33223"},{"label":"Order Status form","value":"41770"}]
+        }
+    ],
+    "presets": [
+        {
+          "name": {
+            "en": "Form"
+          },
+          "category": {
+            "en": "Powerful Contact Form Builder"
+          }
+        }
+      ]
+  }
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

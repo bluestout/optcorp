@@ -1,0 +1,733 @@
+
+
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.css">
+    
+
+  
+  
+
+ 
+  <style type="text/css">
+    table {
+    border: 1px solid #ccc;
+    border-collapse: collapse;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    table-layout: fixed;
+    }
+    table caption {
+    font-size: 1.5em;
+    margin: .5em 0 .75em;
+    }
+    table tr {
+    background: #f8f8f8;
+    border: 1px solid #ddd;
+    padding: .35em;
+    }
+    table th,
+    table td {
+    padding: .625em;
+    text-align: center;
+    min-height:25px;
+    }
+    table th {
+    font-size: .85em;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    }
+    
+    tr:hover {
+     transform: translateY(-5px);
+     
+     box-shadow: 1px 10px 5px 0px rgba(0,0,0,0.35);
+    }
+    
+    tr {
+     transition: all 0.5s;
+    }
+    
+    @media screen and (max-width: 600px) {
+    table {
+      border: 0;
+    }
+    table caption {
+      font-size: 1.3em;
+    }
+    table thead {
+      /*border: none;
+      clip: rect(0 0 0 0);
+      height: 1px;
+      margin: -1px;
+      overflow: hidden;
+      padding: 0;
+      position: absolute;
+      width: 1px;*/
+    }
+    table tr {
+      border-bottom: 3px solid #ddd;
+      display: block;
+      margin-bottom: .625em;
+    }
+    table td ,th {
+      border-bottom: 1px solid #ddd;
+      display: block;
+      font-size: .8em;
+      text-align: right ;
+    }
+    table td:before {
+      /*
+      * aria-label has no advantage, it won't be read inside a table
+      content: attr(aria-label);
+      */
+      content: attr(data-label);
+      float: left;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+    table td:last-child {
+      border-bottom: 0;
+    }
+    }
+  </style>
+
+<input type="search" id="searchInput" isp_ignore class="light-table-filter" data-table="order-table" placeholder="Filter">
+<table id="example" class="order-table table" cellspacing="0" width="100%">
+  <thead>
+    <tr>
+        <th data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;Applicable Telescopes/Lenses&quot;}"><strong>Applicable Telescopes/Lenses</strong></th>
+        <th data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;Telescope Tube/Lens Diameter&quot;}"><strong>Telescope Tube/Lens Diameter</strong></th>
+        <th data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;Glass Filters&quot;}"><span style="color: #ff0000;"><strong>Glass Filters</strong></span></th>
+        <th data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;Film Filters&quot;}"><span style="color: #38761d;"><strong>Film Filters</strong></span></th>
+        <th data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;Polymer Filters&quot;}"><span style="color: #0000ff;"><strong>Polymer Filters</strong></span></th>
+    </tr>
+  </thead>
+  <tbody id="fbody">
+
+      <tr>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;Camera Lens with 37mm thread&quot;}">Camera Lens with 37mm thread</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;37mm (thread)&quot;}">37mm (thread)</td>
+          <td></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;TH-RG-8.5X11, AZ-1032&quot;}"><span style="color: #38761d;"><a href="https://optcorp.com/products/1000-oaks-rg-solar-filter-film-sheet-8-5-x-11-high-resolution" target="_blank" title="1000 OAKS SOLAR FILTER FILM SHEET - 8.5 X 11 - HIGH RESOLUTION RG" rel="noopener noreferrer" style="color: #38761d;">TH-RG-8.5X11</a>, <a href="https://optcorp.com/products/astrozap-solar-film-250mm-x-250mm-photographic" target="_blank" title="ASTROZAP SOLAR FILM - 250MM X 250MM- PHOTOGRAPHIC" rel="noopener noreferrer" style="color: #38761d;">AZ-1032</a></span></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;SP-ST37MM, TH-BP-8.5X11&quot;}">
+              <div>
+                  <div><span style="color: #0000ff;"><a href="https://optcorp.com/products/spectrum-threaded-camera-solar-filter-37mm" target="_blank" title="SPECTRUM FULL APERTURE SOLAR FILTER: THREADED FILM - 37MM" style="color: #0000ff;" rel="noopener noreferrer">SP-ST37MM</a></span>, <span style="color: #0000ff;"><a href="https://optcorp.com/products/1000-oaks-black-polymer-solar-filter-film" target="_blank" title="1000 OAKS SOLAR FILTER FILM SHEET - MEDIUM RESOLUTION BLACK POLYMER" style="color: #0000ff;" rel="noopener noreferrer">TH-BP-8.5X11</a></span></div>
+              </div>
+          </td>
+      </tr>
+      <tr>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;Camera Lens with 40.5mm thread&quot;}">Camera Lens with 40.5mm thread</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;40.5mm (thread)&quot;}">
+              <div>
+                  <div>40.5mm (thread)</div>
+              </div>
+          </td>
+          <td></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;TH-RG-8.5X11, AZ-1032&quot;}"><a href="https://optcorp.com/products/1000-oaks-rg-solar-filter-film-sheet-8-5-x-11-high-resolution" target="_blank" title="1000 OAKS SOLAR FILTER FILM SHEET - 8.5 X 11 - HIGH RESOLUTION RG" rel="noopener noreferrer" style="color: #38761d;">TH-RG-8.5X11</a><span>, </span><a href="https://optcorp.com/products/astrozap-solar-film-250mm-x-250mm-photographic" target="_blank" title="ASTROZAP SOLAR FILM - 250MM X 250MM- PHOTOGRAPHIC" rel="noopener noreferrer" style="color: #38761d;">AZ-1032</a>
+              <br /><span style="color: #38761d;"></span></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;SP-ST40.5MM, TH-BP-8.5X11&quot;}">
+              <div>
+                  <div><span style="color: #0000ff;"><a href="https://optcorp.com/products/spectrum-threaded-camera-solar-filter-40-5mm" target="_blank" title="SPECTRUM FULL APERTURE SOLAR FILTER: THREADED FILM - 40.5MM" style="color: #0000ff;" rel="noopener noreferrer">SP-ST40.5MM</a></span>, <a href="https://optcorp.com/products/1000-oaks-black-polymer-solar-filter-film" target="_blank" title="1000 OAKS SOLAR FILTER FILM SHEET - MEDIUM RESOLUTION BLACK POLYMER" style="color: #0000ff;" rel="noopener noreferrer">TH-BP-8.5X11</a></div>
+              </div>
+          </td>
+      </tr>
+      <tr>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;Camera Lens with 43mm thread&quot;}">Camera Lens with 43mm thread</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;43mm (thread)&quot;}">43mm (thread)</td>
+          <td></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;TH-RG-8.5X11, AZ-1032&quot;}"><a href="https://optcorp.com/products/1000-oaks-rg-solar-filter-film-sheet-8-5-x-11-high-resolution" target="_blank" title="1000 OAKS SOLAR FILTER FILM SHEET - 8.5 X 11 - HIGH RESOLUTION RG" rel="noopener noreferrer" style="color: #38761d;">TH-RG-8.5X11</a><span>, </span><a href="https://optcorp.com/products/astrozap-solar-film-250mm-x-250mm-photographic" target="_blank" title="ASTROZAP SOLAR FILM - 250MM X 250MM- PHOTOGRAPHIC" rel="noopener noreferrer" style="color: #38761d;">AZ-1032</a>
+              <br /><span></span></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;SP-ST43MM, TH-BP-8.5X11&quot;}">
+              <div>
+                  <div><span style="color: #0000ff;"><a href="https://optcorp.com/products/spectrum-threaded-camera-solar-filter-43mm" target="_blank" title="SPECTRUM FULL APERTURE SOLAR FILTER: THREADED FILM - 43MM" style="color: #0000ff;" rel="noopener noreferrer">SP-ST43MM</a></span>, <a href="https://optcorp.com/products/1000-oaks-black-polymer-solar-filter-film" target="_blank" title="1000 OAKS SOLAR FILTER FILM SHEET - MEDIUM RESOLUTION BLACK POLYMER" style="color: #0000ff;" rel="noopener noreferrer">TH-BP-8.5X11</a></div>
+              </div>
+          </td>
+      </tr>
+      <tr>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;Camera lens, finder, monocular, binocular (need 2 filters) with &lt;1.75\&quot; Outer Diameter (OD)&quot;}">Camera lens, finder, monocular, binocular (need 2 filters) with &lt;1.75" Outer Diameter (OD)</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;44mm\\1.75\&quot;&quot;}">44mm\1.75"</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;SP-ST200G, AZ-1501&quot;}"><span style="color: #ff0000;"><a href="https://optcorp.com/products/spectrum-2-full-ap-glass-solar-1-5-8-41mm-1-7-8-48mm" target="_blank" title="SPECTRUM 2&quot; FULL APERTURE GLASS SOLAR FILTER- 41MM TO 48MM" style="color: #ff0000;" rel="noopener noreferrer">SP-ST200G</a></span>, <span style="color: #ff0000;"><a href="https://optcorp.com/products/astrozap-41-48mm-od-full-aperture-glass-solar-filter" target="_blank" title="ASTROZAP 41-48MM OD FULL APERTURE GLASS SOLAR FILTER" style="color: #ff0000;" rel="noopener noreferrer">AZ-1501</a></span></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;TH-RG-8.5X11, AZ-1032&quot;}"><a href="https://optcorp.com/products/1000-oaks-rg-solar-filter-film-sheet-8-5-x-11-high-resolution" target="_blank" title="1000 OAKS SOLAR FILTER FILM SHEET - 8.5 X 11 - HIGH RESOLUTION RG" rel="noopener noreferrer" style="color: #38761d;">TH-RG-8.5X11</a><span>, </span><a href="https://optcorp.com/products/astrozap-solar-film-250mm-x-250mm-photographic" target="_blank" title="ASTROZAP SOLAR FILM - 250MM X 250MM- PHOTOGRAPHIC" rel="noopener noreferrer" style="color: #38761d;">AZ-1032</a></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;TH-BP-8.5X11&quot;}"><span style="color: #0000ff;"><a class="in-cell-link" href="https://optcorp.com/products/1000-oaks-black-polymer-solar-filter-film" target="_blank" rel="noopener noreferrer" style="color: #0000ff;">TH-BP-8.5X11</a></span></td>
+      </tr>
+      <tr>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;Camera Lens with 46mm thread&quot;}">Camera Lens with 46mm thread</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;46mm (thread)&quot;}">46mm (thread)</td>
+          <td></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;TH-RG-8.5X11, AZ-1032&quot;}"><a href="https://optcorp.com/products/1000-oaks-rg-solar-filter-film-sheet-8-5-x-11-high-resolution" target="_blank" title="1000 OAKS SOLAR FILTER FILM SHEET - 8.5 X 11 - HIGH RESOLUTION RG" rel="noopener noreferrer" style="color: #38761d;">TH-RG-8.5X11</a><span>, </span><a href="https://optcorp.com/products/astrozap-solar-film-250mm-x-250mm-photographic" target="_blank" title="ASTROZAP SOLAR FILM - 250MM X 250MM- PHOTOGRAPHIC" rel="noopener noreferrer" style="color: #38761d;">AZ-1032</a></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;SP-ST46MM&quot;}"><span style="color: #0000ff;"><a class="in-cell-link" href="https://optcorp.com/products/spectrum-threaded-camera-solar-filter-46mm" target="_blank" rel="noopener noreferrer" style="color: #0000ff;">SP-ST46MM</a></span></td>
+      </tr>
+      <tr>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;Camera Lens with 49mm thread&quot;}">Camera Lens with 49mm thread</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;49mm (thread)&quot;}">49mm (thread)</td>
+          <td></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;TH-RG-8.5X11, AZ-1032&quot;}"><a href="https://optcorp.com/products/1000-oaks-rg-solar-filter-film-sheet-8-5-x-11-high-resolution" target="_blank" title="1000 OAKS SOLAR FILTER FILM SHEET - 8.5 X 11 - HIGH RESOLUTION RG" rel="noopener noreferrer" style="color: #38761d;">TH-RG-8.5X11</a><span>, </span><a href="https://optcorp.com/products/astrozap-solar-film-250mm-x-250mm-photographic" target="_blank" title="ASTROZAP SOLAR FILM - 250MM X 250MM- PHOTOGRAPHIC" rel="noopener noreferrer" style="color: #38761d;">AZ-1032</a></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;SP-ST49MM&quot;}"><span style="color: #0000ff;"><a class="in-cell-link" href="https://optcorp.com/products/spectrum-threaded-camera-solar-filter-49mm" target="_blank" rel="noopener noreferrer" style="color: #0000ff;">SP-ST49MM</a></span></td>
+      </tr>
+      <tr>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;Camera lens, finder, monocular, binocular (need 2 filters) with &lt;2\&quot; Outer Diameter (OD)&quot;}">Camera lens, finder, monocular, binocular (need 2 filters) with &lt;2" Outer Diameter (OD)</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;50mm\\2.00\&quot;&quot;}">50mm\2.00"</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;SP-ST225G, AZ-1502&quot;}"><span style="color: #ff0000;"><a href="https://optcorp.com/products/spectrum-2-25-full-ap-glass-solar-1-7-8-48mm-2-1-8-54mm" target="_blank" title="SPECTRUM 2.25&quot; FULL APERTURE GLASS SOLAR FILTER- 48MM TO 54MM" style="color: #ff0000;" rel="noopener noreferrer">SP-ST225G</a></span>, <span style="color: #ff0000;"><a href="https://optcorp.com/products/astrozap-41-48mm-od-full-aperture-glass-solar-filter-1" target="_blank" title="ASTROZAP 48-54MM OD FULL APERTURE GLASS SOLAR FILTER" style="color: #ff0000;" rel="noopener noreferrer">AZ-1502</a></span></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;TH-RG-8.5X11, AZ-1032&quot;}"><a href="https://optcorp.com/products/1000-oaks-rg-solar-filter-film-sheet-8-5-x-11-high-resolution" target="_blank" title="1000 OAKS SOLAR FILTER FILM SHEET - 8.5 X 11 - HIGH RESOLUTION RG" rel="noopener noreferrer" style="color: #38761d;">TH-RG-8.5X11</a><span>, </span><a href="https://optcorp.com/products/astrozap-solar-film-250mm-x-250mm-photographic" target="_blank" title="ASTROZAP SOLAR FILM - 250MM X 250MM- PHOTOGRAPHIC" rel="noopener noreferrer" style="color: #38761d;">AZ-1032</a></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;TH-S-2000&quot;}"><span style="color: #0000ff;"><a class="in-cell-link" href="https://optcorp.com/products/th-solarlite-solar-filter-40mm-1-50-ca-50mm-2-00-id" target="_blank" rel="noopener noreferrer" style="color: #0000ff;">TH-S-2000</a></span></td>
+      </tr>
+      <tr>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;Camera Lens with 52mm thread&quot;}">Camera Lens with 52mm thread</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;52mm (thread)&quot;}">52mm (thread)</td>
+          <td></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;TH-RG-8.5X11, AZ-1032&quot;}"><a href="https://optcorp.com/products/1000-oaks-rg-solar-filter-film-sheet-8-5-x-11-high-resolution" target="_blank" title="1000 OAKS SOLAR FILTER FILM SHEET - 8.5 X 11 - HIGH RESOLUTION RG" rel="noopener noreferrer" style="color: #38761d;">TH-RG-8.5X11</a><span>, </span><a href="https://optcorp.com/products/astrozap-solar-film-250mm-x-250mm-photographic" target="_blank" title="ASTROZAP SOLAR FILM - 250MM X 250MM- PHOTOGRAPHIC" rel="noopener noreferrer" style="color: #38761d;">AZ-1032</a></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;SP-ST52MM&quot;}"><span style="color: #0000ff;"><a class="in-cell-link" href="https://optcorp.com/products/spectrum-threaded-camera-solar-filter-52mm" target="_blank" rel="noopener noreferrer" style="color: #0000ff;">SP-ST52MM</a></span></td>
+      </tr>
+      <tr>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;Camera lens, finder, monocular, binocular (need 2 filters) with &lt;2.25\&quot; Outer Diameter (OD)&quot;}">Camera lens, finder, monocular, binocular (need 2 filters) with &lt;2.25" Outer Diameter (OD)</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;54mm\\2.25\&quot;&quot;}">54mm\2.25"</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;SP-ST232G, AZ-1503&quot;}"><span style="color: #ff0000;"><a href="https://optcorp.com/products/spectrum-2-50-full-ap-glass-solar-2-51mm-2-1-4-57mm" target="_blank" title="SPECTRUM 2.5&quot; FULL APERTURE GLASS SOLAR FILTER- 51MM TO 57MM" style="color: #ff0000;" rel="noopener noreferrer">SP-ST232G</a></span>, <span style="color: #ff0000;"><a href="https://optcorp.com/products/astrozap-41-48mm-od-full-aperture-glass-solar-filter-2" target="_blank" title="ASTROZAP 51-57MM OD FULL APERTURE GLASS SOLAR FILTER" style="color: #ff0000;" rel="noopener noreferrer">AZ-1503</a></span></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;TH-RG-8.5X11, AZ-1032&quot;}"><a href="https://optcorp.com/products/1000-oaks-rg-solar-filter-film-sheet-8-5-x-11-high-resolution" target="_blank" title="1000 OAKS SOLAR FILTER FILM SHEET - 8.5 X 11 - HIGH RESOLUTION RG" rel="noopener noreferrer" style="color: #38761d;">TH-RG-8.5X11</a><span>, </span><a href="https://optcorp.com/products/astrozap-solar-film-250mm-x-250mm-photographic" target="_blank" title="ASTROZAP SOLAR FILM - 250MM X 250MM- PHOTOGRAPHIC" rel="noopener noreferrer" style="color: #38761d;">AZ-1032</a></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;TH-S-2325&quot;}"><span style="color: #0000ff;"><a class="in-cell-link" href="https://optcorp.com/products/th-solarlite-solar-filter-45mm-1-75-ca-60mm-2-32-id" target="_blank" rel="noopener noreferrer" style="color: #0000ff;">TH-S-2325</a></span></td>
+      </tr>
+      <tr>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;Camera Lens with 55mm thread&quot;}">Camera Lens with 55mm thread</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;55mm (thread)&quot;}">55mm (thread)</td>
+          <td></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;TH-RG-8.5X11, AZ-1032&quot;}"><a href="https://optcorp.com/products/1000-oaks-rg-solar-filter-film-sheet-8-5-x-11-high-resolution" target="_blank" title="1000 OAKS SOLAR FILTER FILM SHEET - 8.5 X 11 - HIGH RESOLUTION RG" rel="noopener noreferrer" style="color: #38761d;">TH-RG-8.5X11</a><span>, </span><a href="https://optcorp.com/products/astrozap-solar-film-250mm-x-250mm-photographic" target="_blank" title="ASTROZAP SOLAR FILM - 250MM X 250MM- PHOTOGRAPHIC" rel="noopener noreferrer" style="color: #38761d;">AZ-1032</a></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;SP-ST55MM&quot;}"><span style="color: #0000ff;"><a class="in-cell-link" href="https://optcorp.com/products/spectrum-threaded-camera-solar-filter-55mm" target="_blank" rel="noopener noreferrer" style="color: #0000ff;">SP-ST55MM</a></span></td>
+      </tr>
+      <tr>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;Camera Lens with 58mm thread&quot;}">Camera Lens with 58mm thread</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;58mm (thread)&quot;}">58mm (thread)</td>
+          <td></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;TH-RG-8.5X11, AZ-1032&quot;}"><a href="https://optcorp.com/products/1000-oaks-rg-solar-filter-film-sheet-8-5-x-11-high-resolution" target="_blank" title="1000 OAKS SOLAR FILTER FILM SHEET - 8.5 X 11 - HIGH RESOLUTION RG" rel="noopener noreferrer" style="color: #38761d;">TH-RG-8.5X11</a><span>, </span><a href="https://optcorp.com/products/astrozap-solar-film-250mm-x-250mm-photographic" target="_blank" title="ASTROZAP SOLAR FILM - 250MM X 250MM- PHOTOGRAPHIC" rel="noopener noreferrer" style="color: #38761d;">AZ-1032</a></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;SP-ST58MM&quot;}"><span style="color: #0000ff;"><a class="in-cell-link" href="https://optcorp.com/products/spectrum-threaded-camera-solar-filter-58mm" target="_blank" rel="noopener noreferrer" style="color: #0000ff;">SP-ST58MM</a></span></td>
+      </tr>
+      <tr>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;Camera lens, finder, monocular, binocular (need 2 filters) with &lt;2.4\&quot; Outer Diameter (OD)&quot;}">Camera lens, finder, monocular, binocular (need 2 filters) with &lt;2.4" Outer Diameter (OD)</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;60mm\\2.37\&quot;&quot;}">60mm\2.37"</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;AZ-1504&quot;}"><span style="color: #ff0000;"><a class="in-cell-link" href="https://optcorp.com/products/astrozap-41-48mm-od-full-aperture-glass-solar-filter-3" target="_blank" rel="noopener noreferrer" style="color: #ff0000;">AZ-1504</a></span></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;TH-RG-8.5X11, AZ-1032&quot;}">
+              <div>
+                  <div><a href="https://optcorp.com/products/1000-oaks-rg-solar-filter-film-sheet-8-5-x-11-high-resolution" target="_blank" title="1000 OAKS SOLAR FILTER FILM SHEET - 8.5 X 11 - HIGH RESOLUTION RG" rel="noopener noreferrer" style="color: #38761d;">TH-RG-8.5X11</a><span>, </span><a href="https://optcorp.com/products/astrozap-solar-film-250mm-x-250mm-photographic" target="_blank" title="ASTROZAP SOLAR FILM - 250MM X 250MM- PHOTOGRAPHIC" rel="noopener noreferrer" style="color: #38761d;">AZ-1032</a></div>
+              </div>
+          </td>
+          <td></td>
+      </tr>
+      <tr>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;Camera Lens with 62mm thread&quot;}">Camera Lens with 62mm thread</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;62mm (thread)&quot;}">62mm (thread)</td>
+          <td></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;TH-RG-8.5X11, AZ-1032&quot;}"><a href="https://optcorp.com/products/1000-oaks-rg-solar-filter-film-sheet-8-5-x-11-high-resolution" target="_blank" title="1000 OAKS SOLAR FILTER FILM SHEET - 8.5 X 11 - HIGH RESOLUTION RG" rel="noopener noreferrer" style="color: #38761d;">TH-RG-8.5X11</a><span>, </span><a href="https://optcorp.com/products/astrozap-solar-film-250mm-x-250mm-photographic" target="_blank" title="ASTROZAP SOLAR FILM - 250MM X 250MM- PHOTOGRAPHIC" rel="noopener noreferrer" style="color: #38761d;">AZ-1032</a></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;SP-ST62MM&quot;}"><span style="color: #0000ff;"><a class="in-cell-link" href="https://optcorp.com/products/spectrum-threaded-camera-solar-filter-62mm" target="_blank" rel="noopener noreferrer" style="color: #0000ff;">SP-ST62MM</a></span></td>
+      </tr>
+      <tr>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;Celestron 9x50 Finder or William optics 7x50 finder&quot;}">Celestron 9x50 Finder or William optics 7x50 finder</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;65mm\\2.55\&quot;&quot;}">65mm\2.55"</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;AZ-1504&quot;}"><a class="in-cell-link" href="https://optcorp.com/products/astrozap-41-48mm-od-full-aperture-glass-solar-filter-3" target="_blank" rel="noopener noreferrer" style="color: #ff0000;">AZ-1504</a></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;TH-RG-8.5X11, AZ-1032&quot;}">
+              <div>
+                  <div><a href="https://optcorp.com/products/1000-oaks-rg-solar-filter-film-sheet-8-5-x-11-high-resolution" target="_blank" title="1000 OAKS SOLAR FILTER FILM SHEET - 8.5 X 11 - HIGH RESOLUTION RG" rel="noopener noreferrer" style="color: #38761d;">TH-RG-8.5X11</a><span>, </span><a href="https://optcorp.com/products/astrozap-solar-film-250mm-x-250mm-photographic" target="_blank" title="ASTROZAP SOLAR FILM - 250MM X 250MM- PHOTOGRAPHIC" rel="noopener noreferrer" style="color: #38761d;">AZ-1032</a></div>
+              </div>
+          </td>
+          <td></td>
+      </tr>
+      <tr>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;Camera Lens with 67mm thread&quot;}">Camera Lens with 67mm thread</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;67mm (thread)&quot;}">67mm (thread)</td>
+          <td></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;TH-RG-8.5X11, AZ-1032&quot;}"><a href="https://optcorp.com/products/1000-oaks-rg-solar-filter-film-sheet-8-5-x-11-high-resolution" target="_blank" title="1000 OAKS SOLAR FILTER FILM SHEET - 8.5 X 11 - HIGH RESOLUTION RG" rel="noopener noreferrer" style="color: #38761d;">TH-RG-8.5X11</a><span>, </span><a href="https://optcorp.com/products/astrozap-solar-film-250mm-x-250mm-photographic" target="_blank" title="ASTROZAP SOLAR FILM - 250MM X 250MM- PHOTOGRAPHIC" rel="noopener noreferrer" style="color: #38761d;">AZ-1032</a></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;SP-ST67MM&quot;}"><span style="color: #0000ff;"><a class="in-cell-link" href="https://optcorp.com/products/spectrum-threaded-camera-solar-filter-67mm" target="_blank" rel="noopener noreferrer" style="color: #0000ff;">SP-ST67MM</a></span></td>
+      </tr>
+      <tr>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;Meade NG-60 or MGC-60, small refractors, finder scopes, camera lenses, and binoculars with less than 70mm OD&quot;}">Meade NG-60 or MGC-60, small refractors, finder scopes, camera lenses, and binoculars with less than 70mm OD</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;70mm\\2.75\&quot;&quot;}">70mm\2.75"</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;SP-ST275G, AZ-1505&quot;}"><span style="color: #ff0000;"><a href="https://optcorp.com/products/spectrum-2-75-full-ap-glass-solar-2-3-8-60mm-2-5-8-67mm" target="_blank" title="SPECTRUM 2.75&quot; FULL APERTURE GLASS SOLAR FILTER- 60MM TO 67MM" style="color: #ff0000;" rel="noopener noreferrer">SP-ST275G</a></span>, <span style="color: #ff0000;"><a href="https://optcorp.com/products/astrozap-41-48mm-od-full-aperture-glass-solar-filter-4" target="_blank" title="ASTROZAP 67-73MM OD FULL APERTURE GLASS SOLAR FILTER" style="color: #ff0000;" rel="noopener noreferrer">AZ-1505</a></span></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;TH-RG-8.5X11, AZ-1032&quot;}"><a href="https://optcorp.com/products/1000-oaks-rg-solar-filter-film-sheet-8-5-x-11-high-resolution" target="_blank" title="1000 OAKS SOLAR FILTER FILM SHEET - 8.5 X 11 - HIGH RESOLUTION RG" rel="noopener noreferrer" style="color: #38761d;">TH-RG-8.5X11</a><span>, </span><a href="https://optcorp.com/products/astrozap-solar-film-250mm-x-250mm-photographic" target="_blank" title="ASTROZAP SOLAR FILM - 250MM X 250MM- PHOTOGRAPHIC" rel="noopener noreferrer" style="color: #38761d;">AZ-1032</a></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;SP-ST300BP1, TH-S-2750&quot;}">
+              <div>
+                  <div><span style="color: #0000ff;"><a href="https://optcorp.com/products/spectrum-2-37-full-aperture-solar-film-filter-67mm-to-73mm" target="_blank" title="SPECTRUM 2.37&quot; FULL APERTURE SOLAR FILM FILTER- 67MM TO 73MM" style="color: #0000ff;" rel="noopener noreferrer">SP-ST300BP1</a></span>, <span style="color: #0000ff;"><a href="https://optcorp.com/products/th-solarlite-solar-filter-50mm-2-00-ca-70mm-2-75-id" target="_blank" title="TH SOLARLITE SOLAR FILM FILTER - 2&quot; / 2.75&quot;" style="color: #0000ff;" rel="noopener noreferrer">TH-S-2750</a></span></div>
+              </div>
+          </td>
+      </tr>
+      <tr>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;Camera Lens with 72mm thread&quot;}">Camera Lens with 72mm thread</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;72mm (thread)&quot;}">72mm (thread)</td>
+          <td></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;TH-RG-8.5X11, AZ-1032&quot;}"><a href="https://optcorp.com/products/1000-oaks-rg-solar-filter-film-sheet-8-5-x-11-high-resolution" target="_blank" title="1000 OAKS SOLAR FILTER FILM SHEET - 8.5 X 11 - HIGH RESOLUTION RG" rel="noopener noreferrer" style="color: #38761d;">TH-RG-8.5X11</a><span>, </span><a href="https://optcorp.com/products/astrozap-solar-film-250mm-x-250mm-photographic" target="_blank" title="ASTROZAP SOLAR FILM - 250MM X 250MM- PHOTOGRAPHIC" rel="noopener noreferrer" style="color: #38761d;">AZ-1032</a></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;SP-ST72MM&quot;}"><span style="color: #0000ff;"><a class="in-cell-link" href="https://optcorp.com/products/spectrum-threaded-camera-solar-filter-72mm" target="_blank" rel="noopener noreferrer" style="color: #0000ff;">SP-ST72MM</a></span></td>
+      </tr>
+      <tr>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;Telescopes with max outer diameter of 73mm&quot;}">Telescopes with max outer diameter of 73mm</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;73mm\\2.87\&quot;&quot;}">73mm\2.87"</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;SP-ST300G&quot;}"><span style="color: #ff0000;"><a class="in-cell-link" href="https://optcorp.com/products/spectrum-3-full-ap-glass-solar-2-5-8-67mm-2-7-8-73mm" target="_blank" rel="noopener noreferrer" style="color: #ff0000;">SP-ST300G</a></span></td>
+          <td></td>
+          <td></td>
+      </tr>
+      <tr>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;Celestron 60, Meade DS-2070AT,DS-60 EC, Orion 70 is suitable, Vixen A70LF&quot;}">Celestron 60, Meade DS-2070AT,DS-60 EC, Orion 70 is suitable, Vixen A70LF</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;76mm\\3.00\&quot;&quot;}">76mm\3.00"</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;SP-ST325G, AZ-1506&quot;}"><span style="color: #ff0000;"><a href="https://optcorp.com/products/spectrum-3-25-full-ap-glass-solar-2-7-8-73mm-3-1-8-79mm" target="_blank" title="SPECTRUM 3.25&quot; FULL APERTURE GLASS SOLAR FILTER- 73MM TO 79MM" style="color: #ff0000;" rel="noopener noreferrer">SP-ST325G</a></span>, <span style="color: #ff0000;"><a href="https://optcorp.com/products/astrozap-41-48mm-od-full-aperture-glass-solar-filter-5" target="_blank" title="ASTROZAP 73-79MM OD FULL APERTURE GLASS SOLAR FILTER" style="color: #ff0000;" rel="noopener noreferrer">AZ-1506</a></span></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;TH-RG-8.5X11, AZ-1032&quot;}"><a href="https://optcorp.com/products/1000-oaks-rg-solar-filter-film-sheet-8-5-x-11-high-resolution" target="_blank" title="1000 OAKS SOLAR FILTER FILM SHEET - 8.5 X 11 - HIGH RESOLUTION RG" rel="noopener noreferrer" style="color: #38761d;">TH-RG-8.5X11</a><span>, </span><a href="https://optcorp.com/products/astrozap-solar-film-250mm-x-250mm-photographic" target="_blank" title="ASTROZAP SOLAR FILM - 250MM X 250MM- PHOTOGRAPHIC" rel="noopener noreferrer" style="color: #38761d;">AZ-1032</a></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;TH-S-3000&quot;}"><span style="color: #0000ff;"><a class="in-cell-link" href="https://optcorp.com/products/th-solarlite-solar-filter-60mm-2-37-ca-76mm-3-00-id" target="_blank" rel="noopener noreferrer" style="color: #0000ff;">TH-S-3000</a></span></td>
+      </tr>
+      <tr>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;Camera Lens with 77mm thread&quot;}">Camera Lens with 77mm thread</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;77mm (thread)&quot;}">77mm (thread)</td>
+          <td></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;TH-RG-8.5X11, AZ-1032&quot;}"><a href="https://optcorp.com/products/1000-oaks-rg-solar-filter-film-sheet-8-5-x-11-high-resolution" target="_blank" title="1000 OAKS SOLAR FILTER FILM SHEET - 8.5 X 11 - HIGH RESOLUTION RG" rel="noopener noreferrer" style="color: #38761d;">TH-RG-8.5X11</a><span>, </span><a href="https://optcorp.com/products/astrozap-solar-film-250mm-x-250mm-photographic" target="_blank" title="ASTROZAP SOLAR FILM - 250MM X 250MM- PHOTOGRAPHIC" rel="noopener noreferrer" style="color: #38761d;">AZ-1032</a></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;SP-ST77MM&quot;}"><span style="color: #0000ff;"><a class="in-cell-link" href="https://optcorp.com/products/spectrum-threaded-camera-solar-filter-77mm" target="_blank" rel="noopener noreferrer" style="color: #0000ff;">SP-ST77MM</a></span></td>
+      </tr>
+      <tr>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;Camera Lens with 82mm thread&quot;}">Camera Lens with 82mm thread</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;82mm (thread)&quot;}">82mm (thread)</td>
+          <td></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;TH-RG-8.5X11, AZ-1032&quot;}"><a href="https://optcorp.com/products/1000-oaks-rg-solar-filter-film-sheet-8-5-x-11-high-resolution" target="_blank" title="1000 OAKS SOLAR FILTER FILM SHEET - 8.5 X 11 - HIGH RESOLUTION RG" rel="noopener noreferrer" style="color: #38761d;">TH-RG-8.5X11</a><span>, </span><a href="https://optcorp.com/products/astrozap-solar-film-250mm-x-250mm-photographic" target="_blank" title="ASTROZAP SOLAR FILM - 250MM X 250MM- PHOTOGRAPHIC" rel="noopener noreferrer" style="color: #38761d;">AZ-1032</a></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;SP-ST82MM&quot;}"><span style="color: #0000ff;"><a class="in-cell-link" href="https://optcorp.com/products/spectrum-threaded-camera-solar-filter-82mm" target="_blank" rel="noopener noreferrer" style="color: #0000ff;">SP-ST82MM</a></span></td>
+      </tr>
+      <tr>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;Takahashi FS-60C, some 70mm refractors less than 84mm OD&quot;}">Takahashi FS-60C, some 70mm refractors less than 84mm OD</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;84mm\\3.25&quot;}">84mm\3.25</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;SP-ST350G, AZ-1507&quot;}"><span style="color: #ff0000;"><a href="https://optcorp.com/products/spectrum-3-50-full-ap-glass-solar-3-1-8-79mm-3-3-8-86mm" target="_blank" title="SPECTRUM 3.50&quot; FULL APERTURE GLASS SOLAR FILTER- 79MM TO 86MM" style="color: #ff0000;" rel="noopener noreferrer">SP-ST350G</a></span>, <span style="color: #ff0000;"><a href="https://optcorp.com/products/astrozap-41-48mm-od-full-aperture-glass-solar-filter-6" target="_blank" title="ASTROZAP 79-86MM OD FULL APERTURE GLASS SOLAR FILTER" style="color: #ff0000;" rel="noopener noreferrer">AZ-1507</a></span></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;TH-RG-8.5X11, AZ-1032&quot;}"><a href="https://optcorp.com/products/1000-oaks-rg-solar-filter-film-sheet-8-5-x-11-high-resolution" target="_blank" title="1000 OAKS SOLAR FILTER FILM SHEET - 8.5 X 11 - HIGH RESOLUTION RG" rel="noopener noreferrer" style="color: #38761d;">TH-RG-8.5X11</a><span>, </span><a href="https://optcorp.com/products/astrozap-solar-film-250mm-x-250mm-photographic" target="_blank" title="ASTROZAP SOLAR FILM - 250MM X 250MM- PHOTOGRAPHIC" rel="noopener noreferrer" style="color: #38761d;">AZ-1032</a></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;TH-S-3250&quot;}"><span style="color: #0000ff;"><a class="in-cell-link" href="https://optcorp.com/products/th-solarlite-solar-filter-60mm-2-37-ca-82mm-3-25-id" target="_blank" rel="noopener noreferrer" style="color: #0000ff;">TH-S-3250</a></span></td>
+      </tr>
+      <tr>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;Celestron's 60 AZ and EQ, 80 EQ, Meade's ETX-60AT ETX-70AT, NG-60, Orion Observer 60 AZ and EQ, Tele-Vue 76 and Pronto, Vixen's A80MF, A80SSWT, and ED81SWT&quot;}">Celestron's 60 AZ and EQ, 80 EQ, Meade's ETX-60AT ETX-70AT, NG-60, Orion Observer 60 AZ and EQ, Tele-Vue 76 and Pronto, Vixen's A80MF, A80SSWT, and ED81SWT</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;90mm\\3.50\&quot;&quot;}">90mm\3.50"</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;SP-ST375G, AZ-1508&quot;}"><span style="color: #ff0000;"><a href="https://optcorp.com/products/spectrum-3-75-full-ap-glass-solar-3-3-8-86mm-3-5-8-92mm" target="_blank" title="SPECTRUM 3.75&quot; FULL APERTURE GLASS SOLAR FILTER- 86MM TO 92MM" style="color: #ff0000;" rel="noopener noreferrer">SP-ST375G</a></span>, <span style="color: #ff0000;"><a href="https://optcorp.com/products/astrozap-41-48mm-od-full-aperture-glass-solar-filter-7" target="_blank" title="ASTROZAP 86-92MM OD FULL APERTURE GLASS SOLAR FILTER" style="color: #ff0000;" rel="noopener noreferrer">AZ-1508</a></span></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;AZ-1000, AZ-1015, TH-RG-8.5X11, AZ-1032&quot;}"><span style="color: #38761d;"><a href="https://optcorp.com/products/astrozap-baader-solar-filter-meade-etx90" target="_blank" title="ASTROZAP BAADER FILM SOLAR FILTER FOR MEADE ETX-90 &amp; CELESTRON C80" style="color: #38761d;" rel="noopener noreferrer">AZ-1000</a></span>, <span style="color: #38761d;"><a href="https://optcorp.com/products/astrozap-baader-solar-filter-etx80-telescopes-1015" target="_blank" title="ASTROZAP BAADER FILM SOLAR FILTER FOR ETX 80 TELESCOPE" style="color: #38761d;" rel="noopener noreferrer">AZ-1015</a></span>, <span style="color: #38761d;"><a href="https://optcorp.com/products/1000-oaks-rg-solar-filter-film-sheet-8-5-x-11-high-resolution" target="_blank" title="1000 OAKS SOLAR FILTER FILM SHEET - 8.5 X 11 - HIGH RESOLUTION RG" rel="noopener noreferrer" style="color: #38761d;">TH-RG-8.5X11</a>, <a href="https://optcorp.com/products/astrozap-solar-film-250mm-x-250mm-photographic" target="_blank" title="ASTROZAP SOLAR FILM - 250MM X 250MM- PHOTOGRAPHIC" rel="noopener noreferrer" style="color: #38761d;">AZ-1032</a></span></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;TH-S-3500&quot;}"><span style="color: #0000ff;"><a class="in-cell-link" href="https://optcorp.com/products/th-solarlite-solar-filter-80mm-3-15-ca-90mm-3-50-id" target="_blank" rel="noopener noreferrer" style="color: #0000ff;">TH-S-3500</a></span></td>
+      </tr>
+      <tr>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;Older models of Celestron 80, Meade ETX-80 AT-TC, DS2080. Orion Shortube 80, Observer 70, Astroview 80/90, and Explorer 80/90. Takahashi SKY 90, Vixen ED80SF and ED100SF&quot;}">Older models of Celestron 80, Meade ETX-80 AT-TC, DS2080. Orion Shortube 80, Observer 70, Astroview 80/90, and Explorer 80/90. Takahashi SKY 90, Vixen ED80SF and ED100SF</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;95mm\\3.75\&quot;&quot;}">95mm\3.75"</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;SP-ST400G, AZ-1509&quot;}"><span style="color: #ff0000;"><a href="https://optcorp.com/products/spectrum-4-full-ap-glass-solar-3-5-8-92mm-3-7-8-98mm" target="_blank" title="SPECTRUM 4&quot; FULL APERTURE GLASS SOLAR FILTER- 92MM TO 98MM" style="color: #ff0000;" rel="noopener noreferrer">SP-ST400G</a></span>, <span style="color: #ff0000;"><a href="https://optcorp.com/products/astrozap-41-48mm-od-full-aperture-glass-solar-filter-8" target="_blank" title="ASTROZAP 92-98MM OD FULL APERTURE GLASS SOLAR FILTER" style="color: #ff0000;" rel="noopener noreferrer">AZ-1509</a></span></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;AZ-1000, AZ-1032&quot;}"><span style="color: #38761d;"><a href="https://optcorp.com/products/astrozap-baader-solar-filter-meade-etx90" target="_blank" title="ASTROZAP BAADER FILM SOLAR FILTER FOR MEADE ETX-90 &amp; CELESTRON C80" style="color: #38761d;" rel="noopener noreferrer">AZ-1000</a></span>, <span style="color: #38761d;"><a href="https://optcorp.com/products/astrozap-solar-film-250mm-x-250mm-photographic" target="_blank" title="ASTROZAP SOLAR FILM - 250MM X 250MM- PHOTOGRAPHIC" style="color: #38761d;" rel="noopener noreferrer">AZ-1032</a></span></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;TH-S-3750&quot;}"><span style="color: #0000ff;"><a class="in-cell-link" href="https://optcorp.com/products/th-solarlite-solar-filter-80mm-3-15-ca-95mm-3-75-id" target="_blank" rel="noopener noreferrer" style="color: #0000ff;">TH-S-3750</a></span></td>
+      </tr>
+      <tr>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;Meade ETX 90m, Celestron Nexstars 60, 80, 80GT, Celestron Firstscope 90EQ, Orion Starmax/ Apex 90&quot;}">Meade ETX 90m, Celestron Nexstars 60, 80, 80GT, Celestron Firstscope 90EQ, Orion Starmax/ Apex 90</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;101mm\\4.00\&quot;&quot;}">101mm\4.00"</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;AZ-1510&quot;}"><span style="color: #ff0000;"><a class="in-cell-link" href="https://optcorp.com/products/astrozap-41-48mm-od-full-aperture-glass-solar-filter-9" target="_blank" rel="noopener noreferrer" style="color: #ff0000;">AZ-1510</a></span></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;TH-4000, BA-ASTF-80, AZ-1032&quot;}"><span style="color: #38761d;"><a href="https://optcorp.com/products/th-solarlite-solar-filter-80mm-3-15-ca-101mm-4-00-id" target="_blank" title="TH SOLARLITE SOLAR FILM FILTER - 3.15&quot; / 4.00&quot;" style="color: #38761d;" rel="noopener noreferrer">TH-4000</a>, <a href="https://optcorp.com/products/baader-80mm-astrosolar-filter-for-100-140mm-telescopes" target="_blank" title="BAADER 80MM ASTROSOLAR ASTF FILTER FOR 100-140MM O.D. TELESCOPES" style="color: #38761d;" rel="noopener noreferrer">BA-ASTF-80</a>, <a href="https://optcorp.com/products/astrozap-solar-film-250mm-x-250mm-photographic" target="_blank" title="ASTROZAP SOLAR FILM - 250MM X 250MM- PHOTOGRAPHIC" style="color: #38761d;" rel="noopener noreferrer">AZ-1032</a></span></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;TH-S-4000&quot;}"><span style="color: #0000ff;"><a class="in-cell-link" href="https://optcorp.com/products/th-solarlite-solar-filter-80mm-3-15-ca-101mm-4-00-id" target="_blank" rel="noopener noreferrer" style="color: #0000ff;">TH-S-4000</a></span></td>
+      </tr>
+      <tr>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;Telescopes with max outer diameter of 105mm&quot;}">Telescopes with max outer diameter of 105mm</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;105mm\\4.13\&quot;&quot;}">105mm\4.13"</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;SP-ST425G&quot;}"><span style="color: #ff0000;"><a class="in-cell-link" href="https://optcorp.com/products/spectrum-4-25-full-ap-glass-solar-3-7-8-98mm-4-1-8-105mm" target="_blank" rel="noopener noreferrer" style="color: #ff0000;">SP-ST425G</a></span></td>
+          <td></td>
+          <td></td>
+      </tr>
+      <tr>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;Orion, Sky-Watcher, Vixen 80 or 100mm ED&quot;}">Orion, Sky-Watcher, Vixen 80 or 100mm ED</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;108mm\\4.25\&quot;&quot;}">108mm\4.25"</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;AZ-1511&quot;}"><span style="color: #ff0000;"><a class="in-cell-link" href="https://optcorp.com/products/astrozap-41-48mm-od-full-aperture-glass-solar-filter-10" target="_blank" rel="noopener noreferrer" style="color: #ff0000;">AZ-1511</a></span></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;AZ-1003, BA-ASTF-80&quot;}"><span style="color: #38761d;"><a href="https://optcorp.com/products/astrozap-solar-filter-for-orion-80-100-ed-104mm-114mm-telescopes" target="_blank" title="ASTROZAP BAADER FILM SOLAR FILTER FOR ORION 80 &amp; 100 ED REFRACTORS" style="color: #38761d;" rel="noopener noreferrer">AZ-1003</a>, <a href="https://optcorp.com/products/baader-80mm-astrosolar-filter-for-100-140mm-telescopes" target="_blank" title="BAADER 80MM ASTROSOLAR ASTF FILTER FOR 100-140MM O.D. TELESCOPES" style="color: #38761d;" rel="noopener noreferrer">BA-ASTF-80</a></span></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;TH-S-4250&quot;}"><span style="color: #0000ff;"><a class="in-cell-link" href="https://optcorp.com/products/th-solarlite-solar-filter-90mm-3-50-ca-108mm-4-25-id" target="_blank" rel="noopener noreferrer" style="color: #0000ff;">TH-S-4250</a></span></td>
+      </tr>
+      <tr>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;Telescopes with max outer diameter of 111mm&quot;}">Telescopes with max outer diameter of 111mm</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;111mm\\4.37\&quot;&quot;}">111mm\4.37"</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;SP-ST450G&quot;}"><span style="color: #ff0000;"><a class="in-cell-link" href="https://optcorp.com/products/spectrum-4-50-full-ap-glass-solar-105mm-111mm" target="_blank" rel="noopener noreferrer" style="color: #ff0000;">SP-ST450G</a></span></td>
+          <td></td>
+          <td></td>
+      </tr>
+      <tr>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;Orion, Sky-Watcher, Vixen 80 or 100mm ED, Canon 100-400mm L IS I Lens shield&quot;}">Orion, Sky-Watcher, Vixen 80 or 100mm ED, Canon 100-400mm L IS I Lens shield</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;114mm\\4.50\&quot;&quot;}">114mm\4.50"</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;AZ-1512&quot;}"><span style="color: #ff0000;"><a class="in-cell-link" href="https://optcorp.com/products/astrozap-41-48mm-od-full-aperture-glass-solar-filter-11" target="_blank" rel="noopener noreferrer" style="color: #ff0000;">AZ-1512</a></span></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;AZ-1003, AZ-1001, BA-ASTF-80&quot;}"><a href="https://optcorp.com/products/astrozap-solar-filter-for-orion-80-100-ed-104mm-114mm-telescopes" target="_blank" title="ASTROZAP BAADER FILM SOLAR FILTER FOR ORION 80 &amp; 100 ED REFRACTORS" style="color: #38761d;" rel="noopener noreferrer">AZ-1003</a>, <span style="color: #38761d;"><a href="https://optcorp.com/products/astrozap-baader-solar-filter-meade-etx105-telescopes" target="_blank" title="ASTROZAP BAADER FILM SOLAR FILTER FOR ETX-105 OR ASTROMASTER 90" style="color: #38761d;" rel="noopener noreferrer">AZ-1001</a></span>, <a href="https://optcorp.com/products/baader-80mm-astrosolar-filter-for-100-140mm-telescopes" target="_blank" title="BAADER 80MM ASTROSOLAR ASTF FILTER FOR 100-140MM O.D. TELESCOPES" style="color: #38761d;" rel="noopener noreferrer">BA-ASTF-80</a></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;TH-S-4500&quot;}"><span style="color: #0000ff;"><a class="in-cell-link" href="https://optcorp.com/products/th-solarlite-solar-filter-101mm-4-00-ca-114mm-4-50-id" target="_blank" rel="noopener noreferrer" style="color: #0000ff;">TH-S-4500</a></span></td>
+      </tr>
+      <tr>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;Telescopes with max outer diameter of 117mm&quot;}">Telescopes with max outer diameter of 117mm</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;117mm\\4.6\&quot;&quot;}">117mm\4.6"</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;SP-ST475G&quot;}"><span style="color: #ff0000;"><a class="in-cell-link" href="https://optcorp.com/products/spectrum-4-75-full-ap-glass-solar-111mm-117mm" target="_blank" rel="noopener noreferrer" style="color: #ff0000;">SP-ST475G</a></span></td>
+          <td></td>
+          <td></td>
+      </tr>
+      <tr>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;Meade ETX105 and Celestron Astromaster 90&quot;}">Meade ETX105 and Celestron Astromaster 90</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;120mm\\4.75\&quot;&quot;}">120mm\4.75"</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;AZ-1513, TH-4750&quot;}"><span style="color: #ff0000;"><a href="https://optcorp.com/products/astrozap-41-48mm-od-full-aperture-glass-solar-filter-12" target="_blank" title="ASTROZAP 117-124MM OD FULL APERTURE GLASS SOLAR FILTER" style="color: #ff0000;" rel="noopener noreferrer">AZ-1513</a></span>, <span style="color: #ff0000;"><a href="https://optcorp.com/products/th-solarlite-solar-filter-101mm-4-00-ca-120mm-4-75-id" target="_blank" title="TH SOLARLITE SOLAR FILM FILTER - 4.00&quot; / 4.75&quot;" style="color: #ff0000;" rel="noopener noreferrer">TH-4750</a></span></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;AZ-1001, BA-ASTF-80&quot;}"><a href="https://optcorp.com/products/astrozap-baader-solar-filter-meade-etx105-telescopes" target="_blank" title="ASTROZAP BAADER FILM SOLAR FILTER FOR ETX-105 OR ASTROMASTER 90" style="color: #38761d;" rel="noopener noreferrer">AZ-1001</a>, <a href="https://optcorp.com/products/baader-80mm-astrosolar-filter-for-100-140mm-telescopes" target="_blank" title="BAADER 80MM ASTROSOLAR ASTF FILTER FOR 100-140MM O.D. TELESCOPES" style="color: #38761d;" rel="noopener noreferrer">BA-ASTF-80</a></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;TH-S-4750&quot;}"><span style="color: #0000ff;"><a class="in-cell-link" href="https://optcorp.com/products/th-solarlite-solar-filter-101mm-4-00-ca-120mm-4-75-id" target="_blank" rel="noopener noreferrer" style="color: #0000ff;">TH-S-4750</a></span></td>
+      </tr>
+      <tr>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;Celestron Firstscope 76, Nexstar 4/4SE, C4, 102HD, Meade's ETX 105, DSX 102, 2045 . Stellarvue SV102ED, Skywatcher 80ED and Evostar 80ED, Questar 4.75, Takahashi FSQ-106, Tele-Vue's NP101 and 102, Vixen VMC 110L&quot;}">Celestron Firstscope 76, Nexstar 4/4SE, C4, 102HD, Meade's ETX 105, DSX 102, 2045 . Stellarvue SV102ED, Skywatcher 80ED and Evostar 80ED, Questar 4.75, Takahashi FSQ-106, Tele-Vue's NP101 and 102, Vixen VMC 110L</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;124mm\\4.87\&quot;&quot;}">124mm\4.87"</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;SP-ST500G, AZ-1514&quot;}"><span style="color: #ff0000;"><a href="https://optcorp.com/products/spectrum-5-full-ap-glass-solar-4-5-8-117mm-4-7-8-124mm" target="_blank" title="SPECTRUM 5&quot; FULL APERTURE GLASS SOLAR FILTER- 117MM TO 124MM" style="color: #ff0000;" rel="noopener noreferrer">SP-ST500G</a></span>, <span style="color: #ff0000;"><a href="https://optcorp.com/products/astrozap-41-48mm-od-full-aperture-glass-solar-filter-13" target="_blank" title="ASTROZAP 124-130MM OD FULL APERTURE GLASS SOLAR FILTER" style="color: #ff0000;" rel="noopener noreferrer">AZ-1514</a></span></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;BA-ASTF-100&quot;}"><span style="color: #38761d;"><a class="in-cell-link" href="https://optcorp.com/products/baader-100mm-astrosolar-astf-filter-for-120-160mm-o-d-telescopes" target="_blank" rel="noopener noreferrer" style="color: #38761d;">BA-ASTF-100</a></span></td>
+          <td></td>
+      </tr>
+      <tr>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;Celestron older models of C102 HD, Meade 5000 ED APO 80mm, Meade 2045, ETX 105, TV-101-102, or Meade DSX 102&quot;}">Celestron older models of C102 HD, Meade 5000 ED APO 80mm, Meade 2045, ETX 105, TV-101-102, or Meade DSX 102</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;127mm\\5.00\&quot;&quot;}">127mm\5.00"</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;SP-ST525G, AZ-1514&quot;}"><span style="color: #ff0000;"><a href="https://optcorp.com/products/spectrum-5-25-full-ap-glass-solar-4-7-8-124mm-5-1-8-130mm" target="_blank" title="SPECTRUM 5.25&quot; FULL APERTURE GLASS SOLAR FILTER- 124MM TO 130MM" style="color: #ff0000;" rel="noopener noreferrer">SP-ST525G</a></span>, <span style="color: #ff0000;"><a href="https://optcorp.com/products/astrozap-41-48mm-od-full-aperture-glass-solar-filter-13" target="_blank" title="ASTROZAP 124-130MM OD FULL APERTURE GLASS SOLAR FILTER" style="color: #ff0000;" rel="noopener noreferrer">AZ-1514</a></span></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;BA-ASTF-100&quot;}"><span style="color: #38761d;"><a class="in-cell-link" href="https://optcorp.com/products/baader-100mm-astrosolar-astf-filter-for-120-160mm-o-d-telescopes" target="_blank" rel="noopener noreferrer" style="color: #38761d;">BA-ASTF-100</a></span></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;TH-S-5000&quot;}"><span style="color: #0000ff;"><a class="in-cell-link" href="https://optcorp.com/products/th-solarlite-solar-filter-101mm-4-00-ca-127mm-5-00-id" target="_blank" rel="noopener noreferrer" style="color: #0000ff;">TH-S-5000</a></span></td>
+      </tr>
+      <tr>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;C-102 HD&quot;}">C-102 HD</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;133mm\\5.25\&quot;&quot;}">133mm\5.25"</td>
+          <td></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;BA-ASTF-100&quot;}"><span style="color: #38761d;"><a class="in-cell-link" href="https://optcorp.com/products/baader-100mm-astrosolar-astf-filter-for-120-160mm-o-d-telescopes" target="_blank" rel="noopener noreferrer" style="color: #38761d;">BA-ASTF-100</a></span></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;TH-S-5250&quot;}"><span style="color: #0000ff;"><a class="in-cell-link" href="https://optcorp.com/products/th-solarlite-solar-filter-101mm-4-00-ca-133mm-5-25-id" target="_blank" rel="noopener noreferrer" style="color: #0000ff;">TH-S-5250</a></span></td>
+      </tr>
+      <tr>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;Celestron CG4.5, C5/5i, Firstscope 114, Nexstar 5/5SE, Nexstar 114, 130GT. Meade's ETX 125, 114 EQ, DS-2114 ATS, Orion's ShortTube 4.5, Skyquest XT4.5, 127 Mak, Takahashi TSA-102&quot;}">Celestron CG4.5, C5/5i, Firstscope 114, Nexstar 5/5SE, Nexstar 114, 130GT. Meade's ETX 125, 114 EQ, DS-2114 ATS, Orion's ShortTube 4.5, Skyquest XT4.5, 127 Mak, Takahashi TSA-102</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;139mm\\5.50\&quot;&quot;}">139mm\5.50"</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;SP-ST575G, AZ-1515&quot;}"><span style="color: #ff0000;"><a href="https://optcorp.com/products/spectrum-5-75-full-ap-glass-solar-5-3-8-137mm-5-5-8-149mm" target="_blank" title="SPECTRUM 5.75&quot; FULL APERTURE GLASS SOLAR FILTER- 137MM TO 149MM" style="color: #ff0000;" rel="noopener noreferrer">SP-ST575G</a></span>, <span style="color: #ff0000;"><a href="https://optcorp.com/products/astrozap-137-143mm-od-full-aperture-glass-solar-filter" target="_blank" title="ASTROZAP 137-143MM OD FULL APERTURE GLASS SOLAR FILTER" style="color: #ff0000;" rel="noopener noreferrer">AZ-1515</a></span></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;AZ-1002, BA-ASTF-100&quot;}"><span style="color: #38761d;"><a href="https://optcorp.com/products/astrozap-solar-filter-meade-etx125" target="_blank" title="ASTROZAP BAADER FILM SOLAR FILTER FOR MEADE ETX-125" style="color: #38761d;" rel="noopener noreferrer">AZ-1002</a></span>, <a class="in-cell-link" href="https://optcorp.com/products/baader-100mm-astrosolar-astf-filter-for-120-160mm-o-d-telescopes" target="_blank" rel="noopener noreferrer" style="color: #38761d;">BA-ASTF-100</a></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;TH-5500&quot;}"><span style="color: #0000ff;"><a class="in-cell-link" href="https://optcorp.com/products/1000-oaks-type-2-glass-solar-filter-5-5inch-cell-id" target="_blank" rel="noopener noreferrer" style="color: #0000ff;">TH-5500</a></span></td>
+      </tr>
+      <tr>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;Celestron CG4.5, C5/5i, Firstscope 114, Nexstar 5/5SE, Nexstar 114, 130GT. Meade's ETX 125, 114 EQ, DS-2114 ATS, Orion's ShortTube 4.5, Skyquest XT4.5, 127 Mak, Takahashi TSA-102,, Canon 300mm f/2.8 L IS lens shield&quot;}">Celestron CG4.5, C5/5i, Firstscope 114, Nexstar 5/5SE, Nexstar 114, 130GT. Meade's ETX 125, 114 EQ, DS-2114 ATS, Orion's ShortTube 4.5, Skyquest XT4.5, 127 Mak, Takahashi TSA-102,, Canon 300mm f/2.8 L IS lens shield</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;146mm\\5.75\&quot;&quot;}">146mm\5.75"</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;SP-ST600G, AZ-1516&quot;}"><span style="color: #ff0000;"><a href="https://optcorp.com/products/spectrum-6-full-ap-glass-solar-5-5-8-143mm-5-7-8-149mm" target="_blank" title="SPECTRUM 6&quot; FULL APERTURE GLASS SOLAR FILTER- 143MM TO 149MM" style="color: #ff0000;" rel="noopener noreferrer">SP-ST600G</a></span>, <span style="color: #ff0000;"><a href="https://optcorp.com/products/astrozap-143-149mm-od-full-aperture-glass-solar-filter" target="_blank" title="ASTROZAP 143-149MM OD FULL APERTURE GLASS SOLAR FILTER" style="color: #ff0000;" rel="noopener noreferrer">AZ-1516</a></span></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;AZ-1002, TH-RG-5750, BA-ASTF-100, BA-ASTF-120&quot;}"><a href="https://optcorp.com/products/astrozap-solar-filter-meade-etx125" target="_blank" title="ASTROZAP BAADER FILM SOLAR FILTER FOR MEADE ETX-125" style="color: #38761d;" rel="noopener noreferrer">AZ-1002</a>, <span style="color: #38761d;"><a href="https://optcorp.com/products/1000-oaks-r-g-film-solar-filter-146mm-id" target="_blank" title="1000 OAKS R-G FILM SOLAR FILTER - 146MM ID, FULL APERTURE" style="color: #38761d;" rel="noopener noreferrer">TH-RG-5750</a></span>, <a class="in-cell-link" href="https://optcorp.com/products/baader-100mm-astrosolar-astf-filter-for-120-160mm-o-d-telescopes" target="_blank" rel="noopener noreferrer" style="color: #38761d;">BA-ASTF-100</a>, <span style="color: #38761d;"><a href="https://optcorp.com/products/baader-120mm-astrosolar-astf-filter-for-140-180mm-o-d-telescopes" target="_blank" title="BAADER 120MM ASTROSOLAR ASTF FILTER FOR 140-180MM O.D. TELESCOPES" style="color: #38761d;" rel="noopener noreferrer">BA-ASTF-120</a></span></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;TH-S-5750&quot;}"><span style="color: #0000ff;"><a class="in-cell-link" href="https://optcorp.com/products/th-solarlite-solar-filter-127mm-5-00-ca-146mm-5-75-id" target="_blank" rel="noopener noreferrer" style="color: #0000ff;">TH-S-5750</a></span></td>
+      </tr>
+      <tr>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;Meade 130mm 5000 ED APO, Tele-Vue 127NP, Vixen 114.&quot;}">Meade 130mm 5000 ED APO, Tele-Vue 127NP, Vixen 114.</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;152mm\\6.00\&quot;&quot;}">152mm\6.00"</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;SP-ST625G&quot;}"><span style="color: #ff0000;"><a class="in-cell-link" href="https://optcorp.com/products/spectrum-6-25-full-ap-glass-solar-5-7-8-149mm-6-1-8-156mm" target="_blank" rel="noopener noreferrer" style="color: #ff0000;">SP-ST625G</a></span></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;TH-RG-6000, BA-ASTF-100, BA-ASTF-120&quot;}"><span style="color: #38761d;"><a href="https://optcorp.com/products/1000-oaks-r-g-film-solar-filter-152mm-id" target="_blank" title="1000 OAKS R-G FILM SOLAR FILTER - 152MM ID, FULL APERTURE" style="color: #38761d;" rel="noopener noreferrer">TH-RG-6000</a></span>, <a class="in-cell-link" href="https://optcorp.com/products/baader-100mm-astrosolar-astf-filter-for-120-160mm-o-d-telescopes" target="_blank" rel="noopener noreferrer" style="color: #38761d;">BA-ASTF-100</a>, <a href="https://optcorp.com/products/baader-120mm-astrosolar-astf-filter-for-140-180mm-o-d-telescopes" target="_blank" title="BAADER 120MM ASTROSOLAR ASTF FILTER FOR 140-180MM O.D. TELESCOPES" style="color: #38761d;" rel="noopener noreferrer">BA-ASTF-120</a></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;TH-S-6000&quot;}"><span style="color: #0000ff;"><a class="in-cell-link" href="https://optcorp.com/products/th-solarlite-solar-filter-127mm-5-00-ca-152mm-6-00-id" target="_blank" rel="noopener noreferrer" style="color: #0000ff;">TH-S-6000</a></span></td>
+      </tr>
+      <tr>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;Meade 127NT, LXD55/LXD75 AR-5, Orion SpaceProbe 130ST, Starseeker 130, and 130EDF5, Astrophysics 125 and 130&quot;}">Meade 127NT, LXD55/LXD75 AR-5, Orion SpaceProbe 130ST, Starseeker 130, and 130EDF5, Astrophysics 125 and 130</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;158mm\\6.25\&quot;&quot;}">158mm\6.25"</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;SP-ST650G, AZ-1518&quot;}"><span style="color: #ff0000;"><a href="https://optcorp.com/products/spectrum-6-50-full-ap-glass-solar-6-1-8-156mm-6-3-8-162mm" target="_blank" title="SPECTRUM 6.50&quot; FULL APERTURE GLASS SOLAR FILTER- 156MM TO 162MM" style="color: #ff0000;" rel="noopener noreferrer">SP-ST650G</a></span>, <span style="color: #ff0000;"><a href="https://optcorp.com/products/astrozap-156-162mm-od-full-aperture-glass-solar-filter" target="_blank" title="ASTROZAP 156-162MM OD FULL APERTURE GLASS SOLAR FILTER" style="color: #ff0000;" rel="noopener noreferrer">AZ-1518</a></span></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;AZ-1013, TH-RG-6250, BA-ASTF-120, BA-ASTF-140&quot;}"><span style="color: #38761d;"><a href="https://optcorp.com/products/astrozap-baader-solar-filter-130-telescopes" target="_blank" title="ASTROZAP BAADER FILM SOLAR FILTER FOR 130MM TELESCOPES" style="color: #38761d;" rel="noopener noreferrer">AZ-1013</a></span>, <span style="color: #38761d;"><a href="https://optcorp.com/products/1000-oaks-r-g-film-solar-filter-158mm-id" target="_blank" title="1000 OAKS R-G FILM SOLAR FILTER - 158MM ID, FULL APERTURE" style="color: #38761d;" rel="noopener noreferrer">TH-RG-6250</a></span>, <a href="https://optcorp.com/products/baader-120mm-astrosolar-astf-filter-for-140-180mm-o-d-telescopes" target="_blank" title="BAADER 120MM ASTROSOLAR ASTF FILTER FOR 140-180MM O.D. TELESCOPES" style="color: #38761d;" rel="noopener noreferrer">BA-ASTF-120</a>, <span style="color: #38761d;"><a href="https://optcorp.com/products/baader-140mm-astrosolar-astf-filter-for-160-200mm-o-d-telescopes" target="_blank" title="BAADER 140MM ASTROSOLAR ASTF FILTER FOR 160-200MM O.D. TELESCOPES" style="color: #38761d;" rel="noopener noreferrer">BA-ASTF-140</a></span></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;TH-S-6250&quot;}"><span style="color: #0000ff;"><a class="in-cell-link" href="https://optcorp.com/products/th-solarlite-solar-filter-127mm-5-00-ca-158mm-6-25-id" target="_blank" rel="noopener noreferrer" style="color: #0000ff;">TH-S-6250</a></span></td>
+      </tr>
+      <tr>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;130mm Newtonian telescopes&quot;}">130mm Newtonian telescopes</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;165mm\\6.50\&quot;&quot;}">165mm\6.50"</td>
+          <td></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;AZ-1013, BA-ASTF-120, BA-ASTF-140&quot;}"><a href="https://optcorp.com/products/astrozap-baader-solar-filter-130-telescopes" target="_blank" title="ASTROZAP BAADER FILM SOLAR FILTER FOR 130MM TELESCOPES" style="color: #38761d;" rel="noopener noreferrer">AZ-1013</a>, <a href="https://optcorp.com/products/baader-120mm-astrosolar-astf-filter-for-140-180mm-o-d-telescopes" target="_blank" title="BAADER 120MM ASTROSOLAR ASTF FILTER FOR 140-180MM O.D. TELESCOPES" style="color: #38761d;" rel="noopener noreferrer">BA-ASTF-120</a>, <a href="https://optcorp.com/products/baader-140mm-astrosolar-astf-filter-for-160-200mm-o-d-telescopes" target="_blank" title="BAADER 140MM ASTROSOLAR ASTF FILTER FOR 160-200MM O.D. TELESCOPES" style="color: #38761d;" rel="noopener noreferrer">BA-ASTF-140</a></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;TH-S-6500&quot;}"><span style="color: #0000ff;"><a class="in-cell-link" href="https://optcorp.com/products/th-solarlite-solar-filter-127mm-5-00-ca-165mm-6-50-id" target="_blank" rel="noopener noreferrer" style="color: #0000ff;">TH-S-6500</a></span></td>
+      </tr>
+      <tr>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;CelestronC-150 CR/C-150 HD, Meade 6\&quot; Apo 152 ED, DS-2130 ATS, LXD55 SN-6, Orion's SpaceProbe 130, SkyWatcher 6\&quot;, Stellarvue SV5 and SV125, Takahashi FS-128, TOA-130, and TOA-150, Intes Mk67&quot;}">CelestronC-150 CR/C-150 HD, Meade 6" Apo 152 ED, DS-2130 ATS, LXD55 SN-6, Orion's SpaceProbe 130, SkyWatcher 6", Stellarvue SV5 and SV125, Takahashi FS-128, TOA-130, and TOA-150, Intes Mk67</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;178mm\\7.00\&quot;&quot;}">178mm\7.00"</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;SP-ST712G, AZ-1519&quot;}"><span style="color: #ff0000;"><a href="https://optcorp.com/products/spectrum-7-12-full-ap-glass-solar-6-3-4-171mm-7-178mm" target="_blank" title="SPECTRUM 7.12&quot; FULL APERTURE GLASS SOLAR FILTER- 171MM TO 178MM" style="color: #ff0000;" rel="noopener noreferrer">SP-ST712G</a></span>, <span style="color: #ff0000;"><a href="https://optcorp.com/products/astrozap-171-178mm-od-full-aperture-glass-solar-filter" target="_blank" title="ASTROZAP 171-178MM OD FULL APERTURE GLASS SOLAR FILTER" style="color: #ff0000;" rel="noopener noreferrer">AZ-1519</a></span></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;AZ-1016, BA-ASTF-120, BA-ASTF-140&quot;}">
+              <div>
+                  <div><span style="color: #38761d;"><a href="https://optcorp.com/products/astrozap-baader-solar-filter-6inch-sct-1016" target="_blank" title="ASTROZAP BAADER FILM SOLAR FILTER - 174-185MM ID" style="color: #38761d;" rel="noopener noreferrer">AZ-1016</a></span>, <a href="https://optcorp.com/products/baader-120mm-astrosolar-astf-filter-for-140-180mm-o-d-telescopes" target="_blank" title="BAADER 120MM ASTROSOLAR ASTF FILTER FOR 140-180MM O.D. TELESCOPES" style="color: #38761d;" rel="noopener noreferrer">BA-ASTF-120</a>, <a href="https://optcorp.com/products/baader-140mm-astrosolar-astf-filter-for-160-200mm-o-d-telescopes" target="_blank" title="BAADER 140MM ASTROSOLAR ASTF FILTER FOR 160-200MM O.D. TELESCOPES" style="color: #38761d;" rel="noopener noreferrer">BA-ASTF-140</a></div>
+              </div>
+          </td>
+          <td></td>
+      </tr>
+      <tr>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;Astrophysics 155, Celestron Nexstar 6/6SE, C6, Starhopper 6, Orion's AstroView 6, SkyView Pro 6 or 6LT, Skyquest XT6, Vixen 150&quot;}">Astrophysics 155, Celestron Nexstar 6/6SE, C6, Starhopper 6, Orion's AstroView 6, SkyView Pro 6 or 6LT, Skyquest XT6, Vixen 150</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;181mm\\7.12\&quot;&quot;}">181mm\7.12"</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;SP-ST750G, AZ-1520&quot;}"><span style="color: #ff0000;"><a href="https://optcorp.com/products/spectrum-7-50-full-ap-glass-solar-7-1-8-181mm-7-3-8-187mm" target="_blank" title="SPECTRUM 7.50&quot; FULL APERTURE GLASS SOLAR FILTER- 181MM TO 187MM" style="color: #ff0000;" rel="noopener noreferrer">SP-ST750G</a></span>, <span style="color: #ff0000;"><a href="https://optcorp.com/products/astrozap-181-187mm-od-full-aperture-glass-solar-filter" target="_blank" title="ASTROZAP 181-187MM OD FULL APERTURE GLASS SOLAR FILTER" style="color: #ff0000;" rel="noopener noreferrer">AZ-1520</a></span></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;AZ-1016, TH-RG-7125, BA-ASTF-160&quot;}"><a href="https://optcorp.com/products/astrozap-baader-solar-filter-6inch-sct-1016" target="_blank" title="ASTROZAP BAADER FILM SOLAR FILTER - 174-185MM ID" style="color: #38761d;" rel="noopener noreferrer">AZ-1016</a>, <span style="color: #38761d;"><a href="https://optcorp.com/products/1000-oaks-r-g-film-solar-filter-181mm-id" target="_blank" title="1000 OAKS R-G FILM SOLAR FILTER - 181MM ID, FULL APERTURE" style="color: #38761d;" rel="noopener noreferrer">TH-RG-7125</a></span>, <span style="color: #38761d;"><a href="https://optcorp.com/products/baader-160mm-astrosolar-astf-filter-for-180-220mm-o-d-telescopes" target="_blank" title="BAADER 160MM ASTROSOLAR ASTF FILTER FOR 180-220MM O.D. TELESCOPES" style="color: #38761d;" rel="noopener noreferrer">BA-ASTF-160</a></span></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;TH-S-7125&quot;}"><span style="color: #0000ff;"><a class="in-cell-link" href="https://optcorp.com/products/th-solarlite-solar-filter-152mm-6-00-ca-181mm-7-12-id" target="_blank" rel="noopener noreferrer" style="color: #0000ff;">TH-S-7125</a></span></td>
+      </tr>
+      <tr>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;Astrophysics 155, Celestron Nexstar 6/6SE, C6, Starhopper 6, Orion's AstroView 6, SkyView Pro 6 or 6LT, Skyquest XT6, Vixen 150&quot;}">Astrophysics 155, Celestron Nexstar 6/6SE, C6, Starhopper 6, Orion's AstroView 6, SkyView Pro 6 or 6LT, Skyquest XT6, Vixen 150</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;187mm\\7.37\&quot;&quot;}">187mm\7.37"</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;SP-ST750G, AZ-1520&quot;}"><span style="color: #ff0000;"><a href="https://optcorp.com/products/spectrum-7-50-full-ap-glass-solar-7-1-8-181mm-7-3-8-187mm" target="_blank" title="SPECTRUM 7.50&quot; FULL APERTURE GLASS SOLAR FILTER- 181MM TO 187MM" style="color: #ff0000;" rel="noopener noreferrer">SP-ST750G</a></span><span>, </span><span></span><span style="color: #ff0000;"><a href="https://optcorp.com/products/astrozap-181-187mm-od-full-aperture-glass-solar-filter" target="_blank" title="ASTROZAP 181-187MM OD FULL APERTURE GLASS SOLAR FILTER" style="color: #ff0000;" rel="noopener noreferrer">AZ-1520</a></span></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;BA-ASTF-160&quot;}"><a href="https://optcorp.com/products/baader-160mm-astrosolar-astf-filter-for-180-220mm-o-d-telescopes" target="_blank" title="BAADER 160MM ASTROSOLAR ASTF FILTER FOR 180-220MM O.D. TELESCOPES" style="color: #38761d;" rel="noopener noreferrer">BA-ASTF-160</a></td>
+          <td></td>
+      </tr>
+      <tr>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;C-6, Meade 6\&quot; Schmidt-Newtonian, Vixen 150, AP-155&quot;}">C-6, Meade 6" Schmidt-Newtonian, Vixen 150, AP-155</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;190mm\\7.50\&quot;&quot;}">190mm\7.50"</td>
+          <td></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;BA-ASTF-160&quot;}"><a href="https://optcorp.com/products/baader-160mm-astrosolar-astf-filter-for-180-220mm-o-d-telescopes" target="_blank" title="BAADER 160MM ASTROSOLAR ASTF FILTER FOR 180-220MM O.D. TELESCOPES" style="color: #38761d;" rel="noopener noreferrer">BA-ASTF-160</a></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;TH-S-7500&quot;}"><span style="color: #0000ff;"><a class="in-cell-link" href="https://optcorp.com/products/th-solarlite-solar-filter-152mm-6-00-ca-190mm-7-50-id" target="_blank" rel="noopener noreferrer" style="color: #0000ff;">TH-S-7500</a></span></td>
+      </tr>
+      <tr>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;152mm Refractors (measure dew shield diameter)&quot;}">152mm Refractors (measure dew shield diameter)</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;196mm\\7.75\&quot;&quot;}">196mm\7.75"</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;AZ-1521&quot;}"><span style="color: #ff0000;"><a class="in-cell-link" href="https://optcorp.com/products/astrozap-194-202mm-od-full-aperture-glass-solar-filter" target="_blank" rel="noopener noreferrer" style="color: #ff0000;">AZ-1521</a></span></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;AZ-1014, BA-ASTF-160&quot;}">
+              <div>
+                  <div><span style="color: #38761d;"><a href="https://optcorp.com/products/astrozap-baader-solar-filter-152mm-telescopes-1014" target="_blank" title="ASTROZAP BAADER FILM SOLAR FILTER FOR 152MM TELESCOPES" style="color: #38761d;" rel="noopener noreferrer">AZ-1014</a></span>, <a href="https://optcorp.com/products/baader-160mm-astrosolar-astf-filter-for-180-220mm-o-d-telescopes" target="_blank" title="BAADER 160MM ASTROSOLAR ASTF FILTER FOR 180-220MM O.D. TELESCOPES" style="color: #38761d;" rel="noopener noreferrer">BA-ASTF-160</a></div>
+              </div>
+          </td>
+          <td></td>
+      </tr>
+      <tr>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;Meade 7\&quot; APO 178ED, Takahashi Mewlon-180&quot;}">Meade 7" APO 178ED, Takahashi Mewlon-180</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;203mm\\8.00\&quot;&quot;}">203mm\8.00"</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;SP-ST8377G&quot;}"><span style="color: #ff0000;"><a class="in-cell-link" href="https://optcorp.com/products/spectrum-8-37-full-ap-glass-solar-8-203mm-8-1-4-210mm-1" target="_blank" rel="noopener noreferrer" style="color: #ff0000;">SP-ST8377G</a></span></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;AZ-1014, BA-ASTF-160&quot;}"><a href="https://optcorp.com/products/astrozap-baader-solar-filter-152mm-telescopes-1014" target="_blank" title="ASTROZAP BAADER FILM SOLAR FILTER FOR 152MM TELESCOPES" style="color: #38761d;" rel="noopener noreferrer">AZ-1014</a>, <a href="https://optcorp.com/products/baader-160mm-astrosolar-astf-filter-for-180-220mm-o-d-telescopes" target="_blank" title="BAADER 160MM ASTROSOLAR ASTF FILTER FOR 180-220MM O.D. TELESCOPES" style="color: #38761d;" rel="noopener noreferrer">BA-ASTF-160</a></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;TH-S-8000&quot;}"><span style="color: #0000ff;"><a class="in-cell-link" href="https://optcorp.com/products/th-solarlite-solar-filter-152mm-6-00-ca-203mm-8-00-id" target="_blank" rel="noopener noreferrer" style="color: #0000ff;">TH-S-8000</a></span></td>
+      </tr>
+      <tr>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;Meade 7\&quot; APO 178ED, Takahashi Mewlon-180&quot;}">Meade 7" APO 178ED, Takahashi Mewlon-180</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;209mm\\8.25\&quot;&quot;}">209mm\8.25"</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;SP-ST8377G&quot;}"><a class="in-cell-link" href="https://optcorp.com/products/spectrum-8-37-full-ap-glass-solar-8-203mm-8-1-4-210mm-1" target="_blank" rel="noopener noreferrer" style="color: #ff0000;">SP-ST8377G</a></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;BA-ASTF-200&quot;}"><span style="color: #38761d;"><a class="in-cell-link" href="https://optcorp.com/products/baader-200mm-astrosolar-astf-filter-for-220-260mm-o-d-telescopes" target="_blank" rel="noopener noreferrer" style="color: #38761d;">BA-ASTF-200</a></span></td>
+          <td></td>
+      </tr>
+      <tr>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;Meade LXD-55 AR-6, M-6 APO, Questar 7&quot;}">Meade LXD-55 AR-6, M-6 APO, Questar 7</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;212mm\\8.37\&quot;&quot;}">212mm\8.37"</td>
+          <td></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;BA-ASTF-200&quot;}"><a class="in-cell-link" href="https://optcorp.com/products/baader-200mm-astrosolar-astf-filter-for-220-260mm-o-d-telescopes" target="_blank" rel="noopener noreferrer" style="color: #38761d;">BA-ASTF-200</a></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;TH-S-8375&quot;}"><span style="color: #0000ff;"><a class="in-cell-link" href="https://optcorp.com/products/th-solarlite-solar-filter-177mm-7-00-ca-212mm-8-37-id" target="_blank" rel="noopener noreferrer" style="color: #0000ff;">TH-S-8375</a></span></td>
+      </tr>
+      <tr>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;Telescopes with OD &lt;8.50\&quot;&quot;}">Telescopes with OD &lt;8.50"</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;218mm\\8.50\&quot;&quot;}">218mm\8.50"</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;SP-ST875G, AZ-1523&quot;}"><span style="color: #ff0000;"><a href="https://optcorp.com/products/spectrum-8-75-full-ap-glass-solar-8-3-8-213mm-8-5-8-219mm" target="_blank" title="SPECTRUM 8.75&quot; FULL APERTURE GLASS SOLAR FILTER- 213MM TO 219MM" style="color: #ff0000;" rel="noopener noreferrer">SP-ST875G</a></span>, <span style="color: #ff0000;"><a href="https://optcorp.com/products/astrozap-213-219mm-od-full-aperture-glass-solar-filter" target="_blank" title="ASTROZAP 213-219MM OD FULL APERTURE GLASS SOLAR FILTER" style="color: #ff0000;" rel="noopener noreferrer">AZ-1523</a></span></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;BA-ASTF-200&quot;}"><a class="in-cell-link" href="https://optcorp.com/products/baader-200mm-astrosolar-astf-filter-for-220-260mm-o-d-telescopes" target="_blank" rel="noopener noreferrer" style="color: #38761d;">BA-ASTF-200</a></td>
+          <td></td>
+      </tr>
+      <tr>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;Telescopes with OD &lt;8.75\&quot;&quot;}">Telescopes with OD &lt;8.75"</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;224mm\\8.75\&quot;&quot;}">224mm\8.75"</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;AZ-1524&quot;}"><span style="color: #ff0000;"><a class="in-cell-link" href="https://optcorp.com/products/astrozap-224-230mm-od-full-aperture-glass-solar-filter" target="_blank" rel="noopener noreferrer" style="color: #ff0000;">AZ-1524</a></span></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;BA-ASTF-200&quot;}"><a class="in-cell-link" href="https://optcorp.com/products/baader-200mm-astrosolar-astf-filter-for-220-260mm-o-d-telescopes" target="_blank" rel="noopener noreferrer" style="color: #38761d;">BA-ASTF-200</a></td>
+          <td></td>
+      </tr>
+      <tr>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;Older Celestron and Meade 8\&quot; SCT. Takahashi's Epsilon-180ED, Vixen's R200SS, VX200L, VMX200L&quot;}">Older Celestron and Meade 8" SCT. Takahashi's Epsilon-180ED, Vixen's R200SS, VX200L, VMX200L</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;230mm\\9.187\&quot;&quot;}">230mm\9.187"</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;SP-ST9312G, AZ-1524&quot;}"><span style="color: #ff0000;"><a href="https://optcorp.com/products/spectrum-9-187-full-ap-glasssolar-8-13-16-224mm-9-1-16-230m" target="_blank" title="SPECTRUM 9.187&quot; FULL APERTURE GLASS SOLAR FILTER- 224MM TO 230MM" style="color: #ff0000;" rel="noopener noreferrer">SP-ST9312G</a></span>, <a class="in-cell-link" href="https://optcorp.com/products/astrozap-224-230mm-od-full-aperture-glass-solar-filter" target="_blank" rel="noopener noreferrer" style="color: #ff0000;">AZ-1524</a></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;AZ-1004, TH-RG-9187, BA-ASTF-200&quot;}"><span style="color: #38761d;"><a href="https://optcorp.com/products/astrozap-baader-solar-filter-8-sct" target="_blank" title="ASTROZAP BAADER FILM SOLAR FILTER FOR 8&quot; SCHMIDT-CASSEGRAIN TELESCOPES" style="color: #38761d;" rel="noopener noreferrer">AZ-1004</a></span>, <span style="color: #38761d;"><a href="https://optcorp.com/products/1000-oaks-r-g-film-solar-filter-233mm-id" target="_blank" title="1000 OAKS R-G FILM SOLAR FILTER - 233MM ID, FULL APERTURE" style="color: #38761d;" rel="noopener noreferrer">TH-RG-9187</a></span>, <a class="in-cell-link" href="https://optcorp.com/products/baader-200mm-astrosolar-astf-filter-for-220-260mm-o-d-telescopes" target="_blank" rel="noopener noreferrer" style="color: #38761d;">BA-ASTF-200</a></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;TH-S-9187&quot;}"><span style="color: #0000ff;"><a class="in-cell-link" href="https://optcorp.com/products/th-solarlite-solar-filter-203mm-8-00-ca-236mm-9-312-id" target="_blank" rel="noopener noreferrer" style="color: #0000ff;">TH-S-9187</a></span></td>
+      </tr>
+      <tr>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;Meade and Celestron 8\&quot; SCT/ACF, Meade 8\&quot; Lightbridge Dob. Orion SkyQuest XT8, Atlas 8, SkyView Pro 8, Vixen R200SS&quot;}">Meade and Celestron 8" SCT/ACF, Meade 8" Lightbridge Dob. Orion SkyQuest XT8, Atlas 8, SkyView Pro 8, Vixen R200SS</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;236mm\\9.312\&quot;&quot;}">236mm\9.312"</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;SP-ST950G, AZ-1525&quot;}"><span style="color: #ff0000;"><a href="https://optcorp.com/products/spectrum-9-50-full-ap-glass-solar-9-1-8-232mm-9-3-8-238mm" target="_blank" title="SPECTRUM 9.50&quot; FULL APERTURE GLASS SOLAR FILTER- 232MM TO 238MM" style="color: #ff0000;" rel="noopener noreferrer">SP-ST950G</a></span>, <span style="color: #ff0000;"><a href="https://optcorp.com/products/astrozap-232-238mm-od-full-aperture-glass-solar-filter" target="_blank" title="ASTROZAP 232-238MM OD FULL APERTURE GLASS SOLAR FILTER" style="color: #ff0000;" rel="noopener noreferrer">AZ-1525</a></span></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;AZ-1004, BA-ASTF-200&quot;}"><a href="https://optcorp.com/products/astrozap-baader-solar-filter-8-sct" target="_blank" title="ASTROZAP BAADER FILM SOLAR FILTER FOR 8&quot; SCHMIDT-CASSEGRAIN TELESCOPES" style="color: #38761d;" rel="noopener noreferrer">AZ-1004</a>, <a class="in-cell-link" href="https://optcorp.com/products/baader-200mm-astrosolar-astf-filter-for-220-260mm-o-d-telescopes" target="_blank" rel="noopener noreferrer" style="color: #38761d;">BA-ASTF-200</a></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;TH-S-9187&quot;}"><span style="color: #0000ff;"><a class="in-cell-link" href="https://optcorp.com/products/th-solarlite-solar-filter-203mm-8-00-ca-236mm-9-312-id" target="_blank" rel="noopener noreferrer" style="color: #0000ff;">TH-S-9187</a></span></td>
+      </tr>
+      <tr>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;Meade Starfinder 8, Orion 8 DSE, Celestron CPC/EdgeHD 8\&quot;&quot;}">Meade Starfinder 8, Orion 8 DSE, Celestron CPC/EdgeHD 8"</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;241mm\\9.50\&quot;&quot;}">241mm\9.50"</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;SP-ST975G, AZ-1526&quot;}"><span style="color: #ff0000;"><a href="https://optcorp.com/products/spectrum-9-75-full-ap-glass-solar-9-3-8-238mm-9-5-8-244mm" target="_blank" title="SPECTRUM 9.75&quot; FULL APERTURE GLASS SOLAR FILTER- 238MM TO 244MM" style="color: #ff0000;" rel="noopener noreferrer">SP-ST975G</a></span>, <span style="color: #ff0000;"><a href="https://optcorp.com/products/astrozap-238-244mm-od-full-aperture-glass-solar-filter" target="_blank" title="ASTROZAP 238-244MM OD FULL APERTURE GLASS SOLAR FILTER" style="color: #ff0000;" rel="noopener noreferrer">AZ-1526</a></span></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;TH-RG-9500, BA-ASTF-200&quot;}"><span style="color: #38761d;"><a href="https://optcorp.com/products/1000-oaks-r-g-film-solar-filter-241mm-id-full-aperture" target="_blank" title="1000 OAKS R-G FILM SOLAR FILTER - 241MM ID, FULL APERTURE" style="color: #38761d;" rel="noopener noreferrer">TH-RG-9500</a></span>, <a class="in-cell-link" href="https://optcorp.com/products/baader-200mm-astrosolar-astf-filter-for-220-260mm-o-d-telescopes" target="_blank" rel="noopener noreferrer" style="color: #38761d;">BA-ASTF-200</a></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;TH-S-9500&quot;}"><span style="color: #0000ff;"><a class="in-cell-link" href="https://optcorp.com/products/th-solarlite-solar-filter-203mm-8-00-ca-241mm-9-50-id" target="_blank" rel="noopener noreferrer" style="color: #0000ff;">TH-S-9500</a></span></td>
+      </tr>
+      <tr>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;Meade LXD55 SN-8 or LXD75 SN-8, Takahashi CN-212&quot;}">Meade LXD55 SN-8 or LXD75 SN-8, Takahashi CN-212</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;247mm\\9.75\&quot;&quot;}">247mm\9.75"</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;AZ-1527&quot;}"><span style="color: #ff0000;"><a class="in-cell-link" href="https://optcorp.com/products/astrozap-244-251mm-od-full-aperture-glass-solar-filter" target="_blank" rel="noopener noreferrer" style="color: #ff0000;">AZ-1527</a></span></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;BA-ASTF-200&quot;}"><a class="in-cell-link" href="https://optcorp.com/products/baader-200mm-astrosolar-astf-filter-for-220-260mm-o-d-telescopes" target="_blank" rel="noopener noreferrer" style="color: #38761d;">BA-ASTF-200</a></td>
+          <td></td>
+      </tr>
+      <tr>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;Meade 8\&quot; Schmidt-Newtonian&quot;}">Meade 8" Schmidt-Newtonian</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;254mm\\10.00\&quot;&quot;}">254mm\10.00"</td>
+          <td></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;AZ-1010&quot;}"><span style="color: #38761d;"><a class="in-cell-link" href="https://optcorp.com/products/astrozap-baader-solar-filter-8-schmidt-newtonian-telescope" target="_blank" rel="noopener noreferrer" style="color: #38761d;">AZ-1010</a></span></td>
+          <td></td>
+      </tr>
+      <tr>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;Older Skywatcher 8\&quot; Reflector&quot;}">Older Skywatcher 8" Reflector</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;260mm\\10.25\&quot;&quot;}">260mm\10.25"</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;AZ-1528&quot;}"><span style="color: #ff0000;"><a class="in-cell-link" href="https://optcorp.com/products/astrozap-257-264mm-od-full-aperture-glass-solar-filter" target="_blank" rel="noopener noreferrer" style="color: #ff0000;">AZ-1528</a></span></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;BA-ASTF-240&quot;}"><span style="color: #38761d;"><a class="in-cell-link" href="https://optcorp.com/products/baader-240mm-astrosolar-astf-filter-for-260-300mm-o-d-telescopes" target="_blank" rel="noopener noreferrer" style="color: #38761d;">BA-ASTF-240</a></span></td>
+          <td></td>
+      </tr>
+      <tr>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;Celestron C9.25/CPC/EdgeHD&quot;}">Celestron C9.25/CPC/EdgeHD</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;266mm\\10.50\&quot;&quot;}">266mm\10.50"</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;AZ-1529&quot;}"><span style="color: #ff0000;"><a class="in-cell-link" href="https://optcorp.com/products/astrozap-264-270mm-od-full-aperture-glass-solar-filter" target="_blank" rel="noopener noreferrer" style="color: #ff0000;">AZ-1529</a></span></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;AZ-1005, BA-ASTF-240&quot;}"><span style="color: #38761d;"><a href="https://optcorp.com/products/astrozap-baader-solar-filter-9-25-sct" target="_blank" title="ASTROZAP BAADER FILM SOLAR FILTER FOR 9.25&quot; SCHMIDT-CASSEGRAIN TELESCOPES" style="color: #38761d;" rel="noopener noreferrer">AZ-1005</a></span>, <a class="in-cell-link" href="https://optcorp.com/products/baader-240mm-astrosolar-astf-filter-for-260-300mm-o-d-telescopes" target="_blank" rel="noopener noreferrer" style="color: #38761d;">BA-ASTF-240</a></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;TH-S-10500&quot;}"><span style="color: #0000ff;"><a class="in-cell-link" href="https://optcorp.com/products/th-solarlite-solar-filter-203mm-8-00-ca-266mm-10-50-id" target="_blank" rel="noopener noreferrer" style="color: #0000ff;">TH-S-10500</a></span></td>
+      </tr>
+      <tr>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;Starhopper 8, C-9 1/4\&quot;&quot;}">Starhopper 8, C-9 1/4"</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;273mm\\10.75\&quot;&quot;}">273mm\10.75"</td>
+          <td></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;BA-ASTF-240&quot;}"><a class="in-cell-link" href="https://optcorp.com/products/baader-240mm-astrosolar-astf-filter-for-260-300mm-o-d-telescopes" target="_blank" rel="noopener noreferrer" style="color: #38761d;">BA-ASTF-240</a></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;TH-S-10750&quot;}"><span style="color: #0000ff;"><a class="in-cell-link" href="https://optcorp.com/products/th-solarlite-solar-filter-228mm-9-00-ca-273mm-10-75-id" target="_blank" rel="noopener noreferrer" style="color: #0000ff;">TH-S-10750</a></span></td>
+      </tr>
+      <tr>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;Celestron 10\&quot; Newtonian, Orion SkyWatcher 10\&quot;&quot;}">Celestron 10" Newtonian, Orion SkyWatcher 10"</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;289mm\\11.37\&quot;&quot;}">289mm\11.37"</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;AZ-1530&quot;}"><span style="color: #ff0000;"><a class="in-cell-link" href="https://optcorp.com/products/astrozap-283-289mm-od-full-aperture-glass-solar-filter" target="_blank" rel="noopener noreferrer" style="color: #ff0000;">AZ-1530</a></span></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;BA-ASTF-240&quot;}"><a class="in-cell-link" href="https://optcorp.com/products/baader-240mm-astrosolar-astf-filter-for-260-300mm-o-d-telescopes" target="_blank" rel="noopener noreferrer" style="color: #38761d;">BA-ASTF-240</a></td>
+          <td></td>
+      </tr>
+      <tr>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;C-10 Newt., Orion Skywatcher 10&quot;}">C-10 Newt., Orion Skywatcher 10</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;292mm\\11.50\&quot;&quot;}">292mm\11.50"</td>
+          <td></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;AZ-1006, BA-ASTF-240&quot;}"><a class="in-cell-link" href="https://optcorp.com/products/astrozap-baader-solar-filter-10-sct" target="_blank" rel="noopener noreferrer" style="color: #38761d;">AZ-1006</a>, <a class="in-cell-link" href="https://optcorp.com/products/baader-240mm-astrosolar-astf-filter-for-260-300mm-o-d-telescopes" target="_blank" rel="noopener noreferrer" style="color: #38761d;">BA-ASTF-240</a></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;TH-S-11500&quot;}"><span style="color: #0000ff;"><a class="in-cell-link" href="https://optcorp.com/products/th-solarlite-solar-filter-254mm-10-00-ca-292mm-11-50-id" target="_blank" rel="noopener noreferrer" style="color: #0000ff;">TH-S-11500</a></span></td>
+      </tr>
+      <tr>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;Meade 10\&quot; SCT/ACF/RCX&quot;}">Meade 10" SCT/ACF/RCX</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;298mm\\11.75\&quot;&quot;}">298mm\11.75"</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;AZ-1531&quot;}"><span style="color: #ff0000;"><a class="in-cell-link" href="https://optcorp.com/products/astrozap-295-302mm-od-full-aperture-glass-solar-filter" target="_blank" rel="noopener noreferrer" style="color: #ff0000;">AZ-1531</a></span></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;AZ-1006&quot;}"><span style="color: #38761d;"><a class="in-cell-link" href="https://optcorp.com/products/astrozap-baader-solar-filter-10-sct" target="_blank" rel="noopener noreferrer" style="color: #38761d;">AZ-1006</a></span></td>
+          <td></td>
+      </tr>
+      <tr>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;Meade 10\&quot; SCT/ACF/RCX/ Schmidt-Newt, Vixen VMC260L&quot;}">Meade 10" SCT/ACF/RCX/ Schmidt-Newt, Vixen VMC260L</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;302mm\\11.87\&quot;&quot;}">302mm\11.87"</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;SP-ST1200G&quot;}"><span style="color: #ff0000;"><a class="in-cell-link" href="https://optcorp.com/products/spectrum-12-full-ap-glass-solar-11-5-8-295mm-11-7-8-302mm" target="_blank" rel="noopener noreferrer" style="color: #ff0000;">SP-ST1200G</a></span></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;AZ-1011, BA-ASTF-280&quot;}">
+              <div>
+                  <div><span style="color: #38761d;"><a href="https://optcorp.com/products/astrozap-baader-solar-filter-10-schmidt-newtonian-telescopes" target="_blank" title="ASTROZAP BAADER FILM SOLAR FILTER FOR 10&quot; SCHMIDT-NEWTONIANS" style="color: #38761d;" rel="noopener noreferrer">AZ-1011</a></span>, <a class="in-cell-link" href="https://optcorp.com/products/baader-260mm-astrosolar-astf-filter-for-300-340mm-o-d-telescopes" target="_blank" rel="noopener noreferrer" style="color: #38761d;">BA-ASTF-280</a></div>
+              </div>
+          </td>
+          <td></td>
+      </tr>
+      <tr>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;Meade 10\&quot; S/C, LXD 55&quot;}">Meade 10" S/C, LXD 55</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;305mm\\12.00\&quot;&quot;}">305mm\12.00"</td>
+          <td></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;BA-ASTF-280&quot;}"><span style="color: #38761d;"><a class="in-cell-link" href="https://optcorp.com/products/baader-260mm-astrosolar-astf-filter-for-300-340mm-o-d-telescopes" target="_blank" rel="noopener noreferrer" style="color: #38761d;">BA-ASTF-280</a></span></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;TH-S-12000&quot;}"><span style="color: #0000ff;"><a class="in-cell-link" href="https://optcorp.com/products/th-solarlite-solar-filter-254mm-10-00-ca-305mm-12-00-id" target="_blank" rel="noopener noreferrer" style="color: #0000ff;">TH-S-12000</a></span></td>
+      </tr>
+      <tr>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;10\&quot; Dobsonian (measure the outer diameter)&quot;}">10" Dobsonian (measure the outer diameter)</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;310mm\\12.22\&quot;&quot;}">310mm\12.22"</td>
+          <td></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;BA-ASTF-280&quot;}"><a class="in-cell-link" href="https://optcorp.com/products/baader-260mm-astrosolar-astf-filter-for-300-340mm-o-d-telescopes" target="_blank" rel="noopener noreferrer" style="color: #38761d;">BA-ASTF-280</a></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;TH-S-12225&quot;}"><span style="color: #0000ff;"><a class="in-cell-link" href="https://optcorp.com/products/th-solarlite-solar-filter-254mm-10-00-ca-311mm-12-25-id" target="_blank" rel="noopener noreferrer" style="color: #0000ff;">TH-S-12225</a></span></td>
+      </tr>
+      <tr>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;Celestron CPC 1100 or C11 SCT. Meade's 10\&quot; Lightbridge Dobsonian, Orion SkyQuest XT10&quot;}">Celestron CPC 1100 or C11 SCT. Meade's 10" Lightbridge Dobsonian, Orion SkyQuest XT10</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;311mm\\12.25\&quot;&quot;}">311mm\12.25"</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;SP-ST1250G, AZ-1532&quot;}"><span style="color: #ff0000;"><a href="https://optcorp.com/products/spectrum-12-50-full-ap-glass-solar-12-1-8-308mm-12-3-8-314mm" target="_blank" title="SPECTRUM 12.50&quot; FULL APERTURE GLASS SOLAR FILTER- 308MM TO 314MM" style="color: #ff0000;" rel="noopener noreferrer">SP-ST1250G</a></span>, <span style="color: #ff0000;"><a href="https://optcorp.com/products/astrozap-308-314mm-od-full-aperture-glass-solar-filter" target="_blank" title="ASTROZAP 308-314MM OD FULL APERTURE GLASS SOLAR FILTER" style="color: #ff0000;" rel="noopener noreferrer">AZ-1532</a></span></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;AZ-1007, BA-ASTF-280&quot;}">
+              <div>
+                  <div><span style="color: #38761d;"><a href="https://optcorp.com/products/astrozap-baader-solar-filter-11-sct" target="_blank" title="ASTROZAP BAADER FILM SOLAR FILTER FOR 11&quot; SCHMIDT-CASSEGRAIN TELESCOPES" style="color: #38761d;" rel="noopener noreferrer">AZ-1007</a></span>, <a class="in-cell-link" href="https://optcorp.com/products/baader-260mm-astrosolar-astf-filter-for-300-340mm-o-d-telescopes" target="_blank" rel="noopener noreferrer" style="color: #38761d;">BA-ASTF-280</a></div>
+              </div>
+          </td>
+          <td></td>
+      </tr>
+      <tr>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;C-11 Schmidt Cassegrain&quot;}">C-11 Schmidt Cassegrain</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;317mm\\12.50\&quot;&quot;}">317mm\12.50"</td>
+          <td></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;BA-ASTF-280&quot;}"><a class="in-cell-link" href="https://optcorp.com/products/baader-260mm-astrosolar-astf-filter-for-300-340mm-o-d-telescopes" target="_blank" rel="noopener noreferrer" style="color: #38761d;">BA-ASTF-280</a></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;TH-S-12500&quot;}"><span style="color: #0000ff;"><a class="in-cell-link" href="https://optcorp.com/products/th-solarlite-solar-filter-279mm-11-00-ca-317mm-12-50-id" target="_blank" rel="noopener noreferrer" style="color: #0000ff;">TH-S-12500</a></span></td>
+      </tr>
+      <tr>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;Meade Starfinder 10,Coulter 10\&quot;, Takahashi Mewlon 300&quot;}">Meade Starfinder 10,Coulter 10", Takahashi Mewlon 300</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;327mm\\12.87\&quot;&quot;}">327mm\12.87"</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;SP-ST1300G, AZ-1533&quot;}"><span style="color: #ff0000;"><a href="https://optcorp.com/products/spectrum-13-full-ap-glass-solar-12-5-8-321mm-23-7-8-327mm" target="_blank" title="SPECTRUM 13&quot; FULL APERTURE GLASS SOLAR FILTER- 321MM TO 327MM" style="color: #ff0000;" rel="noopener noreferrer">SP-ST1300G</a></span>, <span style="color: #ff0000;"><a href="https://optcorp.com/products/astrozap-321-327mm-od-full-aperture-glass-solar-filter" target="_blank" title="ASTROZAP 321-327MM OD FULL APERTURE GLASS SOLAR FILTER" style="color: #ff0000;" rel="noopener noreferrer">AZ-1533</a></span></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;BA-ASTF-280&quot;}"><a class="in-cell-link" href="https://optcorp.com/products/baader-260mm-astrosolar-astf-filter-for-300-340mm-o-d-telescopes" target="_blank" rel="noopener noreferrer" style="color: #38761d;">BA-ASTF-280</a></td>
+          <td></td>
+      </tr>
+      <tr>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;Meade 12\&quot; SCT/ACF/and RCX 400 12\&quot;&quot;}">Meade 12" SCT/ACF/and RCX 400 12"</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;346mm\\13.62\&quot;&quot;}">346mm\13.62"</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;SP-ST1375G, AZ-1534&quot;}"><span style="color: #ff0000;"><a href="https://optcorp.com/products/spectrum-13-75-full-ap-glass-solar-13-3-8-340mm-13-5-8-346mm" target="_blank" title="SPECTRUM 13.75&quot; FULL APERTURE GLASS SOLAR FILTER- 340MM TO 346MM" style="color: #ff0000;" rel="noopener noreferrer">SP-ST1375G</a></span>, <span style="color: #ff0000;"><a href="https://optcorp.com/products/astrozap-340-386mm-od-full-aperture-glass-solar-filter" target="_blank" title="ASTROZAP 340-346MM OD FULL APERTURE GLASS SOLAR FILTER" style="color: #ff0000;" rel="noopener noreferrer">AZ-1534</a></span></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;AZ-1008&quot;}"><span style="color: #38761d;"><a class="in-cell-link" href="https://optcorp.com/products/astrozap-baader-solar-filter-12-sct" target="_blank" rel="noopener noreferrer" style="color: #38761d;">AZ-1008</a></span></td>
+          <td></td>
+      </tr>
+      <tr>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;12\&quot; Meade SCT and some 11-12\&quot; dobsonians (measure the outer diameter)&quot;}">12" Meade SCT and some 11-12" dobsonians (measure the outer diameter)</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;349mm\\13.75\&quot;&quot;}">349mm\13.75"</td>
+          <td></td>
+          <td></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;TH-S-13750&quot;}"><span style="color: #0000ff;"><a class="in-cell-link" href="https://optcorp.com/products/th-solarlite-solar-filter-304mm-12-00-ca-349mm-13-75-id" target="_blank" rel="noopener noreferrer" style="color: #0000ff;">TH-S-13750</a></span></td>
+      </tr>
+      <tr>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;Meade 12\&quot; Lightbridge, Orion Skyquest XT12, or Skywatcher 12\&quot;&quot;}">Meade 12" Lightbridge, Orion Skyquest XT12, or Skywatcher 12"</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;365mm\\14.37\&quot;&quot;}">365mm\14.37"</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;SP-ST1450G&quot;}"><span style="color: #ff0000;"><a class="in-cell-link" href="https://optcorp.com/products/spectrum-14-50-full-ap-glass-solar-14-1-8-358mm-14-3-8-365mm" target="_blank" rel="noopener noreferrer" style="color: #ff0000;">SP-ST1450G</a></span></td>
+          <td></td>
+          <td></td>
+      </tr>
+      <tr>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;Meade Starfinder 12.5\&quot;&quot;}">Meade Starfinder 12.5"</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;381mm\\15.00\&quot;&quot;}">381mm\15.00"</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;SP-ST1525G, AZ-1535&quot;}">
+              <div>
+                  <div><span style="color: #ff0000;"><a href="https://optcorp.com/products/spectrum-15-25-full-ap-glass-solar-14-7-8-378mm-15-1-8-384mm" target="_blank" title="SPECTRUM 15.25&quot; FULL APERTURE GLASS SOLAR FILTER- 378MM TO 384MM" style="color: #ff0000;" rel="noopener noreferrer">SP-ST1525G</a></span>, <span style="color: #ff0000;"><a href="https://optcorp.com/products/astrozap-378-384mm-od-full-aperture-glass-solar-filter" target="_blank" title="ASTROZAP 378-384MM OD FULL APERTURE GLASS SOLAR FILTER" style="color: #ff0000;" rel="noopener noreferrer">AZ-1535</a></span></div>
+              </div>
+          </td>
+          <td></td>
+          <td></td>
+      </tr>
+      <tr>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;Telescopes with an OD &lt;15.25\&quot;&quot;}">Telescopes with an OD &lt;15.25"</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;387mm\\15.25\&quot;&quot;}">387mm\15.25"</td>
+          <td></td>
+          <td></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;TH-S-15250&quot;}"><span style="color: #0000ff;"><a class="in-cell-link" href="https://optcorp.com/products/th-solarlite-solar-filter-317mm-12-50-ca-387mm-15-25-id" target="_blank" rel="noopener noreferrer" style="color: #0000ff;">TH-S-15250</a></span></td>
+      </tr>
+      <tr>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;Older Celestron 14\&quot; SCT&quot;}">Older Celestron 14" SCT</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;397mm\\15.62\&quot;&quot;}">397mm\15.62"</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;SP-ST1575G, AZ-1536&quot;}"><span style="color: #ff0000;"><a href="https://optcorp.com/products/spectrum-15-75-full-ap-glass-solar-15-3-8-391mm-15-5-8-397mm" target="_blank" title="SPECTRUM 15.75&quot; FULL APERTURE GLASS SOLAR FILTER- 391MM TO 397MM" style="color: #ff0000;" rel="noopener noreferrer">SP-ST1575G</a></span>, <span style="color: #ff0000;"><a href="https://optcorp.com/products/astrozap-391-397mm-od-full-aperture-glass-solar-filter" target="_blank" title="ASTROZAP 391-397MM OD FULL APERTURE GLASS SOLAR FILTER" style="color: #ff0000;" rel="noopener noreferrer">AZ-1536</a></span></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;AZ-1009&quot;}"><span style="color: #38761d;"><a class="in-cell-link" href="https://optcorp.com/products/astrozap-baader-off-axis-solar-filter-14-sct" target="_blank" rel="noopener noreferrer" style="color: #38761d;">AZ-1009</a></span></td>
+          <td></td>
+      </tr>
+      <tr>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;Celestron 14\&quot; SCT/EdgeHD&quot;}">Celestron 14" SCT/EdgeHD</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;403mm\\15.87\&quot;&quot;}">403mm\15.87"</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;SP-ST1600G, AZ-1537&quot;}"><span style="color: #ff0000;"><a href="https://optcorp.com/products/spectrum-16-full-ap-glass-solar-15-5-8-397mm-15-7-8-403mm" target="_blank" title="SPECTRUM 16&quot; FULL APERTURE GLASS SOLAR FILTER- 397MM TO 403MM" style="color: #ff0000;" rel="noopener noreferrer">SP-ST1600G</a></span>, <span style="color: #ff0000;"><a href="https://optcorp.com/products/astrozap-397-403mm-od-full-aperture-glass-solar-filter" target="_blank" title="ASTROZAP 397-403MM OD FULL APERTURE GLASS SOLAR FILTER" style="color: #ff0000;" rel="noopener noreferrer">AZ-1537</a></span></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;AZ-1009&quot;}"><a class="in-cell-link" href="https://optcorp.com/products/astrozap-baader-off-axis-solar-filter-14-sct" target="_blank" rel="noopener noreferrer" style="color: #38761d;">AZ-1009</a></td>
+          <td></td>
+      </tr>
+      <tr>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;Celestron 14\&quot; SCT/EdgeHD&quot;}">Celestron 14" SCT/EdgeHD</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;406mm\\16.00\&quot;&quot;}">406mm\16.00"</td>
+          <td></td>
+          <td></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;TH-S-16000&quot;}"><span style="color: #0000ff;"><a class="in-cell-link" href="https://optcorp.com/products/th-solarlite-solar-filter-355mm-14-00-ca-406mm-16-00-id" target="_blank" rel="noopener noreferrer" style="color: #0000ff;">TH-S-16000</a></span></td>
+      </tr>
+      <tr>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;Telescopes with an OD &lt;17.00\&quot;&quot;}">Telescopes with an OD &lt;17.00"</td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;432mm\\17.00\&quot;&quot;}">432mm\17.00"</td>
+          <td></td>
+          <td></td>
+          <td data-sheets-value="{&quot;1&quot;:2,&quot;2&quot;:&quot;TH-S-17000&quot;}"><span style="color: #0000ff;"><a class="in-cell-link" href="https://optcorp.com/products/th-solarlite-solar-filter-355mm-14-00-ca-432mm-17-00-id" target="_blank" rel="noopener noreferrer" style="color: #0000ff;">TH-S-17000</a></span></td>
+      </tr>
+  </tbody>
+    </table>
+<script>
+$("#searchInput").keyup(function () {
+    // Split the current value of the filter textbox
+    var data = this.value.split(" ");
+    // Get the table rows
+    var rows = $("#fbody").find("tr");
+    if (this.value == "") {
+        rows.show();
+        return;
+    }
+    
+    // Hide all the rows initially
+    rows.hide();
+
+    // Filter the rows; check each term in data
+    rows.filter(function (i, v) {
+        for (var d = 0; d < data.length; ++d) {
+            if ($(this).is(":contains('" + data[d] + "')")) {
+                return true;
+            }
+        }
+        return false;
+    })
+    // Show the rows that match.
+    .show();
+}).focus(function () { // style the filter box
+    this.value = "";
+    $(this).unbind('focus');
+}).css({
+    "color": "#C0C0C0"
+});
+
+// make contains case insensitive globally
+// (if you prefer, create a new Contains or containsCI function)
+$.expr[":"].contains = $.expr.createPseudo(function(arg) {
+    return function( elem ) {
+        return $(elem).text().toUpperCase().indexOf(arg.toUpperCase()) >= 0;
+    };
+});
+
+</script>
+<script>
+    $( window ).load(function() {
+       $('#example').dataTable({
+         "paging": false
+       });
+	  $("header.grid").css("visibility","visible !important");
+    } );
+
+  </script>

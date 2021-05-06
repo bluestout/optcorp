@@ -1,0 +1,973 @@
+{% comment %}
+** Article (blog post) - default view **
+- Template section
+- Uses blocks
+{% endcomment %}
+
+{% if section.settings.wide_display == false %}
+<div class="container">
+  <div class="twelve columns offset-by-two medium-down--one-whole equal-columns--outside-trim">
+{% endif %}
+
+{% if article.image and section.settings.featured_image == 'banner' %}
+  <header class="banner center page-banner dark-overlay-{{ section.settings.image_darken }} full-width--{{ section.settings.wide_display }}">
+    {% render 'image-element',
+            image: article.image,
+            alt: article.image.alt,
+            stretch_width: true
+    %}
+    <div class="caption captionOverlay--true">
+      <h1 class="headline">{{ article.title }}</h1>
+    </div>
+  </header>
+{% endif %}
+
+{% if section.settings.wide_display == false %}
+  </div>
+</div>
+{% endif %}
+
+
+<div class="container main content">
+{% paginate article.comments by 100 %}
+
+  {% comment %}Check to see if sidebar should be enabled{% endcomment %}
+  {% if section.blocks.size > 0 %}
+    {% assign sidebar = true %}
+  {% else %}
+    {% assign sidebar = false %}
+  {% endif %}
+  <div class="container">
+    <div class="page-content">
+      <div class="section clearfix">
+        <div class="clearfix breadcrumb">
+          {% if section.settings.blog_breadcrumb %}
+            <script type="application/ld+json">
+              {
+                "@context": "https://schema.org",
+                "@type": "BreadcrumbList",
+                "itemListElement": [
+                  {
+                    "@type": "ListItem",
+                    "position": 1,
+                    "item": {
+                      "@id": "{{ shop.url }}",
+                      "name": "{{ 'general.breadcrumbs.home' | t }}"
+                    }
+                  },
+                  {
+                    "@type": "ListItem",
+                    "position": 2,
+                    "item": {
+                      "@id": "{{ blog.url }}",
+                      "name": "{{ blog.title }}"
+                    }
+                  }
+                ]
+              }
+            </script>
+          {% endif %}
+        </div>
+  
+        {% unless article.image and section.settings.featured_image == 'banner' %}
+          <h1 class="article_title center"  style="font-size: {{section.settings.title_size}}px;">
+            {{ article.title }}
+          </h1>
+        {% endunless %}  
+
+        {% for tag in article.tags %}
+            {% if tag contains 'author:' %}
+              {% assign author = tag | remove: 'author:' | handleize | prepend: 'author-list/' %}
+              {% assign author_article = articles[author] %}
+            {% endif %}
+          {% endfor %}
+          {% for tag in author_article.tags %}
+            {% if tag contains 'Aka:' %}
+            {% assign aka_name = tag | remove: 'Aka:' %}
+            {% endif %}
+          {% endfor %}
+          {% if author_article != blank %}
+            <div class="author">
+              <img src="{{author_article.image | img_url: '100x'}}">
+              <span> by <a href="{{author_article.url}}">{{author_article.title}}</a> (@{{aka_name}})</span>
+            
+            </div>
+          {% endif %}
+          
+          <div class="article_content" style="font-size: {{section.settings.text_size}}px;">
+            
+            <div class="medium-down--show hide social-header">
+              <div class="title">
+                <p class="center">{{ 'blogs.general.social_iconsidebar_title' | t }}</p>
+              </div>
+              <div class="blog_share meta">
+                {% render 'social-buttons', context: 'article' %}
+              </div>
+            </div>
+            {{ article.content }}
+            <a class="more">Show All</a>
+          </div>
+          <div class="clear" id="comments"></div>
+            <br class="clear" />
+  
+            {% if settings.disqus_enabled %}
+              <div id="disqus_thread"></div>
+              <script>
+                  var disqus_config = function () {
+                      this.page.url = "{{ canonical_url }}";
+                      this.page.identifier = "{{ article.id }}";
+                  };
+                  (function() {
+                      var d = document, s = d.createElement('script');
+                      s.src = '//{{ settings.disqus_shortname }}.disqus.com/embed.js';
+                      s.setAttribute('data-timestamp', +new Date());
+                      (d.head || d.body).appendChild(s);
+                  })();
+              </script>
+              <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+            {% elsif blog.comments_enabled? %}
+              {% if article.comments_count > 0 %}
+                <h4>{{ 'blogs.comments.response_count' | t: count: article.comments.size }}</h4>
+    
+                {% for comment in article.comments %}
+                  <div id="comment-{{ comment.id }}" class="comment clearfix">
+                    <div class="comment-body fourteen columns omega">
+                      <h6>{{ comment.author }}</h6>
+                      <p class="meta">
+                        <span class="label">{{ comment.created_at | date: format: "month_day_year" }}</span>
+                      </p>
+    
+                      {{ comment.content }}
+                    </div>
+                  </div>
+                {% endfor %}
+              {% endif %}
+    
+              {% if comment and comment.created_at %}
+                {% if article.comments_count == 0 %}
+                  <h4>{{ 'blogs.comments.response_count' | t: count: article.comments.size }}</h4>
+                {% endif %}
+                <div id="comment-{{ comment.id }}" class="comment clearfix">
+                  <div class="gravatar two columns alpha center" data-email="{{ comment.email }}">
+                    <img src="//1.gravatar.com/avatar/{{ comment.email | md5 }}?s=160&r=G" alt="{{ comment.author }}" />
+                  </div>
+                  <div class="comment-body eight columns omega">
+                    <h6>{{ comment.author }}</h6>
+                    <p class="meta">
+                      <span class="label">{{ comment.created_at | date: format: "month_day_year" }}</span>
+                    </p>
+    
+                    {{ comment.content }}
+                  </div>
+                </div>
+              {% endif %}
+    
+              {% render 'pagination', paginate: paginate %}
+    
+              <div class="clear" id="new-comment"></div>
+              <h4>{{ 'blogs.comments.title' | t }}</h4>
+    
+              {% if blog.moderated? %}
+                <p><em>{{ 'blogs.comments.moderated' | t }}</em></p>
+              {% endif %}
+    
+              {% form article %}
+                {% if form.posted_successfully? %}
+                  {% if blog.moderated? %}
+                    <p class="quote align_left">{{ 'blogs.comments.success_moderated' | t }}</p>
+                  {% else %}
+                    <p class="quote align_left">{{ 'blogs.comments.success' | t }}</p>
+                  {% endif %}
+                {% endif %}
+    
+                {% if form.errors %}
+                  <p class="quote align_left">{{ 'general.forms.post_error' | t }}</p>
+                {% endif %}
+    
+                <div class="eight columns alpha">
+                  <label for="comment_author">{{ 'blogs.comments.name' | t }} <span class="red">*</span></label>
+                  <input type="text" id="comment_author" name="comment[author]" value="{{ form.author }}" required="required" />
+                </div>
+    
+                <div class="eight columns omega">
+                  <label for="comment_email">{{ 'blogs.comments.email' | t }} <span class="red">*</span></label>
+                  <input type="text" id="comment_email" name="comment[email]" value="{{ form.email }}" required="required" />
+                </div>
+    
+                <label for="comment_body">{{ 'blogs.comments.comment' | t }} <span class="red">*</span></label>
+                <textarea id="comment_body" name="comment[body]" rows="5" required="required">{{ form.body }}</textarea>
+    
+                <input type="submit" value="{{ 'blogs.comments.post' | t }}" id="comment-submit" class="action_button" />
+              {% endform %}
+            {% endif %}
+      </div>
+    </div>
+
+    {% if section.settings.display_social_buttons %}
+      <div class="social-icon-sidebar medium-down--hide">
+        
+          <div class="title">
+            <p>{{ 'blogs.general.social_iconsidebar_title' | t }}</p>
+          </div>
+          <div class="blog_share meta">
+            {% render 'social-buttons', context: 'article' %}
+          </div>
+        
+      </div><!--end author_share_wrap-->
+    {% endif %}
+    <div class="featured-products">
+      {% include 'include-featured-collection' %}
+    </div>
+    <div class="hide medium-down--show ">
+      <div class="social-iconbar">
+              
+        <div class="title">
+          <p>{{ 'blogs.general.social_iconbar_title' | t }}</p>
+        </div>
+        <div class="blog_share meta">
+          {% render 'social-buttons', context: 'article' %}
+        </div>
+      
+      </div>
+    </div>
+    
+    
+    {% if section.settings.blog_additional_posts and blog.articles_count > 1 %}
+      <div class="section related_articles clearfix">
+
+        <h3 class="heading center" >{{ 'blogs.article.additional_articles' | t: title: blog.title }}</h3>
+        <div class="flex">
+          {% assign article_found = false %}
+          {% for a in blog.articles limit: 5 %}
+            {% assign skip_article = false %}
+            {% if article_found == false and forloop.last %}
+              {% assign skip_article = true %}
+            {% endif %}
+            {% if article.id == a.id %}
+              {% assign article_found = true %}
+              {% assign skip_article = true %}
+            {% endif %}
+            {% unless skip_article %}
+              <div class="one-fourth medium-down--one-half small-down--one-whole columns article border-box">
+                {% if a.image %}
+                  <a href="{{ a.url }}" title="{{ a.title | escape }}">
+                    {% render 'image-element',
+                            image: a.image,
+                            alt: a.image.alt
+                    %}
+                  </a>
+                {% endif %}
+                <h5 class="sub_title">
+                  <a href="{{ a.url }}" title="{{ a.title | escape }}">{{ a.title }}</a>
+                </h5>
+                {% if a.excerpt != blank %}
+                  <div class="excerpt">{{ a.excerpt }}</div>
+                {% endif %}
+                {% if section.settings.read_more_link %}
+                  <a href="{{ a.url }}" title="{{ a.title | escape }}" class="{% if settings.read_more_style == 'button' %}action_button continue-button read-more-button{% else %}read-more-link{% endif %}">{{ 'blogs.general.continue_reading_html' | t }}</a>
+                {% endif %}
+                <div class="bottom-pannel">
+                  <p class="meta">
+                    <span>{{ a.published_at | date: format: "month_day_year" }}</span>
+                    <span>
+                      <a href="{{ a.url }}#comments">{{ 'blogs.counts.comments_with_count' | t: count: a.comments_count }}</a>
+                    </span>
+                  </p>
+                    <a href="{{ a.url }}" title="{{ a.title | escape }}" class="{% if settings.read_more_style == 'button' %}action_button continue-button read-more-button{% else %}read-more-link{% endif %}">{{ 'blogs.general.continue_reading_html' | t }}</a>
+                </div>
+              </div>
+            {% endunless %}
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+    
+    {% for block in section.blocks %}
+        <div {{ block.shopify_attributes }} class="block__{{ block.type }} block__{{ block.id }}
+        {% if block.type == "image_with_text_overlay" and block.settings.wide_display %}
+          under-menu
+        {% elsif block.type == "featured_video" and block.settings.wide_display %}
+          under-menu
+        {% elsif block.type == "featured_collection" %}
+          featured-collection-section
+        {% endif %}
+        " {% if block.settings.bg_color != blank %}style="background: {{block.settings.bg_color}};"{% endif %}>
+        {% if block.type == 'image_gallery' %}
+          {% include 'include-gallery-university', type: 'block' %}
+        {% endif %}
+        </div>
+    {% endfor %}
+
+
+    {% render "blog-sidebar", blog_handle: blog.handle %}
+  </div>
+  
+{% endpaginate %}
+</div>
+
+<div class="container">
+  <div class="signup-form flex">
+      <div class="one-half medium-down--one-whole">
+          {% include 'image-element' 
+              image: section.settings.form_image,
+              alt: section.settings.form_image.alt
+          %}
+      </div>
+      <div class="one-half medium-down--one-whole form-content flex">
+          <div class="info">
+              <h2 class="heading">{{section.settings.form_title}}</h2>
+              <p class="sub-heading">{{section.settings.form_content}}</p>
+              <div class="signup-form">
+                  <form name="footer-signup" id="footer-signup-beginner" class="sec-width pro-container padding-contrl" action="https://news.optcorp.com/signup.ashx" method="post" autocomplete="off" onsubmit="return validate_signup(this, true)" > 
+                      <input type="hidden" name="userid" value="221098">
+                      <input type="hidden" name="SIG5f6b242604e9d74dc58f68d38f126eb088eb0d8322cd4368b6a8d1f669f01d91" value="">
+                      <input type="hidden" name="addressbookid" value="23928747" />
+                      <input type="hidden" name="ReturnURL" value="">
+                      <input type="hidden" id="ci_consenturl" name="ci_consenturl" value="">   
+                      <input type="hidden" class="text" name="cd_FULLNAME" id="FULLNAME"  placeholder="Your Name" aria-required="false" value="test" /> 
+                      <input type="checkbox" name="ci_userConsentCheckBox" id="ci_userConsentCheckBox2" class="filled-in hide" checked >  
+                      <div class="input-row">
+                        <input type="email" name="email" id="email" required aria-required="true" class="contact_email" placeholder="{{ 'general.newsletter_form.placeholder' | t }}">
+                        <input type="submit" value="{{ 'general.newsletter_form.submit' | t }}" class="action_button sign_up" name="subscribe" />
+                      </div>
+                  </form>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>
+
+{% schema %}
+
+{
+  "name": "Blog post",
+  "class": "blog-post-section",
+  "settings": [
+    {
+      "type": "range",
+      "id": "title_size",
+      "label": "Title font size",
+      "min": 30,
+      "max": 60,
+      "step": 1,
+      "default": 52
+    },
+    {
+      "type": "range",
+      "id": "text_size",
+      "label": "Text font size",
+      "min": 10,
+      "max": 20,
+      "step": 1,
+      "default": 15
+    },
+    {
+      "type": "checkbox",
+      "id": "display_social_buttons",
+      "label": "Show social media share icons",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Related blog posts"
+    },
+    {
+     "type": "checkbox",
+     "id": "blog_additional_posts",
+     "label": "Show related blog posts",
+     "default": false
+    },
+    {
+     "type": "checkbox",
+     "id": "read_more_link",
+     "label": "Show continue reading link",
+     "default": true
+    },
+    {
+      "type": "header",
+      "content": "featured_products"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Featured collection"
+    },
+    {
+      "type": "checkbox",
+      "id": "collection_description",
+      "label": "Show description",
+      "default": true
+    },
+    {
+      "type": "radio",
+      "id": "collection_style",
+      "label": "Collection layout",
+      "default": "grid",
+      "options": [
+        {
+          "value": "slider",
+          "label": "Slider"
+        },
+        {
+          "value": "grid",
+          "label": "Grid"
+        }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "products_per",
+      "label": "Products per row",
+      "min": 2,
+      "max": 7,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "range",
+      "id": "products_limit",
+      "label": "Limit products",
+      "min": 2,
+      "max": 50,
+      "step": 1,
+      "default": 9
+    },
+    {
+      "type": "checkbox",
+      "id": "description_status",
+      "label": "Description status",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "vendor_link_status",
+      "label": "Vendor link"
+    },
+    {
+      "type": "checkbox",
+      "id": "badges",
+      "label": "Product review"
+    },
+    {
+      "type": "checkbox",
+      "id": "add_cart_form",
+      "label": "Add cart form"
+    },
+    {
+      "type": "checkbox",
+      "id": "tag_block_status",
+      "label": "Tag block"
+    },
+    {
+      "type": "header",
+      "content": "sign up form"
+    },
+    {
+        "type": "image_picker",
+        "id": "form_image",
+        "label": "Signup form image"
+    },
+    {
+        "type": "text",
+        "id": "form_title",
+        "label": "Signup form title",
+        "default": "Looking for more guides, sales, and announcements?"
+    },
+    {
+        "type": "richtext",
+        "id": "form_content",
+        "label": "Signup form content"
+    },
+    {
+        "type": "checkbox",
+        "id": "align_height",
+        "label": "Align height of collection images"
+    },
+    {
+        "type": "range",
+        "id": "collection_height",
+        "label": "Collection image height",
+        "min": 150,
+        "max": 400,
+        "step": 10,
+        "default": 200,
+        "unit": "px"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "product",
+      "name": "product",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product"
+        },
+        {
+          "type": "url",
+          "id": "bottom_link",
+          "label": "Link"
+        }
+      ]
+    },
+    {
+      "type": "image_gallery",
+      "name": "Image gallery",
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "wide_display",
+          "label": "Wide display",
+          "default": true
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title"
+        },
+        {
+          "type": "header",
+          "content": "gallery item"
+        },
+        {
+          "type": "image_picker",
+          "id": "detail_image_1",
+          "label": "Image 1",
+          "info": "760 x 500px recommended"
+        },
+        {
+          "type": "html",
+          "id": "detail_icon_1",
+          "label": "Icon 1"
+        },
+        {
+          "type": "text",
+          "id": "detail_title_1",
+          "label": "Title 1"
+        },
+        {
+          "type": "richtext",
+          "id": "detail_text_1",
+          "label": "Text 1"
+        },
+        {
+          "type": "url",
+          "id": "detail_link_1",
+          "label": "Link 1"
+        },
+        {
+          "type": "header",
+          "content": "gallery item"
+        },
+        {
+          "type": "image_picker",
+          "id": "detail_image_2",
+          "label": "Image 2",
+          "info": "760 x 500px recommended"
+        },
+        {
+          "type": "html",
+          "id": "detail_icon_2",
+          "label": "Icon 2"
+        },
+        {
+          "type": "text",
+          "id": "detail_title_2",
+          "label": "Title 2"
+        },
+        {
+          "type": "richtext",
+          "id": "detail_text_2",
+          "label": "Text 2"
+        },
+        {
+          "type": "url",
+          "id": "detail_link_2",
+          "label": "Link 2"
+        },
+        {
+          "type": "header",
+          "content": "gallery item"
+        },
+        {
+          "type": "image_picker",
+          "id": "detail_image_3",
+          "label": "Image 3",
+          "info": "760 x 500px recommended"
+        },
+        {
+          "type": "html",
+          "id": "detail_icon_3",
+          "label": "Icon 3"
+        },
+        {
+          "type": "text",
+          "id": "detail_title_3",
+          "label": "Title 3"
+        },
+        {
+          "type": "richtext",
+          "id": "detail_text_3",
+          "label": "Text 3"
+        },
+        {
+          "type": "url",
+          "id": "detail_link_3",
+          "label": "Link 3"
+        },
+        {
+          "type": "header",
+          "content": "gallery item"
+        },
+        {
+          "type": "image_picker",
+          "id": "detail_image_4",
+          "label": "Image 4",
+          "info": "760 x 500px recommended"
+        },
+        {
+          "type": "html",
+          "id": "detail_icon_4",
+          "label": "Icon 4"
+        },
+        {
+          "type": "text",
+          "id": "detail_title_4",
+          "label": "Title 4"
+        },
+        {
+          "type": "richtext",
+          "id": "detail_text_4",
+          "label": "Text 4"
+        },
+        {
+          "type": "url",
+          "id": "detail_link_4",
+          "label": "Link 4"
+        },
+        {
+          "type": "header",
+          "content": "gallery item"
+        },
+        {
+          "type": "image_picker",
+          "id": "detail_image_5",
+          "label": "Image 5",
+          "info": "760 x 500px recommended"
+        },
+        {
+          "type": "html",
+          "id": "detail_icon_5",
+          "label": "Icon 5"
+        },
+        {
+          "type": "text",
+          "id": "detail_title_5",
+          "label": "Title 5"
+        },
+        {
+          "type": "richtext",
+          "id": "detail_text_5",
+          "label": "Text 5"
+        },
+        {
+          "type": "url",
+          "id": "detail_link_5",
+          "label": "Link 5"
+        },
+        {
+          "type": "header",
+          "content": "gallery item"
+        },
+        {
+          "type": "image_picker",
+          "id": "detail_image_6",
+          "label": "Image 6",
+          "info": "760 x 500px recommended"
+        },
+        {
+          "type": "html",
+          "id": "detail_icon_6",
+          "label": "Icon 6"
+        },
+        {
+          "type": "text",
+          "id": "detail_title_6",
+          "label": "Title 6"
+        },
+        {
+          "type": "richtext",
+          "id": "detail_text_6",
+          "label": "Text 6"
+        },
+        {
+          "type": "url",
+          "id": "detail_link_6",
+          "label": "Link 6"
+        },
+        {
+          "type": "header",
+          "content": "gallery item"
+        },
+        {
+          "type": "image_picker",
+          "id": "detail_image_7",
+          "label": "Image 7",
+          "info": "760 x 500px recommended"
+        },
+        {
+          "type": "html",
+          "id": "detail_icon_7",
+          "label": "Icon 7"
+        },
+        {
+          "type": "text",
+          "id": "detail_title_7",
+          "label": "Title 7"
+        },
+        {
+          "type": "richtext",
+          "id": "detail_text_7",
+          "label": "Text 7"
+        },
+        {
+          "type": "url",
+          "id": "detail_link_7",
+          "label": "Link 7"
+        },
+        {
+          "type": "header",
+          "content": "gallery item"
+        },
+        {
+          "type": "image_picker",
+          "id": "detail_image_8",
+          "label": "Image 8",
+          "info": "760 x 500px recommended"
+        },
+        {
+          "type": "html",
+          "id": "detail_icon_8",
+          "label": "Icon 8"
+        },
+        {
+          "type": "text",
+          "id": "detail_title_8",
+          "label": "Title 8"
+        },
+        {
+          "type": "richtext",
+          "id": "detail_text_8",
+          "label": "Text 8"
+        },
+        {
+          "type": "url",
+          "id": "detail_link_8",
+          "label": "Link 8"
+        },
+        {
+          "type": "range",
+          "id": "item_per_row",
+          "label": "Item per row",
+          "min": 1,
+          "max": 4,
+          "step": 1,
+          "default": 4
+        },
+        {
+          "type": "checkbox",
+          "id": "text_bellow_image",
+          "label": "Text bellow image"
+        },
+        {
+          "type": "color",
+          "id": "bg_color",
+          "label": "Background color"
+        }
+      ]
+    },
+    {
+      "type": "image_with_text",
+      "name": "Image with text",
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "layout",
+          "label": "Wide display"
+        },
+        {
+          "type": "select",
+          "id": "frontpage_text_align",
+          "label": "Text alignment",
+          "options": [
+            {
+              "value": "left",
+              "label": "Left"
+            },
+            {
+              "value": "center",
+              "label": "Center"
+            },
+            {
+              "value": "right",
+              "label": "Right"
+            }
+          ]
+        },
+        {
+          "type": "select",
+          "id": "frontpage_image_position",
+          "label": "Image position",
+          "options": [
+            {
+              "value": "left",
+              "label": "Left"
+            },
+            {
+              "value": "right",
+              "label": "Right"
+            }
+          ]
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image",
+          "info": "1024 x 1024px recommended"
+        },
+        {
+          "type": "select",
+          "id": "image_crop",
+          "label": "Image cropping",
+          "default": "none",
+          "info": "Only applied when text area is taller than image.",
+          "options": [
+            {
+              "value": "left",
+              "label": "Left"
+            },
+            {
+              "value": "right",
+              "label": "Right"
+            },
+            {
+              "value": "center",
+              "label": "Center"
+            },
+            {
+              "value": "none",
+              "label": "None"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Heading",
+          "default": "Your headline"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "<p>Promotion description appears here.</p>"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        },
+        {
+          "type": "text",
+          "id": "button_label",
+          "label": "Button label",
+          "default": "View all"
+        }
+      ]
+    },
+    {
+      "type": "image_with_text_overlay",
+      "name": "Image with text overlay",
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "wide_display",
+          "label": "Wide display",
+          "default": true
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image",
+          "info": "1800 x 1000px recommended"
+        },
+        {
+          "type": "richtext",
+          "id": "pretext",
+          "label": "Preheading",
+          "default": "<p>This is</p>"
+        },
+        {
+          "type": "html",
+          "id": "icon",
+          "label": "Icon"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Heading",
+          "default": "Your headline"
+        },
+        {
+          "type": "richtext",
+          "id": "sub_title",
+          "label": "Sub title"
+        },
+        {
+          "type": "richtext",
+          "id": "subtitle",
+          "label": "Text",
+          "default": "<p>Customize this section</p>"
+        },
+        {
+          "type": "select",
+          "id": "text_align",
+          "label": "Text alignment",
+          "options": [
+            {
+              "value": "left",
+              "label": "Left"
+            },
+            {
+              "value": "center",
+              "label": "Center"
+            },
+            {
+              "value": "right",
+              "label": "Right"
+            }
+          ]
+        },
+        {
+          "type": "url",
+          "id": "read_link",
+          "label": "Read link"
+        },
+        {
+          "type": "url",
+          "id": "watch_link",
+          "label": "Watch link"
+        },
+        {
+          "type": "url",
+          "id": "listen_link",
+          "label": "Listen link"
+        }
+      ]
+    }
+  ]
+}
+
+{% endschema %}

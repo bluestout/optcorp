@@ -1,0 +1,116 @@
+<div class="banner">
+    {% include 'image-element' with
+        image: section.settings.image,
+        alt: section.settings.title
+    %}
+    <div class="caption">
+        <p class="pre_heading">
+            {{section.settings.pre_icon}}
+            {{section.settings.pre_heading}}
+        </p>
+        <h1>{{section.settings.heading}}</h1>
+        {% if section.settings.search_status != blank %}
+        <div class="bottom-content">
+            <div data-autocomplete-{{ settings.enable_autocomplete }}>
+                <form class="blog_search search-box search__form" action="{{ routes.search_url }}">
+                    <input type="hidden" name="type" value="article" />
+                    <input type="text" name="q" class="search-field" placeholder="{{ 'general.search.title' | t }} {{ blog.title | escape }}..." autocapitalize="off" autocomplete="off" autocorrect="off" value="{{ search.terms }}" />
+                    <button type="submit" class="search-button"><span class="icon-search"></span></button>
+                </form>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% schema %}
+{
+    "name": "Author list",
+    "class": "shopify-section--author-list",
+    "settings": [
+        {
+            "type": "header",
+            "content": "banner"
+        },
+        {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Image"
+        },
+        {
+            "type": "header",
+            "content": "pre_heading"
+        },
+        {
+            "type": "html",
+            "id": "pre_icon",
+            "label": "Icon"
+        },
+        {
+            "type": "text",
+            "id": "pre_heading",
+            "label": "Heading"
+        },
+        {
+            "type": "header",
+            "content": "heading"
+        },
+        {
+            "type": "text",
+            "id": "heading",
+            "label": "Heading"
+        },
+        {
+            "type": "checkbox",
+            "id": "search_status",
+            "label": "Search box statu"
+        }
+    ],
+    "blocks": [
+        {
+            "name": "author item",
+            "type": "author",
+            "settings": [
+                {
+                    "type": "image_picker",
+                    "id": "image",
+                    "label": "Image"
+                },
+                {
+                    "type": "text",
+                    "id": "name",
+                    "label": "Name"
+                },
+                {
+                    "type": "text",
+                    "id": "sub_title",
+                    "label": "Sub Title"
+                },
+                {
+                    "type": "richtext",
+                    "id": "text",
+                    "label": "Text"
+                },
+                {
+                    "type": "header",
+                    "content": "sub_content"
+                },
+                {
+                    "type": "text",
+                    "id": "sub_text",
+                    "label": "Sub text"
+                },
+                {
+                    "type": "text",
+                    "id": "button_title",
+                    "label": "Button title"
+                },
+                {
+                    "type": "url",
+                    "id": "button_link",
+                    "label": "Button link"
+                }
+            ]
+        }
+    ]
+}
+{% endschema %}

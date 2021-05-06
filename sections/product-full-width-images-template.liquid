@@ -4,8 +4,6 @@
 - Uses blocks
 {% endcomment %}
 
-<a name="pagecontent" id="pagecontent"></a>
-
 <div class="container main content product-name--{{ product.handle }}">
   <div class="sixteen columns">
     {% if collection.previous_product or collection.next_product or section.settings.product_breadcrumb %}
@@ -87,7 +85,7 @@
           {% endif %}
           <h1 class="product_name">{{ product.title }}</h1>
           {% if section.settings.enable_shopify_product_badges and settings.enable_shopify_review_comments %}
-            <span class="shopify-product-reviews-badge" data-id="{{ product.id }}"></span>
+          <span class=" stamped-product-reviews-badge" data-product-sku="{{ product.handle }}" data-id="{{ product.id }}" data-product-type="{{product.type}}" data-product-title="{{product.title}}"  style="display:block;">{{ product.metafields.stamped.badge }}</span>
           {% endif %}
           <div class="feature_divider"></div>
 
@@ -163,12 +161,6 @@
             {% endif %}
           {% endif %}
 
-          {% if section.settings.review_position == "next_to_gallery" %}
-            <div class="shopify-reviews reviewsVisibility--{{settings.enable_shopify_review_comments}}">
-              <div id="shopify-product-reviews" data-id="{{product.id}}">{{ product.metafields.spr.reviews }}</div>
-            </div>
-          {% endif %}
-
           {% if section.settings.display_collections or section.settings.display_tags or section.settings.display_type %}
             <div class="product_links">
               {% if section.settings.display_collections %}
@@ -224,11 +216,6 @@
         </div>
       {% endif %}
 
-      {% if section.settings.review_position == "below_gallery" %}
-        <div class="shopify-reviews reviewsVisibility--{{settings.enable_shopify_review_comments}}">
-          <div id="shopify-product-reviews" data-id="{{product.id}}">{{ product.metafields.spr.reviews }}</div>
-        </div>
-      {% endif %}
     </div>
 
   {% if sidebar %}

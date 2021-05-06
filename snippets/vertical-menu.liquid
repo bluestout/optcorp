@@ -1,24 +1,200 @@
+
+
 <div class="vertical-menu">
   {% for link in linklists[linklist].links %}
-    {% if linklists[link.handle] == empty %}
-      <li><a href="{{ link.url }}" class="top_link {% if link.url == '#' %}url-deadlink{% endif %} {% if link.active %}active{% endif %}" data-dropdown-rel="{{ link.handle }}">{{ link.title }}</a></li>
+    {% if link.title == 'Browse brands' %}
+      {% assign cls = 'modal_button' %}
     {% else %}
-      <li class="sublink"><a data-no-instant href="{{ link.url }}" class="dropdown_link--vertical {% if link.url == '#' %}url-deadlink{% endif %} {% if link.active %}active{% endif %}" data-dropdown-rel="{{ link.handle }}">{{ link.title }} <span class="icon-down-arrow"></span></a>
-        <ul class="vertical-menu_submenu">
-          {% for link in linklists[link.handle].links %}
-            {% if linklists[link.handle] == empty %}
-              <li><a href="{{ link.url }}">{{ link.title }}</a></li>
-            {% else %}
-            <li class="sublink"><a data-no-instant href="{{ link.url }}" class="{% if link.url == '#' %}url-deadlink{% endif %}">{{ link.title }} <span class="right icon-down-arrow"></span></a>
-              <ul class="vertical-menu_sub-submenu">
-                {% for link in linklists[link.handle].links %}
-                  <li><a href="{{ link.url }}" class="{% if link.url == '#' %}url-deadlink{% endif %}" >{{ link.title }}</a></li>
-                {% endfor %}
-              </ul>
-            </li>
-            {% endif %}
-          {% endfor %}
-        </ul>
+      {% assign cls = '' %}
+    {% endif %}
+    {% assign menu_type = '' %}
+    {% for block in section.blocks %}
+      {% if block.type == 'mega_menu' and block.settings.title == link.title %}
+        {% assign menu_type = 'mega_menu' %}
+
+        {% assign image_top = block.settings.image_top %}
+        {% assign image_title_top = block.settings.image_title_top %}
+        {% assign image_caption_top = block.settings.image_caption_top %}
+        {% assign image_link_top = block.settings.image_link_top %}
+
+        {% assign image_bottom = block.settings.image_bottom %}
+        {% assign image_title_bottom = block.settings.image_title_bottom %}
+        {% assign image_caption_bottom = block.settings.image_caption_bottom %}
+        {% assign image_link_bottom = block.settings.image_link_bottom %}
+        {% assign bottom_description = block.settings.bottom_description %}
+      {% endif %}
+    {% endfor %}
+    {% if linklists[link.handle] == empty %}
+      <li><a href="{{ link.url }}" class="top_link {{cls}} {% if link.url == '#' %}url-deadlink{% endif %} {% if link.active %}active{% endif %}" data-dropdown-rel="{{ link.handle }}">{{ link.title }}</a></li>
+    {% else %}
+      <li class="sublink {% if menu_type == 'mega_menu' %}mega_menu_link{% endif %}"><a data-no-instant href="{{ link.url }}" class="dropdown_link--vertical {{cls}} {% if link.url == '#' %}url-deadlink{% endif %} {% if link.active %}active{% endif %}" data-dropdown-rel="{{ link.handle }}">{{ link.title }} {% render 'icon-pack' with icon: 'arrow-down' %}<span class="icon-down-arrow"></span></a>
+        {% if menu_type == 'mega_menu' %}
+          <div class="vertical-mega-menu">
+            <div class="flex" style="justify-content: center;">
+              <div class="dropdown menu container">
+                <div class="dropdown_content">
+                  <div class="container">
+                    <div class="one-whole columns flex space_between menu-columns">
+                      {% for link in linklists[link.handle].links %}
+                        <div class="dropdown_column" {{ block.shopify_attributes }}>
+                              <div class="dropdown_column__menu">
+                                <ul class="dropdown_title">
+                                  <li>
+                                    <a>{{ link.title }}</a>
+                                  </li>
+                                </ul>
+                                {% if link != empty %}
+                                  <ul>
+                                    {% for sublink in link.links %}
+                                      <li>
+                                        <a href="{{ sublink.url }}">{{ sublink.title }}</a>
+                                      </li>
+                                    {% endfor %}
+                                  </ul>
+                                {% endif %}
+                              </div>
+                        </div>
+                      {% endfor %}
+                    </div>
+        
+                    {% if image_top != blank or image_bottom != blank %}
+                      <div class="banner_field medium-down--hide">
+                        {% comment %}Image with caption and link{% endcomment %}
+                        {% if image_top != nil or image_caption_top != blank %}
+                          <div class="mega-menu__image-caption-link">
+                            <a {% if image_link_top != blank %}href="{{ image_link_top }}"{% endif %} >
+                              {% if image_top != nil %}
+                                {% render 'image-element',
+                                        image: image_top,
+                                        alt: image_title_top
+                                %}
+                              {% endif %}
+                              <div class="info">
+                                {% if image_title_top != blank %}
+                                  <h1 class="title">{{ image_title_top }}</h1>
+                                {% endif %}
+                                {% if image_caption_top != blank %}
+                                  {{ image_caption_top }}
+                                {% endif %}
+                              </div>
+                            </a>
+                          </div>
+                        {% endif %}
+        
+                        {% comment %}Image with caption and link{% endcomment %}
+                        {% if image_bottom != nil or image_caption_bottom != blank %}
+                          <div class="mega-menu__image-caption-link">
+                            <a {% if image_link_bottom != blank %}href="{{ image_link_bottom }}"{% endif %} >
+                              {% if image_bottom != nil %}
+                                {% render 'image-element',
+                                        image: image_bottom,
+                                        alt: image_title_bottom 
+                                %}
+                              {% endif %}
+                              <div class="info">
+                                {% if image_title_bottom != blank %}
+                                  <h1 class="title">{{ image_title_bottom }}</h1>
+                                {% endif %}
+                                {% if image_caption_bottom != blank %}
+                                  <p>{{ image_caption_bottom }}</p>
+                                {% endif %}
+                              </div>
+                            </a>
+                          </div>
+                        {% endif %}
+                      </div>
+                    {% endif %}
+                  
+                  </div>
+                </div>
+                <div class="dropdown_bottom">
+                  <div class="container flex">
+                    {{bottom_description}}
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+          </div>
+        {% else %}
+        {% assign status = false %}
+        {% for block in section.blocks %}
+          {% assign link_title = link.title | handleize %}
+          {% assign block_title = block.settings.menu | handleize %}
+          {% if link_title == block_title and block.type == 'menu_banner' %}
+            {% assign status = true %}
+          {% endif %}
+        {% endfor %}
+          <ul class="vertical-menu_submenu {% if status %} banner-menu {% endif %}">
+            <div class="link">
+              {% for link in linklists[link.handle].links %}
+                {% if linklists[link.handle] == empty %}
+                  <li class="{%if link.handle == 'browse-all' %}browse-all{% endif %}" ><a href="{{ link.url }}">{{ link.title }}</a></li>
+                {% else %}
+                <li class="sublink"><a data-no-instant href="{{ link.url }}" class="{% if link.url == '#' %}url-deadlink{% endif %}">{{ link.title }} {% render 'icon-pack' with icon: 'arrow-down' %}</a>
+                  <ul class="vertical-menu_sub-submenu">
+                    {% for link in linklists[link.handle].links %}
+                      <li><a href="{{ link.url }}" class="{% if link.url == '#' %}url-deadlink{% endif %}" >{{ link.title }}</a></li>
+                    {% endfor %}
+                  </ul>
+                </li>
+                {% endif %}
+              {% endfor %}
+            </div>
+            {% for block in section.blocks %}
+              {% if link.title == block.settings.menu and block.type == 'menu_banner' %}
+                <div class="banner_field medium-down--hide">
+                  {% comment %}Image with caption and link{% endcomment %}
+                  {% if block.settings.banner_1 != nil and block.settings.title_1 != blank %}
+                    <div class="mega-menu__image-caption-link one-half column">
+                      <a {% if block.settings.link_1 != blank %}href="{{ block.settings.link_1 }}"{% endif %} >
+                        {% if block.settings.banner_1 != nil %}
+                          {% render 'image-element',
+                                  image: block.settings.banner_1,
+                                  alt: block.settings.title_1,
+                                  stretch_width: true
+                          %}
+                        {% endif %}
+                        <div class="info">
+                          {% if block.settings.title_1 != blank %}
+                            <h1 class="title">{{ block.settings.title_1 }}</h1>
+                          {% endif %}
+                          {% if block.settings.link_title_1 != blank %}
+                            <p>{{ block.settings.link_title_1 }}</p>
+                          {% endif %}
+                        </div>
+                      </a>
+                    </div>
+                  {% endif %}
+
+                  {% comment %}Image with caption and link{% endcomment %}
+                  {% if block.settings.banner_2 != nil and block.settings.title_2 != blank %}
+                    <div class="mega-menu__image-caption-link one-half column">
+                      <a {% if block.settings.link_2 != blank %}href="{{ block.settings.link_2 }}"{% endif %} >
+                        {% if block.settings.banner_2 != nil %}
+                          {% render 'image-element',
+                                  image: block.settings.banner_2,
+                                  alt: block.settings.title_2,
+                                  stretch_width: true
+                          %}
+                        {% endif %}
+                        <div class="info">
+                          {% if block.settings.title_2 != blank %}
+                            <h1 class="title">{{ block.settings.title_2 }}</h1>
+                          {% endif %}
+                          {% if block.settings.link_title_2 != blank %}
+                            <p>{{ block.settings.link_title_2 }}</p>
+                          {% endif %}
+                        </div>
+                      </a>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+            {% endfor %}
+          </ul>
+        {% endif %}
+        
       </li>
     {% endif %}
   {% endfor %}

@@ -1,0 +1,28 @@
+{% if image != blank %}
+    <div class="page-banner  full-width--{{ wide }}">
+        <div class="medium-down--hide">
+            {% include 'image-element' with 
+                image: image,
+                alt: title
+            %}
+        </div>
+
+        <div class="hide medium-down--show">
+            {% include 'image-element' with 
+                image: mobile_image,
+                alt: title
+            %}
+        </div>
+        
+        <div class="caption center">
+            {% if sub_title %}
+            <p class="center uppercase sub-title">{{sub_title}}</p>
+            {% endif %}
+            <h1 class="headline center">{{title}}</h1>
+            {{ desc }}
+            {% if link and button %}
+                <a href="{{link}}" class="{{ additional_class }} button center">{{button}}</a>
+            {% endif %}
+        </div>
+    </div>
+{% endif %}

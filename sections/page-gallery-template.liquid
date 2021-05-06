@@ -4,8 +4,6 @@
 - Uses blocks
 {% endcomment %}
 
-<a name="pagecontent" id="pagecontent"></a>
-
 {% assign images_per_row = section.settings.grid-size %}
 
 <div class="container main content">
@@ -75,7 +73,7 @@
 
               {% render 'image-element',
                       image: block.settings.image,
-                      alt: block.settings.image.alt,
+                      alt: block.settings.alt,
                       back_to_basics: use_basic
               %}
               {% if section.settings.enable_lightbox  and block.settings.image_link == nil %}
@@ -207,6 +205,12 @@
             "type": "url",
             "id": "image_link",
             "label": "Image link"
+          },
+          {
+            "type": "text",
+            "id": "alt",
+            "label": "Alt text",
+            "default": "galllery"
           }
         ]
       }

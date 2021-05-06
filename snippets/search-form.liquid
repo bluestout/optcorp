@@ -8,9 +8,7 @@
 <div class="search__container" data-autocomplete-{{ settings.enable_autocomplete }}>
   <form class="search search__form" action="{{ routes.search_url }}">
     <div class="search__wrapper">
-      {% if settings.search_option != 'everything' %}
-        <input type="hidden" name="type" value="product" />
-      {% endif %}
+      <input type="hidden" name="type" value="article" />
       <input type="text" name="q" placeholder="{{ search_term }}" value="{{ search.terms | replace: '*', ''}}" x-webkit-speech autocapitalize="off" autocomplete="off" autocorrect="off" />
       <button type="submit" name="submit" class="search__button icon-search" value=" " >
         <span class"icon-search"></span>

@@ -41,7 +41,6 @@
     quick-shop-style--{{ settings.quick_shop_style }}
   {% endif %}
   product-{{ product.id }}">
-
   <div class="product-wrap {% if settings.collection_secondary_image != blank and secondaryImage != blank %}has-secondary-media-swap{% endif %}">
     <div class="relative product_image">
       <a href="{{ product.url | within: collection }}">

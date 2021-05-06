@@ -8,30 +8,41 @@
   <div class="sixteen columns">
     <div class="section clearfix">
     {% if section.settings.title != blank %}
-        <h2 class="title center">{{ section.settings.title | escape }}</h2>
-        <div class="feature_divider no-margin"></div>
+    <p class="heading capitalize center" style="color: {{section.settings.title_color}}">{{ section.settings.title | escape }}</p>
     {% endif %}
 
     {% if section.blocks.size > 0 %}
-      <div class="logo-bar">
-        {% for block in section.blocks %}
-          <div class="logo-bar__item" {{ block.shopify_attributes }}>
-            {% if block.settings.link != blank %}
-              <a href="{{ block.settings.link }}" class="logo-bar__link">
+      <div class="logo-bar js-collection-slider">
+        <div class="products-slider slider-gallery">
+          {% for block in section.blocks %}
+            {% assign modulo = forloop.index | minus: 1 | modulo:2 %}
+            {% if modulo == 0 %}
+              {% if forloop.index != 1 %}
+                </div>
+              {% endif %}
+              <div class="gallery-cell one-seventh medium-down--one-third small-down--one-third column">
             {% endif %}
-            {% if block.settings.image != blank %}
-              {% render 'image-element',
-                      image: block.settings.image,
-                      alt: block.settings.image.alt
-              %}
-            {% else %}
-              {{ 'logo' | placeholder_svg_tag: 'placeholder-svg' }}
-            {% endif %}
-            {% if block.settings.link != blank %}
-              </a>
-            {% endif %}
+            <div class="logo-bar__item border-box" {{ block.shopify_attributes }}>
+              {% if block.settings.link != blank %}
+                <a href="{{ block.settings.link }}" class="logo-bar__link">
+              {% endif %}
+              {% if block.settings.image != blank %}
+                {% render 'image-element',
+                        image: block.settings.image,
+                        alt: block.settings.title,
+                        object_fit: true,
+                        max_height: 37
+                %}
+              {% else %}
+                {{ 'logo' | placeholder_svg_tag: 'placeholder-svg' }}
+              {% endif %}
+              {% if block.settings.link != blank %}
+                </a>
+              {% endif %}
+            </div>
+          {% endfor %}
           </div>
-        {% endfor %}
+        </div>
       </div>
     {% endif %}
 
@@ -50,6 +61,12 @@
         "id": "title",
         "label": "Heading",
         "default": "Logo list"
+      },
+      {
+        "type": "color",
+        "id": "title_color",
+        "label": "Title color",
+        "default": "#000000"
       }
     ],
     "blocks": [
@@ -67,6 +84,11 @@
             "type": "url",
             "id": "link",
             "label": "Link"
+          },
+          {
+            "type": "text",
+            "id": "title",
+            "label": "logo title"
           }
         ]
       }

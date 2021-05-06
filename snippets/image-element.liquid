@@ -61,16 +61,17 @@ max_height: <number>
 {% elsif settings.image_loading_style == 'color' %}
   {% comment %}Dominant image color loads first{% endcomment %}
   {% assign dominant_color_image = image | img_url: '1x' %}
-  {% if object_fit == true %}
-    {% capture crop_to_aspect_ratio %}
-        max-height: {{ max_height }}px; width: calc({{ image.width }} /  {{ image.height }} * {{ max_height }}px);
-    {% endcapture %}
-  {% endif %}
+{% endif %}
 
-  {% capture background_color %}
-    background: url({{ dominant_color_image }});
+{% if object_fit == true %}
+  {% capture crop_to_aspect_ratio %}
+      max-height: {{ max_height }}px; width: calc({{ image.width }} /  {{ image.height }} * {{ max_height }}px);
   {% endcapture %}
 {% endif %}
+
+{% capture background_color %}
+  background: url({{ dominant_color_image }});
+{% endcapture %}
 
 
 {% if back_to_basics %}

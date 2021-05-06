@@ -1244,6 +1244,11 @@
       },
       {
         "type": "checkbox",
+        "id": "monthlyPayment",
+        "label": "Show monthly payment"
+      },
+      {
+        "type": "checkbox",
         "id": "collection_secondary_image",
         "label": "Show secondary product media on hover",
         "info": "Desktop only"
@@ -1608,6 +1613,17 @@
       },
       {
         "type": "checkbox",
+        "id": "redirect_cart",
+        "label": "Redirect cart page",
+        "default": true
+      },
+      {
+        "type": "textarea",
+        "id": "sales_people",
+        "label": "Sales people"
+      },
+      {
+        "type": "checkbox",
         "id": "show_lock_icon",
         "label": "Show lock icon on checkout button",
         "default": true
@@ -1668,6 +1684,11 @@
       {
         "type": "paragraph",
         "content": "If your customer is logged-in, the country in his default shipping address will be selected. If you are not sure about the spelling to use above, refer to your first checkout page."
+      },
+      {
+        "type": "text",
+        "id": "free_shipping_limit",
+        "label": "Free shipping limit"
       }
     ]
   },
@@ -2033,6 +2054,41 @@
         "type": "text",
         "id": "disqus_shortname",
         "label": "[DISQUS](http:\/\/help.disqus.com\/en\/articles\/1717111-what-s-a-shortname\/) shortname"
+      }
+    ]
+  },
+  {
+    "name": "Instagram",
+    "settings": [
+      {
+        "type": "textarea",
+        "id": "code",
+        "label": "Token code"
+      },
+      {
+        "type": "range",
+        "id": "limit",
+        "label": "Images on page",
+        "min": 3,
+        "max": 12,
+        "step": 1,
+        "default": 10
+      },
+      {
+        "type": "range",
+        "id": "grid-size",
+        "label": "Number of columns",
+        "min": 2,
+        "max": 5,
+        "step": 1,
+        "default": 4,
+        "info": "Vertical masonry and classic only"
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_lightbox",
+        "label": "Enable lightbox",
+        "default": true
       }
     ]
   }

@@ -12,6 +12,14 @@
       "subtext": "We're sorry, but the page you requested could not be found.",
       "continue_shopping_html": "Try searching or <a href=\"\/collections\/all\">continue shopping &rarr;<\/a>"
     },
+    "return": {
+      "title": "Return Product",
+      "desc": "Please select a reason for return and fill in your information to start return procedure.",
+      "order_number": "Enter order number",
+      "email": "Enter your email",
+      "note": "You can find it in order confirmation email",
+      "message": "Start typing your message..."
+    },
     "password_page": {
       "opening_soon": "Opening Soon",
       "spread_the_word": "Spread the word",
@@ -33,7 +41,7 @@
     },
     "newsletter_form": {
       "title": "News & Updates",
-      "description": "Sign up to get the latest on sales, new releases and more …",
+      "description": "We only send interesting emails and will never sell your data.",
       "name": "Name",
       "email": "Email",
       "subscriber_first_name": "First Name",
@@ -68,24 +76,32 @@
     },
     "language": {
       "dropdown_label": "Language"
-    }
+    },
+    "guide_download": "Download Quick Guide",
+    "learn_more": "Learn More",
+    "close_day_info": "Please note OPT will be closed on the following days:",
+    "browse_brand": "Browse brands"
   },
   "blogs": {
     "general": {
-      "continue_reading_html": "Read More",
+      "continue_reading_html": "Read",
       "tagged": "tagged",
-      "view_all": "All Categories"
+      "view_all": "All Categories",
+      "view_detail": "View Details",
+      "social_iconbar_title": "Like it? Share it",
+      "social_iconsidebar_title": "Share article"
     },
     "sidebar": {
       "recent_articles": "Recent Articles",
       "categories": "Categories",
       "follow_us": "Follow Us",
-      "follow_shop": "Follow {{ shop_name }} on Twitter"
+      "follow_shop": "Follow {{ shop_name }} on Twitter",
+      "listen_now": "Listen Now"
     },
     "article": {
       "read_time": "min read",
       "posted_in_html": "{{ tags }}",
-      "additional_articles": "Also in {{ title }}",
+      "additional_articles": "Other articles you might be Interested in",
       "author_on_date_html": "Posted on {{ date }} by {{ author }}",
       "by_author": "by {{ author }}",
       "previous_article_html": "<span class=\"icon-left-arrow\"><\/span> Previous",
@@ -158,7 +174,8 @@
     "general": {
       "previous_product_html": "Previous",
       "next_product_html": "Next",
-      "from_html": "from"
+      "from_html": "from",
+      "desc_title": "Why we like it: "
     },
     "product": {
       "sold_out_html": "Sold Out",
@@ -174,10 +191,13 @@
       "size_chart": "Size Guide",
       "savings_html": "You Save",
       "products_tagged": "Products tagged {{ tag }}",
+      "guarantee": "Price Match Guarantee",
+      "chart_html": "Got questions? <a onclick='Smooch.open();' class='btn chat-btn black chat-btn'>Click for live chat<\/a>",
       "items_left_count": {
         "one_html": "item left",
         "other_html": "items left"
       },
+      "detail_header": "Product Details",
       "view_in_your_space": "View in your space"
     },
     "notify_form": {
@@ -202,7 +222,8 @@
   },
   "customer": {
     "account": {
-      "title": "My Account",
+      "title": "Order History",
+      "sub_title": "My account",
       "details": "Account Details",
       "view_addresses": "View Addresses",
       "return": "Return to Account Details"
@@ -214,7 +235,11 @@
       "payment_status": "Payment Status",
       "fulfillment_status": "Fulfillment Status",
       "total": "Total",
+      "delete": "Remove",
       "none": "You haven't placed any orders yet."
+    },
+    "wishlist": {
+      "title": "Wishlist"
     },
     "activate_account": {
       "title": "Activate Account",
@@ -227,7 +252,7 @@
     },
     "addresses": {
       "no_addresses": "No addresses currently on file",
-      "title": "Your Addresses",
+      "title": "Customer profile",
       "default": "Default",
       "primary": "Primary Address",
       "add_new": "Add a New Address",
@@ -254,16 +279,16 @@
       "title": "Customer Login",
       "returning_customers": "Returning Customers",
       "new_customers": "New Customers",
-      "forgot_password": "Forgot your password?",
-      "sign_up_html": "Sign up &rarr;",
-      "new_customer_label": "New Customer?",
-      "sign_in": "Login",
+      "forgot_password": "Forgot?",
+      "sign_up_html": "Create Account",
+      "new_customer_label": "Don’t have an account yet?",
+      "sign_in": "Sign In",
       "cancel": "Return to Store",
       "guest_title_html": "Continue as a Guest &rarr;",
       "first_name": "First Name",
       "last_name": "Last Name",
-      "email": "Email",
-      "password": "Password",
+      "email": "Enter your email",
+      "password": "Enter your password",
       "guest_continue": "Continue",
       "or": "or"
     },
@@ -305,14 +330,15 @@
     },
     "register": {
       "title": "Create Account",
-      "sign_up": "Sign Up",
+      "sub_title": "Enter your information to create an account",
+      "sign_up": "Create account",
       "cancel": "Return to Store",
       "returning_customer_label": "Returning Customer?",
-      "sign_in_html": "Login &rarr;",
-      "first_name": "First Name",
-      "last_name": "Last Name",
-      "email": "Email",
-      "password": "Password",
+      "sign_in_html": "Sign In",
+      "first_name": "Enter your first name",
+      "last_name": "Enter your last name",
+      "email": "Enter your email",
+      "password": "Create password",
       "or": "or",
       "accepts_marketing": "Subscribe to our newsletter?"
     }
@@ -332,7 +358,8 @@
       "blog_excerpt": "Your store hasn’t published any blog posts yet. A blog can be used to talk about new product launches, tips, or other news you want to share with your customers. You can check out Shopify’s ecommerce blog for inspiration and advice for your own store and blog.",
       "blog_author": "Author name",
       "no_content": "This section doesn’t currently include any content. Add content to this section using the sidebar."
-    }
+    },
+    "more": "More"
   },
   "gift_cards": {
     "issued": {
@@ -369,10 +396,11 @@
       "view_terms": "[View Terms]",
       "agree_to_terms_warning_html": "You must agree with the terms and conditions to checkout.",
       "or": "or",
-      "subtotal": "Subtotal",
+      "subtotal": "Total",
       "discount_html": "Discount",
       "update": "Update Subtotal",
-      "checkout": "Checkout"
+      "checkout": "Proceed to checkout",
+      "success": "This item qualifies for free shipping"
     },
     "shipping_calculator": {
       "estimated_shipping": "estimated shipping",
@@ -400,12 +428,13 @@
       "continue_shopping": "Continue",
       "empty_cart": "Your Cart is Empty",
       "cart_note": "Order Notes",
-      "subtotal_html": "Subtotal",
+      "subtotal_html": "Total",
       "savings_html": "Total Savings",
       "pick_a_currency": "Pick a currency",
       "social": "Follow",
       "close_window": "Close",
-      "designer_credits_html": "<a href=\"https:\/\/outofthesandbox.com\/\" target=\"_blank\" title=\"Turbo Shopify Theme by Out of the Sandbox\">Designed by Out of the Sandbox<\/a>."
+      "designer_credits_html": "<a href=\"https:\/\/outofthesandbox.com\/\" target=\"_blank\" title=\"Turbo Shopify Theme by Out of the Sandbox\">Designed by Out of the Sandbox<\/a>.",
+      "learn_opt": "Learn with OPT"
     },
     "social_sharing": {
       "title": "Share",
@@ -422,7 +451,7 @@
       "logged_in_as": "Logged in as",
       "log_out": "Logout",
       "log_in": "Login",
-      "my_account": "My Account",
+      "my_account": "Account",
       "create_account": "Create an account"
     },
     "counts": {
@@ -435,5 +464,10 @@
         "other": "{{ count }} items"
       }
     }
+  },
+  "about": {
+    "phone_num_title": "Give us a call 6 days a week at",
+    "chart": "Start Chat",
+    "phone_hours": "Phone hours:"
   }
 }

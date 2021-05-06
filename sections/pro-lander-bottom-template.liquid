@@ -1,0 +1,257 @@
+<div class="container">
+    <div class="page-content center">
+        <h3 class="heading">{{ section.settings.title }}</h3>
+        <p>{{ section.settings.sub_title }}</p>
+        <div class="content">
+            <div class="logo-bar">
+                {{ section.settings.icon_1 }}
+                {{ section.settings.icon_2 }}
+                {{ section.settings.icon_3 }}
+                {{ section.settings.icon_4 }}
+                {{ section.settings.icon_5 }}
+                {{ section.settings.icon_6 }}
+            </div>
+            <div class="map-content">
+                <div class="sec-width map-wrapper">            
+                    <div class="mapcont">
+                        <div id="container1"></div>
+                    
+                        <script type="text/javascript" src="//d3js.org/d3.v3.min.js" charset="utf-8"></script>
+                        <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/topojson/1.6.9/topojson.min.js" charset="utf-8"></script>
+                        <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/datamaps/0.5.5/datamaps.world.min.js" charset="utf-8"></script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="clearfix text-list-block">
+        <h3 class="heading center">{{section.settings.text_list_title}}</h3>
+        <div class="content flex">
+            {% for block in section.blocks %}
+                {% if block.type == 'text' %}
+                    <div class="one-third small-down--one-whole column">
+                        <div class="border-box">
+                            {{ block.settings.icon }}
+                            <h3 class="heading">{{ block.settings.title }}</h3>
+                            {{ block.settings.text }}
+                            {% if block.settings.link != blank and block.settings.button_title != blank %}
+                                {% if block.settings.button_title == 'Contact' %}
+                                    <a class="button modal_button" href="#pro-contact-form">{{block.settings.button_title}}</a>
+                                {% else %}
+                                    <a class="button" href="{{block.settings.link}}">{{block.settings.button_title}}</a>
+                                {% endif %}
+                            {% endif %}
+                            <span>{{ block.settings.subtext | strip_html }}</span>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+            
+        </div>
+    </div>
+    <div class="clearfix carousel-block">
+        <div class="carousel-indicator flex">
+            {% assign status = true %}
+            {% for block in section.blocks %}
+                {% if block.type == 'carousel' %}
+                    {% if status %}
+                        {% assign cls = 'active' %}
+                    {% else %}
+                        {% assign cls = '' %}
+                    {% endif %}
+                    <div class="indicator-item {{cls}}">
+                        <a href="#carousel-{{block.id}}">
+                            {{ block.settings.indicator_icon }}
+                            <p>{{ block.settings.indicator_title }}</p>
+                        </a>
+                    </div>
+                    {% assign status = false %}
+                {% endif %}
+            {% endfor %}
+        </div>
+        <div class="border-box animated fadeInUp">
+            <div class="banner-slider slider-gallery">
+                {% for block in section.blocks %}
+                    {% if block.type == 'carousel' %}
+                        <div class="gallery-cell flex" id="carousel-{{block.id}}">
+                            <div class="one-fourth medium-down--one-whole column text-list">
+                                <h3 class="heading">{{ block.settings.title }}</h3>
+                                {{block.settings.content}}
+                            </div>
+                            <div class="three-fourths medium-down--one-whole column">
+                                {% include 'image-element' with 
+                                    image: block.settings.image,
+                                    alt: block.settings.title,
+                                    stretch_width: true,
+                                %}
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="page-width">
+    <div class="pro-container sec-1" aria-label="{{section.settings.banner_title}}" style=" background-image: url({{section.settings.banner_image | img_url: '2048x'}});">
+        <div class="title-sec-container">
+            <div class="title-wrap text-center">
+                <h1 class="headline">{{ section.settings.banner_title }}</h1>
+            </div>
+
+            <div class="action-bottom">
+                <div class="sec-width fadeInUp flex">
+                    <button class="button button-full modal_button" href="#pro-contact-form">Contact</button>
+                    <a href="#google_form_1" class="button border-button one-half small-down--one-whole column modal_button">Capability Statement</a>
+                    <a href="#google_form_2" class="button border-button one-half small-down--one-whole column modal_button">W9 Form</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% schema %}
+{
+    "name": "bottom section",
+    "class": "pro-service-bottom-section",
+    "settings": [
+        {
+            "type": "text",
+            "id": "title",
+            "label": "Title",
+            "default": "Some of Our Satisfied Clients"
+        },
+        {
+            "type": "text",
+            "id": "sub_title",
+            "label": "Sub title",
+            "default": "Browse the interactive map to see some of the projects we’ve supported."
+        },
+        {
+            "type": "html",
+            "id": "icon_1",
+            "label": "Icon"
+        },
+        {
+            "type": "html",
+            "id": "icon_2",
+            "label": "Icon"
+        },
+        {
+            "type": "html",
+            "id": "icon_3",
+            "label": "Icon"
+        },
+        {
+            "type": "html",
+            "id": "icon_4",
+            "label": "Icon"
+        },
+        {
+            "type": "html",
+            "id": "icon_5",
+            "label": "Icon"
+        },
+        {
+            "type": "html",
+            "id": "icon_6",
+            "label": "Icon"
+        },
+        {
+            "type": "header",
+            "content": "text list"
+        },
+        {
+            "type": "text",
+            "id": "text_list_title",
+            "label": "Text list title",
+            "default": "How can we help?"
+        },
+        {
+            "type": "header",
+            "content": "Footer banner"
+        },
+        {
+            "type": "image_picker",
+            "id": "banner_image",
+            "label": "Banner image"
+        },
+        {
+            "type": "text",
+            "id": "banner_title",
+            "label": "Banner title",
+            "default": "Ready to know more?"
+        }
+    ],
+    "blocks": [
+        {
+            "type": "text",
+            "name": "text block",
+            "settings": [
+                {
+                    "type": "html",
+                    "id": "icon",
+                    "label": "Icon"
+                },
+                {
+                    "type": "text",
+                    "id": "title",
+                    "label": "Title"
+                },
+                {
+                    "type": "richtext",
+                    "id": "text",
+                    "label": "Text"
+                },
+                {
+                    "type": "richtext",
+                    "id": "subtext",
+                    "label": "Sub text"
+                },
+                {
+                    "type": "url",
+                    "id": "link",
+                    "label": "Button link"
+                },
+                {
+                    "type": "text",
+                    "id": "button_title",
+                    "label": "Button title"
+                }
+            ]
+        },
+        {
+            "type": "carousel",
+            "name": "Banner carousel",
+            "settings": [
+                {
+                    "type": "image_picker",
+                    "id": "image",
+                    "label": "Image"
+                },
+                {
+                    "type": "text",
+                    "id": "title",
+                    "label": "Title"
+                },
+                {
+                    "type": "richtext",
+                    "id": "content",
+                    "label": "Content"
+                },
+                {
+                    "type": "html",
+                    "id": "indicator_icon",
+                    "label": "Indicatror icon"
+                },
+                {
+                    "type": "text",
+                    "id": "indicator_title",
+                    "label": "Indicator title"
+                }
+            ]
+        }
+    ]
+}
+{% endschema %}

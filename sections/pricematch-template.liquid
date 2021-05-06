@@ -1,0 +1,158 @@
+{% if section.blocks.size > 0 %}
+    {% assign sidebar = true %}
+{% else %}
+    {% assign sidebar = false %}
+{% endif %}
+
+<div class="container">
+    {% if sidebar %}
+        <div class="four medium-down--one-whole column sidebar">
+            {% for block in section.blocks %}
+                <div class="sidebar-block sidebar-menu wrapper">
+                    {% if block.settings.links != blank %}
+                        <div class="select-box hide medium-down--show">
+                            {% for link in linklists[block.settings.links].links %}
+                                {% if link.url contains page.handle %}
+                                    {{link.title}}
+                                {% endif %} 
+                            {% endfor %}
+                        </div>
+                        <ul class="links">
+                            {% for link in linklists[block.settings.links].links %}
+                                {% if link.url contains page.handle %}
+                                    {% assign cls = 'active' %}
+                                {% else %}
+                                    {% assign cls = '' %}
+                                {% endif %} 
+                                <li class="{{cls}}"><a href="{{link.url}}">{{link.title}}</a></li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    <div class="{% if sidebar %}twelve medium-down--one-whole relative flex {% else %}sixteen{% endif %} column main-content">
+        
+        {% if block.settings.title != blank %}
+            {% assign title = block.settings.title %}
+        {% else %}
+            {% assign title = page.title %}
+        {% endif %}
+
+        {% include 'heading-banner' with 
+            image: section.settings.image,
+            mobile_image: section.settings.banner_mobile_image,
+            sub_title: section.settings.sub_title,
+            title: title,
+            wide: section.settings.wide_display,
+        %}
+
+        <div class="twelve column offset-by-two medium-down--one-whole content">
+            <h1 class="heading">{{ section.settings.bottom_title }}</h1>
+            {{ section.settings.botton_desc }}
+            {{page.content}}
+            <div class="form-pannel border-box flex">
+                <div class="info">
+                    <h3 class="title">{{section.settings.form_title}}</h3>
+                    {{ section.settings.form_text }}
+                </div>
+                <div class="flex buttons">
+                    {% if section.settings.link != blank and section.settings.name != blank %}
+                        <a class="button center {{section.settings.additional_class}}" href="{{section.settings.link}}">{{section.settings.name}}</a>
+                    {% endif %}
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+{% schema %}
+{
+    "name": "Page template",
+    "class": "page-section pricematch-section",
+    "settings": [
+        {
+            "type": "checkbox",
+            "id": "wide_display",
+            "label": "Wide display"
+        },
+        {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Image"
+        },
+        {
+            "type": "image_picker",
+            "id": "banner_mobile_image",
+            "label": "Mobile banner image"
+        },
+        {
+            "type": "text",
+            "id": "sub_title",
+            "label": "Sub title",
+            "default": "customer help"
+        },
+        {
+            "type": "text",
+            "id": "title",
+            "label": "Title"
+        },
+        {
+            "type": "text",
+            "id": "bottom_title",
+            "label": "Bottom title",
+            "default": "We refuse to be beat on price"
+        },
+        {
+            "type": "richtext",
+            "id": "botton_desc",
+            "label": "Botton description",
+            "default": "<p>We guarantee to match any telescope or telescope accessory price online.</p>"
+        },
+        {
+            "type": "header",
+            "content": "price match form"
+        },
+        {
+            "type": "text",
+            "id": "form_title",
+            "label": "TItle"
+        },
+        {
+            "type": "richtext",
+            "id": "form_text",
+            "label": "text"
+        },
+        {
+            "type": "url",
+            "id": "link",
+            "label": "Button link"
+        },
+        {
+            "type": "text",
+            "id": "name",
+            "label": "Button title"
+        },
+        {
+            "type": "text",
+            "id": "additional_class",
+            "label": "Additional class"
+        }
+    ],
+    "blocks": [
+        {
+            "type": "sidebar",
+            "name": "Sidebar",
+            "settings": [
+                {
+                    "type": "link_list",
+                    "id": "links",
+                    "label": "Links"
+                }
+            ]
+        }
+    ]
+}
+{% endschema %}

@@ -1,0 +1,157 @@
+<div class="container full-width--{{ block.settings.wide_display }}">
+  <div class="one-whole column">
+    <h2 class="heading capitalize center">{{block.settings.title}}</h2>
+  </div>
+  <div class="gallerys bellow-image-text--{{block.settings.text_bellow_image}}">
+    {% case block.settings.item_per_row %}
+      {% when 1 %}
+        {% assign cls = 'one-whole medium-down--one-whole' %}
+      {% when 2 %}
+        {% assign cls = 'one-half medium-down--one-whole' %}
+      {% when 3 %}
+        {% assign cls = 'one-third medium-down--one-half' %}
+      {% when 4 %}
+        {% assign cls = 'two-eighths medium-down--one-half' %}
+    {% endcase %}
+    <div class="{{cls}} column thumbnail">
+      {% if block.settings.detail_image_1 %}
+        <div class="gallery-cell">
+          <a href="{{block.settings.detail_link_1}}">
+            {% render 'image-element',
+                    image: block.settings.detail_image_1,
+                    alt: block.settings.caption
+            %}
+            <div class="info">
+              {{block.settings.detail_icon_1}}
+              <p class="title">{{block.settings.detail_title_1}}</p>
+              {{block.settings.detail_text_1}}
+            </div>
+          </a>
+        </div>
+      {% endif %}
+    </div>
+    <div class="{{cls}} column thumbnail">
+      {% if block.settings.detail_image_2 %}
+        <div class="gallery-cell">
+          <a href="{{block.settings.detail_link_2}}">
+            {% render 'image-element',
+                    image: block.settings.detail_image_2,
+                    alt: block.settings.caption
+            %}
+            <div class="info">
+              {{block.settings.detail_icon_2}}
+              <p class="title">{{block.settings.detail_title_2}}</p>
+              {{block.settings.detail_text_2}}
+            </div>
+          </a>
+        </div>
+      {% endif %}
+    </div>
+    <div class="{{cls}} column thumbnail">
+      {% if block.settings.detail_image_3 %}
+        <div class="gallery-cell">
+          <a href="{{block.settings.detail_link_3}}">
+            {% render 'image-element',
+                    image: block.settings.detail_image_3,
+                    alt: block.settings.caption
+            %}
+            <div class="info">
+              {{block.settings.detail_icon_3}}
+              <p class="title">{{block.settings.detail_title_3}}</p>
+              {{block.settings.detail_text_3}}
+            </div>
+          </a>
+        </div>
+      {% endif %}
+    </div>
+    <div class="{{cls}} column thumbnail">
+      {% if block.settings.detail_image_4 %}
+        <div class="gallery-cell">
+          <a href="{{block.settings.detail_link_4}}">
+            {% render 'image-element',
+                    image: block.settings.detail_image_4,
+                    alt: block.settings.caption
+            %}
+            <div class="info">
+              {{block.settings.detail_icon_4}}
+              <p class="title">{{block.settings.detail_title_4}}</p>
+              {{block.settings.detail_text_4}}
+            </div>
+          </a>
+        </div>
+      {% endif %}
+    </div>
+    <div class="{{cls}} column thumbnail">
+      {% if block.settings.detail_image_5 %}
+        <div class="gallery-cell">
+          <a href="{{block.settings.detail_link_5}}">
+            {% render 'image-element',
+                    image: block.settings.detail_image_5,
+                    alt: block.settings.caption
+            %}
+            <div class="info">
+              {{block.settings.detail_icon_5}}
+              <p class="title">{{block.settings.detail_title_5}}</p>
+              {{block.settings.detail_text_5}}
+            </div>
+          </a>
+        </div>
+      {% endif %}
+    </div>
+    <div class="{{cls}} column thumbnail">
+      {% if block.settings.detail_image_6 %}
+        <div class="gallery-cell">
+          <a href="{{block.settings.detail_link_6}}">
+            {% render 'image-element',
+                    image: block.settings.detail_image_6,
+                    alt: block.settings.caption
+            %}
+            <div class="info">
+              {{block.settings.detail_icon_6}}
+              <p class="title">{{block.settings.detail_title_6}}</p>
+              {{block.settings.detail_text_6}}
+            </div>
+          </a>
+        </div>
+      {% endif %}
+    </div>
+    <div class="{{cls}} column thumbnail">
+      {% if block.settings.detail_image_7 %}
+        <div class="gallery-cell">
+          <a href="{{block.settings.detail_link_7}}">
+            {% render 'image-element',
+                    image: block.settings.detail_image_7,
+                    alt: block.settings.caption
+            %}
+            <div class="info">
+              {{block.settings.detail_icon_7}}
+              <p class="title">{{block.settings.detail_title_7}}</p>
+              {{block.settings.detail_text_7}}
+            </div>
+          </a>
+        </div>
+      {% endif %}
+    </div>
+    <div class="{{cls}} column thumbnail">
+      {% if block.settings.detail_image_8 %}
+        <div class="gallery-cell">
+          <a href="{{block.settings.detail_link_8}}">
+            {% render 'image-element',
+                    image: block.settings.detail_image_8,
+                    alt: block.settings.caption
+            %}
+            <div class="info">
+              {{block.settings.detail_icon_8}}
+              <p class="title">{{block.settings.detail_title_8}}</p>
+              {{block.settings.detail_text_8}}
+            </div>
+          </a>
+        </div>
+      {% endif %}
+    </div>
+    <div class="medium-down--show hide  one-whole ">
+      <a class="button more button-full grey-border border-button">Show All</a>
+    </div>
+    
+  </div>
+</div>

@@ -1,0 +1,104 @@
+{% comment %}
+** Logos - homepage partial **
+- Draggable section
+- Uses blocks
+{% endcomment %}
+
+<div class="container">
+  <div class="sixteen columns clearfix">
+    {% if section.settings.title != blank %}
+        <h2 class="title center">{{ section.settings.title | escape }}</h2>
+        <div class="feature_divider no-margin"></div>
+    {% endif %}
+    {% if section.blocks.size > 0 %}
+      <div class="icon-bar container">
+        {% for block in section.blocks %}
+          <div class="icon-bar__item small-down--one-third" {{ block.shopify_attributes }}>
+            {% if block.settings.link != blank %}
+              <a href="{{ block.settings.link }}" class="icon-bar__link">
+            {% endif %}
+            {% if block.settings.image != blank %}
+              {% render 'image-element',
+                      image: block.settings.image,
+                      alt: block.settings.title
+              %}
+            {% elsif block.settings.svg != blank %}
+              {{ block.settings.svg }}
+            {% else %}
+              {{ 'logo' | placeholder_svg_tag: 'placeholder-svg' }}
+            {% endif %}
+            <p>{{block.settings.title}}</p>
+            {% if block.settings.link != blank %}
+              </a>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+{% schema %}
+  {
+    "name": "Icon list",
+    "class": "icon-bar-section",
+    "max_blocks": 20,
+    "settings": [
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Heading",
+        "default": "Logo list"
+      }
+    ],
+    "blocks": [
+      {
+        "type": "logo_image",
+        "name": "Icon",
+        "settings": [
+          {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Image",
+            "info": "400 x 300px recommended"
+          },
+          {
+            "type": "html",
+            "id": "svg",
+            "label": "Svg"
+          },
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Title"
+          },
+          {
+            "type": "url",
+            "id": "link",
+            "label": "Link"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Icon list",
+        "category": "Image",
+        "blocks": [
+          {
+            "type": "logo_image"
+          },
+          {
+            "type": "logo_image"
+          },
+          {
+            "type": "logo_image"
+          },
+          {
+            "type": "logo_image"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

@@ -1,0 +1,190 @@
+{% unless section.settings.wide_display %}
+    <div class="container">
+{% endunless %}
+<div class="banner">
+
+    {% include 'image-element' with 
+        image: section.settings.image,
+        alt: section.settings.title,
+        additional_classes: 'small-down--hide'
+    %}
+
+    {% include 'image-element' with 
+        image: section.settings.mobile_image,
+        alt: section.settings.title,
+        additional_classes: 'small-up--hide'
+    %}
+    <div class="caption captionOverlay--true">
+        {% if section.settings.icon != blank %}
+            <div class="icon">
+                {{ section.settings.icon }}
+            </div>
+        {% endif %}
+        
+        <h1 class="headline text-center">{{ section.settings.title }}</h1>
+        <div class="medium-down--hide">
+            <p class="text-center">{{section.settings.desc}}</p>
+        </div>
+    </div>
+
+</div>
+<div class="medium-up--hide text-center mobile-desc">
+    <div class="container">
+        {{ section.settings.desc }}
+    </div>
+</div>
+<div class="content {{section.settings.blog_style}} text-align-{{section.settings.text_align}}">
+    <div class="container flex">
+        
+        {% if section.settings.blog_style == 'list' or section.settings.text_align == 'left' %}
+            {% assign cls = 'one-whole' %}
+        {% else %}
+            {% assign cls = 'one-half' %}
+        {% endif %}
+
+        {% for block in section.blocks %}
+            <div class="{{cls}} medium-down--one-whole column">
+                <div class="info">
+                    {% if section.settings.text_align == 'top' %}
+                        <h1>{{block.settings.title}}</h1>
+
+                        {% if block.settings.image %}
+                            {% include 'image-element' with 
+                                image: block.settings.image,
+                                alt: block.settings.title
+                            %}
+                        {% endif %}
+                        
+                        {{ block.settings.desc }}
+
+                        {% if block.settings.link != blank %}
+                            <a href="{{block.settings.link}}" class="button border-button">{{'blogs.general.view_detail' | t }}</a>
+                        {% endif %}
+                    {% else %}
+                        <div class="one-whole small-down--show hide column">
+                            <h1>{{block.settings.title}}</h1>
+                        </div>
+                        {% if block.settings.image %}
+                            {% include 'image-element' with 
+                                image: block.settings.image,
+                                alt: block.settings.title
+                            %}
+                        {% endif %}
+                        <div class="two-eighths small-down--hide column">
+                            <h1>{{block.settings.title}}</h1>
+                        </div>
+                        <div class="six-eighths small-down--one-whole column">
+                            {{ block.settings.desc }}
+
+                            {% if block.settings.link != blank %}
+                                <a href="{{block.settings.link}}" class="button border-button">{{'blogs.general.view_detail' | t }}</a>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                    
+                </div>
+                
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% unless section.settings.wide_display %}
+</div>
+{% endunless %}
+{% schema %}
+{
+    "name": "Collection blog section",
+    "class": "collection-blog-section",
+    "settings": [
+        {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Image"
+        },
+        {
+            "type": "image_picker",
+            "id": "mobile_image",
+            "label": "Mobile image"
+        },
+        {
+            "type": "html",
+            "id": "icon",
+            "label": "Icon"
+        },
+        {
+            "type": "text",
+            "id": "title",
+            "label": "Title",
+            "default": "Types of Telescope Cameras"
+        },
+        {
+            "type": "richtext",
+            "id": "desc",
+            "label": "Description"
+        },
+        {
+            "type": "richtext",
+            "id": "mobile_desc",
+            "label": "MObile description"
+        },
+        {
+            "type": "select",
+            "id": "blog_style",
+            "label": "Blog list style",
+            "options": [
+                {
+                    "value": "list",
+                    "label": "List"
+                },
+                {
+                    "value": "grid",
+                    "label": "Grid"
+                }
+            ]
+        },
+        {
+            "type": "select",
+            "id": "text_align",
+            "label": "Text align",
+            "options": [
+                {
+                    "value": "top",
+                    "label": "Top"
+                },
+                {
+                    "value": "left",
+                    "label": "Left"
+                }
+            ]
+        }
+    ],
+    "blocks": [
+        {
+            "type": "blog",
+            "name": "Blog item",
+            "settings": [
+                {
+                    "type": "text",
+                    "id": "title",
+                    "label": "Title"
+                },
+                {
+                    "type": "richtext",
+                    "id": "desc",
+                    "label": "Description"
+                },
+                {
+                    "type": "image_picker",
+                    "id": "image",
+                    "label": "Image"
+                },
+                {
+                    "type": "url",
+                    "id": "link",
+                    "label": "Button link"
+                }
+            ]
+        }
+    ]
+}
+{% endschema %}

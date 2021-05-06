@@ -1,0 +1,107 @@
+
+{% assign per_slide = section.settings.frontpage_collections_per_row %}
+
+<div class="slider-gallery products-slider products-length-{{ section.blocks.size }}"
+      data-products-per-slide="{{ per_slide }}">
+  {% for block in section.blocks %}
+      {% assign feature_collection = block.settings.feature_collection %}
+      {% assign collection = collections[feature_collection] %}
+      
+      {% if block.settings.image %}
+        {% assign collection_image = block.settings.image %}
+      {% elsif collection.image != blank %}
+        {% assign collection_image = collection.image %}
+      {% else collection.empty? == false %}
+        {% assign collection_image = collection.products.first.featured_image %}
+      {% endif %}
+
+      {% if block.settings.title != blank %}
+        {% assign collection_title = block.settings.title %}
+        {% assign collection_image_alt = block.settings.title | escape %}
+      {% elsif collection.title != blank %}
+        {% assign collection_title = collection.title %}
+        {% assign collection_image_alt = collection.title %}
+      {% else collection.empty? == false %}
+        {% assign collection_title = collection.products.first.title %}
+        {% assign collection_image_alt = collection.products.first.title %}
+      {% endif %}
+
+      {% if block.settings.link != blank %}
+        {% assign collection_url = block.settings.link %}
+      {% elsif collection.url != blank %}
+        {% assign collection_url = collection.url %}
+      {% else collection.empty? == false %}
+        {% assign collection_url = collection.products.first.url %}
+      {% endif %}
+
+      {% if block.settings.link_title != blank and block.settings.add_link != blank %}
+        {% assign add_title = block.settings.link_title %}
+        {% assign add_link = block.settings.add_link %}
+      {% else %}
+        {% assign add_title = collection_title | downcase | prepend: 'Learn about ' %}
+        {% assign add_link = collection_url %}
+      {% endif %}
+
+
+    <div class="gallery-cell thumbnail visible-{{ per_slide }}">
+      <div class="product-wrap border-box">
+        {% if collection_image != nil %}
+          <div class="image__container">
+            {% render 'image-element',
+                    image: collection_image.src,
+                    alt: collection_image_alt,
+                    object_fit: section.settings.align_height,
+                    max_height: section.settings.collection_height
+            %}
+          </div>
+        {% else %}
+          {% capture num %}{% cycle "1", "2", "3", "4", "5", "6" %}{% endcapture %}
+          {{ 'collection-' | append: num | placeholder_svg_tag: 'placeholder-svg' }}
+        {% endif %}
+
+        <a href="{{ collection_url }}" class="hidden-product-link">
+          {% if collection_title != blank %}
+            {{ collection_title }}
+          {% else %}
+            {{ "homepage.onboarding.collection_title" | t }}
+          {% endif %}
+        </a>
+        {% if settings.thumbnail_hover_enabled %}
+          <div class="thumbnail-overlay">
+            <a href="{{ collection_url }}" class="hidden-product-link">
+              {% if collection_title != blank %}
+                {{ collection_title }}
+              {% else %}
+                {{ "homepage.onboarding.collection_title" | t }}
+              {% endif %}
+            </a>
+            <div class="info">
+              <div class="collection-details">
+                <span class="title">
+                  {% if collection_title != blank %}
+                    {{ collection_title }}
+                  {% else %}
+                    {{ "homepage.onboarding.collection_title" | t }}
+                  {% endif %}
+                </span>
+              </div>
+              <a href="{{ collection_url }}"><span class="view_all">{{ 'collections.general.view_all' | t }}</span></a>
+            </div>
+          </div>
+        {% endif %}
+        <a class="collection-info__caption {% if settings.thumbnail_hover_enabled %}hidden{% endif %}" href="{{ collection_url }}">
+          <span class="title">
+            {% if collection_title != blank %}
+              {{ collection_title }}
+            {% else %}
+              {{ "homepage.onboarding.collection_title" | t }}
+            {% endif %}
+          </span>
+        </a>
+      </div>
+      {% if block.settings.additional_link_status and add_link != blank and add_title != blank %}
+        <span class="brand left"><a href="{{ add_link }}">{{ add_title }}</a></span>
+      {% endif %}
+    </div>
+  {% endfor %}
+</div>

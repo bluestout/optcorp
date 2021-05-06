@@ -1,6 +1,6 @@
 development:
   password: 53ca6b0cc9bdfd3212256f4c47faf4ed
-  theme_id: "81364287557"
+  theme_id: "120156586053"
   store: oceanside-photo-telescope.myshopify.com
   ignore_files:
     - config/settings_data.json

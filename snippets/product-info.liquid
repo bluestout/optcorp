@@ -1,15 +1,9 @@
 <div class="product-details">
-  <span class="title" itemprop="name">{{ product.title }}</span>
-  {% if settings.display_vendor %}
-    <span class="brand">
-      {{ product.vendor | link_to_vendor }}
-    </span>
-  {% endif %}
-  {% if settings.enable_shopify_collection_badges %}
-    <div class="shopify-reviews reviewsVisibility--{{settings.enable_shopify_review_comments}}">
-      <span class="shopify-product-reviews-badge" data-id="{{ product.id }}"></span>
-    </div>
-  {% endif %}
+  <p class="title" itemprop="name">
+    {{ product.title }}
+    <span class="sku">{{product.selected_or_first_available_variant.sku}}</span>
+  </p>
+  
   {% if collection_handles contains 'coming-soon' %}
     <span class="coming-soon">{{ 'collections.general.coming_soon_html' | t }}</span>
   {% else %}
@@ -38,5 +32,12 @@
         {% endunless %}
       </div>
     </span>
+  {% endif %}
+  <span class="wishList">{% render 'iwish_v2' with 'iwishCollection', product: product %}</span>
+  
+  {% if settings.enable_shopify_collection_badges and section.settings.badges %}
+    <div class="shopify-reviews reviewsVisibility--{{settings.enable_shopify_review_comments}}">
+      <span class=" stamped-product-reviews-badge" data-product-sku="{{ product.handle }}" data-id="{{ product.id }}" data-product-type="{{product.type}}" data-product-title="{{product.title}}"  style="display:block;">{{ product.metafields.stamped.badge }}</span>
+    </div>
   {% endif %}
 </div>

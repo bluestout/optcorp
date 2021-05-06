@@ -19,10 +19,7 @@
   <div class="section clearfix homepage_content">
     {% if title != blank %}
       <div class="sixteen columns">
-        <h2 class="title center blog">
-          <a href="{{ blogs[blog_widget_select].url }}">{{ title | escape }}</a>
-        </h2>
-        <div class="feature_divider"></div>
+        <h2 class="heading center blog">{{ title | escape }}</h2>
       </div>
     {% endif %}
     {% if blog_widget_select != blank %}
@@ -36,50 +33,52 @@
               %}
             </a>
           {% endif %}
-
-          <h3 class="sub_title">
-            <a href="{{ article.url }}">{{ article.title }}</a>
-          </h3>
-          <p class="blog_meta">
-            {% if blog_author %}
-              <span>{{ 'blogs.article.by_author' | t: author: article.author }}</span>
-            {% endif %}
-
-            {% if blog_date %}
-              <span>{{ article.published_at | date: format: "month_day_year" }}</span>
-            {% endif %}
-
-            {% if read_time %}
-              {% render 'include-read-time', article: article %}
-            {% endif %}
-
-            {% if blog_comment_count %}
-              {% if settings.disqus_enabled %}
-                <span>
-                  <a href="{{ article.url }}#disqus_thread" data-disqus-identifier="{{ article.id }}" class="disqus-comment-count">{{ 'blogs.counts.comments_with_count' | t: count: 0 }}</a>
-                </span>
-              {% elsif article.comments_enabled? and article.comments_count > 0 %}
-                <span>
-                  <a href="{{ article.url }}#comments">{{ 'blogs.counts.comments_with_count' | t: count: article.comments_count }}</a>
-                </span>
+            <div class="info">
+              <h3 class="sub_title">
+                <a href="{{ article.url }}">{{ article.title }}</a>
+              </h3>
+              <p class="blog_meta">
+                {% if blog_author %}
+                  <span>{{ 'blogs.article.by_author' | t: author: article.author }}</span>
+                {% endif %}
+    
+                {% if blog_date %}
+                  <span>{{ article.published_at | date: format: "month_day_year" }}</span>
+                {% endif %}
+    
+                {% if read_time %}
+                  {% render 'include-read-time', article: article %}
+                {% endif %}
+    
+                {% if blog_comment_count %}
+                  {% if settings.disqus_enabled %}
+                    <span>
+                      <a href="{{ article.url }}#disqus_thread" data-disqus-identifier="{{ article.id }}" class="disqus-comment-count">{{ 'blogs.counts.comments_with_count' | t: count: 0 }}</a>
+                    </span>
+                  {% elsif article.comments_enabled? and article.comments_count > 0 %}
+                    <span>
+                      <a href="{{ article.url }}#comments">{{ 'blogs.counts.comments_with_count' | t: count: article.comments_count }}</a>
+                    </span>
+                  {% endif %}
+                {% endif %}
+              </p>
+    
+              {% if blog_tags %}
+                <div class="blog_meta tags">
+                  {% for tag in article.tags %}
+                    <span><a href="{{ shop.url}}/blogs/{{ blogs[blog_widget_select].handle }}/tagged/{{ tag | handleize }}" title="{{ blogs[blog_widget_select].title | escape }} {{ 'blogs.general.tagged' | t }} {{ tag | escape }}">{{ tag }}</a></span>
+                  {% endfor %}
+                </div>
               {% endif %}
-            {% endif %}
-          </p>
-
-          {% if blog_tags %}
-            <div class="blog_meta tags">
-              {% for tag in article.tags %}
-                <span><a href="{{ shop.url}}/blogs/{{ blogs[blog_widget_select].handle }}/tagged/{{ tag | handleize }}" title="{{ blogs[blog_widget_select].title | escape }} {{ 'blogs.general.tagged' | t }} {{ tag | escape }}">{{ tag }}</a></span>
-              {% endfor %}
+    
+              {% if article.excerpt != blank %}
+                <div class="blog_excerpt">{{ article.excerpt }}</div>
+              {% endif %}
+              {% if read_more_link %}
+                <a href="{{ article.url }}" class="{% if settings.read_more_style == 'button' %}action_button continue-button read-more-button{% else %}read-more-link{% endif %}">{{ 'blogs.general.continue_reading_html' | t }}</a>
+              {% endif %}
             </div>
-          {% endif %}
-
-          {% if article.excerpt != blank %}
-            <div class="blog_excerpt">{{ article.excerpt }}</div>
-          {% endif %}
-          {% if read_more_link %}
-            <a href="{{ article.url }}" class="{% if settings.read_more_style == 'button' %}action_button continue-button read-more-button{% else %}read-more-link{% endif %}">{{ 'blogs.general.continue_reading_html' | t }}</a>
-          {% endif %}
+          
         </div>
       {% endfor %}
     {% else %}

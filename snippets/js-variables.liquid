@@ -12,6 +12,7 @@ Shopify.routes = {};
 Shopify.theme_settings.display_tos_checkbox = {{ settings.display_tos_checkbox | json }};
 Shopify.theme_settings.go_to_checkout = {{ settings.go_to_checkout | json }};
 Shopify.theme_settings.cart_action = {{ settings.cart_action | json }};
+Shopify.theme_settings.redirect_cart = {{ settings.redirect_cart | json }};
 Shopify.theme_settings.cart_shipping_calculator = {{ settings.show_shipping_calculator | json }};
 
 {% comment %} Collection {% endcomment %}
@@ -124,7 +125,9 @@ Shopify.media_queries.larger = window.matchMedia( "(min-width: 960px)" );
 Shopify.media_queries.xlarge = window.matchMedia( "(min-width: 1200px)" );
 Shopify.media_queries.ie10 = window.matchMedia( "all and (-ms-high-contrast: none), (-ms-high-contrast: active)" );
 Shopify.media_queries.tablet = window.matchMedia( "only screen and (min-width: 799px) and (max-width: 1024px)" );
-
+let template = "{{page.handle}}";
+let code = "{{ settings.code }}";
+let limit = {{ settings.limit }};
 {% endcapture %}
 {%- assign js_variables = js_variables | split: 'Shopify.' -%}
 {%- for variable in js_variables -%}{%- assign variableblock = variable | strip -%}{% if forloop.first %}{{ variableblock }}{% else %}{{ variableblock | prepend: 'Shopify.' }}{% endif %}{%- endfor -%}

@@ -1,0 +1,68 @@
+<script>
+jQuery( document ).ready(function() {
+	jQuery(document).on('click', "a[href='/apps/iwish']", function(e) {
+		if(typeof(Storage) !== "undefined") {
+			e.preventDefault();
+			iWishPost('/apps/iwish',{iwishlist:JSON.stringify(iWishlistmain), cId:iwish_cid});
+		}
+	});
+	jQuery(document).on('click', ".iWishAdd", function() {
+		var iWishvId = jQuery(this).parents(iwishWrapperClass).find(iWishVarSelector).val();
+		iwish_add(jQuery(this), iWishvId);
+		return false;
+	});
+	jQuery(document).on('click', ".iWishAddColl", function(e) {
+		var iWishvId = jQuery(this).attr("data-variant");
+	       	iwish_addCollection(jQuery(this), iWishvId);
+	      	return false;
+	});
+});
+
+function iwishCheckColl(){
+	if(jQuery(".iwishcheck").length > 0) {
+      jQuery(".iwishcheck").each(function() {
+          var iWishvId = jQuery(this).attr("data-variant");
+          var iWishpId = jQuery(this).attr("data-product");
+          if(isInWishlist(iWishpId,iWishvId)){ jQuery(this).addClass("iwishAdded").html(iwish_added_txt_col); }
+          jQuery(this).removeClass("iwishcheck");
+      });
+	}
+}
+  
+var windowLocation = window.location.href;
+if (windowLocation.indexOf('?collection=') != -1 || windowLocation.indexOf('/collections/') != -1) {
+    var product_icon = `{% render 'icon-pack' with icon: 'product-wishlist' %}`;
+
+	$(document).on('Searchanise.ResultsUpdated', function(e, content) {
+		var jq = Searchanise.$;
+
+		jq('li.snize-product', content).each(function() {
+			var data = jq(this).data('snize_item_data');
+          	var available_first_variant = data.shopify_variants[0].variant_id;
+          
+			for (var i = 0; i < data.shopify_variants.length; i++) {
+				if (data.shopify_variants[i].available >= 0) {
+					available_first_variant = data.shopify_variants[i].variant_id;
+                    break;
+                }
+            }
+          
+			var iwish_link = $('<a></a>')
+            	.addClass('iWishAddColl iwishcheck')
+            	.attr('href', '#')
+            	.attr('data-product', data.product_id)
+            	.attr('data-pTitle', data.title)
+            	.attr('data-variant', available_first_variant)
+            	.html(product_icon);
+            
+          	var iwish_div = $('<div></div>').addClass('wishList');
+          	var iwish_link_wrap = $('<span></span').addClass('iwishAddWrap');
+          	iwish_link_wrap.append(iwish_link);
+          	iwish_div.append(iwish_link_wrap);
+          	$(this).find('.snize-thumbnail-wrapper').append(iwish_div);          
+		});
+      
+      	iwishCheckColl();
+	});
+}
+</script>

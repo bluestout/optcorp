@@ -306,7 +306,10 @@ var recentlyViewed = {
         } else {
           $('.js-rv-slider .gallery-cell').eq(productLimit).nextAll().addBack().remove();
         }
-        recentlyViewed.createSlider(parent, productLimit);
+        if ($(window).width() < 768) {
+          recentlyViewed.createSlider(parent, productLimit);
+        }
+        
       } else if ($(parent).find('.rv-main').hasClass('js-rv-grid')){
         if (displayProducts.length <= productLimit) {
           $('.js-rv-grid .thumbnail').eq(displayProducts.length).nextAll().addBack().remove();
@@ -343,18 +346,63 @@ var recentlyViewed = {
       initialIndex = 3;
     }
 
-    $('.js-rv-slider').flickity({
-      "lazyLoad": 2,
-      "imagesLoaded": true,
-      "prevNextButtons": prevNextButtons,
-      "wrapAround": wrapAround,
-      "cellAlign": cellAlign,
-      "pageDots": usePageDots,
-      "contain": true,
-      "freeScroll": true,
-      "arrowShape": arrowSize,
-      "initialIndex": initialIndex
+    new Swiper ('.recently-viewed__section', {
+      speed: 400,
+      spaceBetween: 10,
+      initialSlide: 4,
+      //truewrapper adoptsheight of active slide
+      autoHeight: false,
+      // Optional parameters
+      direction: 'horizontal',
+      loop: true,
+      // delay between transitions in ms
+      autoplay: 5000,
+      autoplayStopOnLast: false, // loop false also
+      // If we need pagination
+      pagination: '.swiper-pagination',
+      paginationType: "bullets",
+      mousewheel: {
+        invert: false
+      },
+      // And if we need scrollbar
+      scrollbar: {
+        el: '.swiper-scrollbar',
+        draggable: true
+      },
+      // "slide", "fade", "cube", "coverflow" or "flip"
+      effect: 'slide',
+      // Distance between slides in px.
+      //
+      slidesPerView: 4,
+      //
+      centeredSlides: true,
+      //
+      slidesOffsetBefore: 0,
+      //
+      grabCursor: true,
+      
+      breakpoints: {
+        // when window width is <= 320px
+        320: {
+          slidesPerView: 1,
+          spaceBetween: 10,
+          centeredSlides: false
+        },
+        // when window width is <= 480px
+        480: {
+          slidesPerView: 2,
+          spaceBetween: 5,
+          centeredSlides: false
+        },
+        // when window width is <= 640px
+        640: {
+          slidesPerView: 3,
+          spaceBetween: 10,
+          centeredSlides: false
+        }
+      }
     });
+
 
     $('.js-rv-slider').addClass('slider-initialized');
   }
@@ -982,7 +1030,13 @@ var utils = {
       if(contentLocation.charAt(0)=="#") {
         $('ul.tabs > li > a.active').removeClass('active');
         $(this).addClass('active');
-        $(this).parents('ul.tabs').next().find(contentLocation).show().css({'display': 'block'}).addClass('active').siblings().hide().removeClass('active');
+        if ($(this).parents('ul.tabs').next().hasClass('tab-content')) {
+          $(this).parents('ul.tabs').next().find(contentLocation).show().css({'display': 'block'}).addClass('active').siblings().hide().removeClass('active');
+        } else {
+          var position = $(contentLocation).offset();
+          $(document).scrollTop(position.top);
+        }
+        
       }
     });
   },

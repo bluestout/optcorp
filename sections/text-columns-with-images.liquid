@@ -1,51 +1,90 @@
 <div class="container">
   {% if section.settings.title != blank %}
     <div class="sixteen columns">
-      <h2 class="title center">{{ section.settings.title | escape }}</h2>
-      <div class="feature_divider"></div>
+      <p class="heading capitalize center">{{ section.settings.title | escape }}</p>
     </div>
   {% endif %}
-
-  {% for block in section.blocks %}
-  {% if section.blocks.size == 1 %}
-    {%- assign column_width = 'sixteen columns' -%}
-    {% elsif section.blocks.size == 3 %}
-      {%- assign column_width = 'one-third column' -%}
-    {% elsif section.blocks.size == 4 %}
-      {%- assign column_width = 'four columns medium-down--one-half' -%}
-    {% elsif section.blocks.size == 5 %}
-      {%- assign column_width = 'one-fifth column medium-down--one-half' -%}
-    {% else %}
-      {%- assign column_width = 'eight columns medium-down--one-half' -%}
-    {% endif %}
-    <div class="{{ column_width }} text-column" {{ block.shopify_attributes }}>
-      <div class="border-style--{{ block.settings.border_style }} text-align--{{ block.settings.align_text }}">
-        {% if block.settings.enable_image %}
-          {% if block.settings.image != blank %}
-            {% render 'image-element',
-                    image: block.settings.image.src,
-                    alt: block.settings.image.alt
-            %}
-          {% else %}
-            <p>
-              {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
-            </p>
-          {% endif %}
+  <div class="flex one-whole columns">
+    <div class="flex seven-twelfths  medium-down--one-whole columns">
+      {% for block in section.blocks %}
+        {% if forloop.index == 1 %}
+            <div class="flex one-whole first column text-column" {{ block.shopify_attributes }}>
+              <div class="border-style--{{ block.settings.border_style }} image-text-block text-align--{{ block.settings.align_text }}">
+                <div class="image image-block-{{block.id}}">
+                  {% if block.settings.enable_image %}
+                    {% if block.settings.image != blank %}
+                      {% include 'image-element' with
+                        image: block.settings.image,
+                        alt: block.settings.title
+                      %}
+                    {% else %}
+                      <p>
+                        {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+                      </p>
+                    {% endif %}
+                  {% endif %}
+                </div>
+                
+                <div class="info">
+                  {% if block.settings.title != blank %}
+                      <h3 class="{{ block.settings.heading_size }}">{{ block.settings.title | escape }}</h3>
+                    {% endif %}
+                    {% if block.settings.text != blank %}
+                      <div class="rte-setting">{{ block.settings.text }}</div>
+                    {% endif %}
+                    {% if block.settings.button_label != blank and block.settings.button_link != blank %}
+                      <a href="{{ block.settings.button_link }}" class="read_more">
+                        {{ block.settings.button_label | escape }}
+                      </a>
+                    {% endif %}
+                </div>
+              </div>
+            </div>
         {% endif %}
-        {% if block.settings.title != blank %}
-          <h3 class="{{ block.settings.heading_size }}">{{ block.settings.title | escape }}</h3>
-        {% endif %}
-        {% if block.settings.text != blank %}
-          <div class="rte-setting">{{ block.settings.text }}</div>
-        {% endif %}
-        {% if block.settings.button_label != blank and block.settings.button_link != blank %}
-          <a href="{{ block.settings.button_link }}" class="action_button continue-button">
-            {{ block.settings.button_label | escape }}
-          </a>
-        {% endif %}
-      </div>
+      {% endfor %}
     </div>
-  {% endfor %}
+
+    <div class="flex five-twelfths medium-down--hide columns">
+      {% for block in section.blocks %}
+        {% if forloop.index != 1 %}
+          <div class="flex one-whole second column text-column" {{ block.shopify_attributes }}>
+            <div class="one-whole column border-style--{{ block.settings.border_style }} image-text-block text-align--{{ block.settings.align_text }}">
+              <div class="image image-block-{{block.id}}">
+                {% if block.settings.enable_image %}
+                  {% if block.settings.image != blank %}
+                    {% include 'image-element' with
+                      image: block.settings.image,
+                      alt: block.settings.title
+                    %}
+                  {% else %}
+                    <p>
+                      {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+                    </p>
+                  {% endif %}
+                {% endif %}
+              </div>
+              
+              <div class="info">
+                {% if block.settings.title != blank %}
+                    <h3 class="{{ block.settings.heading_size }}">{{ block.settings.title | escape }}</h3>
+                  {% endif %}
+                  {% if block.settings.text != blank %}
+                    <div class="rte-setting">{{ block.settings.text }}</div>
+                  {% endif %}
+                  {% if block.settings.button_label != blank and block.settings.button_link != blank %}
+                    <a href="{{ block.settings.button_link }}" class="read_more">
+                      {{ block.settings.button_label | escape }}
+                    </a>
+                  {% endif %}
+              </div>
+            </div>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+    
+  </div>
+  
 </div>
 
 {% schema %}

@@ -1,0 +1,43 @@
+<script>
+  window.mwGroupedProductsObjects = {
+      product: {{ product | json }},
+      cart: {{ cart | json }},
+      template_name: {{ template.name | json }},
+      shop: {
+      domain: {{ shop.permanent_domain | json }},
+      money_format : {{ shop.money_format  | json }},
+      money_with_currency_format : {{ shop.money_with_currency_format  | json }}
+      }
+  };
+
+window.onload = function() {
+  if (typeof jQuery === 'undefined') {
+    return;
+  }
+
+  jQuery('body').on('mwGroupedProducts', function (event, action) {
+    if (action === 'end-append-table') {
+      $('[data-mwgp-add-to-cart]').removeClass("ajax-submit");
+//       let bundlePrise = 0;
+//       mwGroupedProducts.config.associatedProducts.forEach(item => {
+//         if(+item.min_qty > 0) {
+//             let discount = +item.discount;
+//             let min_qty = +item.min_qty;
+//             let itemObj = JSON.parse(item.params);
+//             let totalProductPrice = +itemObj.variants[0].price * min_qty * (100 - discount)/100;
+//             bundlePrise += totalProductPrice;
+//         }
+//       })
+//       bundlePrise = bundlePrise.toFixed(2)
+//       $("#price-product-template").html('$' + bundlePrise);
+    }
+  })  
+}
+</script>
+  
+  <style>
+    .mw-gp__table__cell--price {
+        opacity: 0 !important;
+      cursor: default  !important;
+    }
+  </style>

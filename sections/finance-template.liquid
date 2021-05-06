@@ -1,0 +1,267 @@
+{% if section.blocks.size > 0 %}
+    {% assign sidebar = true %}
+{% else %}
+    {% assign sidebar = false %}
+{% endif %}
+
+<div class="container">
+    {% if sidebar %}
+        <div class="four medium-down--one-whole column sidebar">
+            {% for block in section.blocks %}
+                {% if block.type == 'sidebar' %}
+                    <div class="sidebar-block sidebar-menu wrapper">
+                    {% if block.settings.links != blank %}
+                        <div class="select-box hide medium-down--show">
+                        {% for link in linklists[block.settings.links].links %}
+                            {% if link.url contains page.handle %}
+                                {{link.title}}
+                            {% endif %} 
+                        {% endfor %}
+                        </div>
+                        <ul class="links">
+                            {% for link in linklists[block.settings.links].links %}
+                                {% if link.url contains page.handle %}
+                                    {% assign cls = 'active' %}
+                                {% else %}
+                                    {% assign cls = '' %}
+                                {% endif %} 
+                                <li class="{{cls}}"><a href="{{link.url}}">{{link.title}}</a></li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    {% endif %}
+    <div class="{% if sidebar %}twelve medium-down--one-whole relative flex {% else %}sixteen{% endif %} column main-content">
+        
+        {% if block.settings.title != blank %}
+            {% assign title = block.settings.title %}
+        {% else %}
+            {% assign title = page.title %}
+        {% endif %}
+
+        {% include 'heading-banner' with 
+            image: section.settings.image,
+            mobile_image: section.settings.banner_mobile_image,
+            sub_title: section.settings.sub_title,
+            title: title,
+            desc: section.settings.desc,
+            wide: section.settings.wide_display,
+        %}
+        <div class="twelve medium-down--one-whole column offset-by-two content">
+            <div class="heading-content column">
+                <h1 class="heading">{{section.settings.content_title}}<span class="sub">Powered by {% include 'icon-pack' with icon: 'bread' %}</span></h1>
+                {{ section.settings.content_sub_title }}
+            </div>
+            <div class="content-block bread-cta bread-section bread-style column">
+                <div class="one-third small-down--one-whole column">
+                    <div class="icon">
+                        {{ section.settings.icon_1 }}
+                    </div>
+                    <div class="info">
+                        <p class="title">{{ section.settings.icon_title_1 }}</p>
+                        {{ section.settings.icon_desc_1 }}
+                    </div>
+                </div>
+                <div class="one-third small-down--one-whole column">
+                    <div class="icon">
+                        {{ section.settings.icon_2 }}
+                    </div>
+                    <div class="info">
+                        <p class="title">{{ section.settings.icon_title_2 }}</p>
+                        {{ section.settings.icon_desc_2 }}
+                    </div>
+                </div>
+                <div class="one-third small-down--one-whole column">
+                    <div class="icon">
+                        {{ section.settings.icon_3 }}
+                    </div>
+                    <div class="info">
+                        <p class="title">{{ section.settings.icon_title_3 }}</p>
+                        {{ section.settings.icon_desc_3 }}
+                    </div>
+                </div>
+                <div class="one-whole bread-content-inner column">
+                    <a class="bread-promo button center fixer-fin" data-api-key="28ac893f-f884-44b5-8a8c-6f512ffde089" data-custom="true" data-button-location="financing" id="bread-promo-0">{{section.settings.button_title}}</a>
+                </div>
+            </div>
+            <div class="question-block border-box column">
+                <p class="title">{{ section.settings.question_title }}</p>
+                {{ section.settings.question_text }}
+            </div>
+            <div class="sub-description">
+                {{ section.settings.content_description }}
+            </div>
+            
+        </div>
+        
+    </div>
+</div>
+
+{% schema %}
+{
+    "name": "Page template",
+    "class": "page-section finance-template",
+    "settings": [
+        {
+            "type": "checkbox",
+            "id": "wide_display",
+            "label": "Wide display"
+        },
+        {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Image"
+        },
+        {
+            "type": "image_picker",
+            "id": "banner_mobile_image",
+            "label": "Mobile banner image"
+        },
+        {
+            "type": "text",
+            "id": "sub_title",
+            "label": "Sub title",
+            "default": "customer help"
+        },
+        {
+            "type": "text",
+            "id": "title",
+            "label": "Title"
+        },
+        {
+            "type": "richtext",
+            "id": "desc",
+            "label": "Description",
+            "default": "<p>Clear, transparent terms. Fair rates. No prepayment penalties.</p>"
+        },
+        {
+            "type": "header",
+            "content": "content"
+        },
+        {
+            "type": "text",
+            "id": "content_title",
+            "label": "Title",
+            "default": "Explore The Cosmos Now and Pay Later"
+        },
+        {
+            "type": "richtext",
+            "id": "content_sub_title",
+            "label": "Description"
+        },
+        {
+            "type": "header",
+            "content": "description block"
+        },
+        {
+            "type": "html",
+            "id": "icon_1",
+            "label": "Icon"
+        },
+        {
+            "type": "text",
+            "id": "icon_title_1",
+            "label": "Title 1",
+            "default": "Affordable Monthly Plans"
+        },
+        {
+            "type": "richtext",
+            "id": "icon_desc_1",
+            "label": "Description 1",
+            "default": "<p>Pay for your order over 12, 24, or 36 months at competitive interest rates*.</p>"
+        },
+        {
+            "type": "header",
+            "content": "description block"
+        },
+        {
+            "type": "html",
+            "id": "icon_2",
+            "label": "Icon"
+        },
+        {
+            "type": "text",
+            "id": "icon_title_2",
+            "label": "Title",
+            "default": "No Prepayment Penalties"
+        },
+        {
+            "type": "richtext",
+            "id": "icon_desc_2",
+            "label": "Description",
+            "default": "<p>Pay for your purchase with monthly payments and prepay at any time without penalty.</p>"
+        },
+        {
+            "type": "header",
+            "content": "description block"
+        },
+        {
+            "type": "html",
+            "id": "icon_3",
+            "label": "Icon"
+        },
+        {
+            "type": "text",
+            "id": "icon_title_3",
+            "label": "Title",
+            "default": "Quick and Easy Application"
+        },
+        {
+            "type": "richtext",
+            "id": "icon_desc_3",
+            "label": "Description",
+            "default": "<p>Get a decision in seconds with no obligation to buy. Checking your rate won't affect your credit score.</p>"
+        },
+        {
+            "type": "text",
+            "id": "button_title",
+            "label": "Button Title",
+            "default": "Get My Rate"
+        },
+        {
+            "type": "url",
+            "id": "button_link",
+            "label": "Button link"
+        },
+        {
+            "type": "header",
+            "content": "Question block"
+        },
+        {
+            "type": "text",
+            "id": "question_title",
+            "label": "Title"
+        },
+        {
+            "type": "richtext",
+            "id": "question_text",
+            "label": "Text"
+        },
+        {
+            "type": "header",
+            "content": "Content description"
+        },
+        {
+            "type": "richtext",
+            "id": "content_description",
+            "label": "Content description"
+        }
+    ],
+    "blocks": [
+        {
+            "type": "sidebar",
+            "name": "Sidebar",
+            "settings": [
+                {
+                    "type": "link_list",
+                    "id": "links",
+                    "label": "Links"
+                }
+            ]
+        }
+    ]
+}
+{% endschema %}

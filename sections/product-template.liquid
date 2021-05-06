@@ -3,26 +3,11 @@
 - Product template
 {% endcomment %}
 
-<a name="pagecontent" id="pagecontent"></a>
-
-<div class="container main content product-name--{{ product.handle }}">
+<div class="container main product-name--{{ product.handle }}">
 
   <div class="sixteen columns">
     {% if collection.previous_product or collection.next_product or section.settings.product_breadcrumb %}
       <div class="clearfix breadcrumb-collection">
-        {% if collection.previous_product or collection.next_product %}
-          <div class="nav_arrows breadcrumb_text">
-            {% if collection.previous_product %}
-              <a href="{{ collection.previous_product }}" title="{{ 'products.general.previous_product_html' | t }}" class="breadcrumb_link"><span class="icon-left-arrow"> {{ 'products.general.previous_product_html' | t }}</span></a>
-            {% endif %}
-            {% if collection.previous_product and collection.next_product %}<span class="breadcrumb-divider"> | </span>{% endif %}
-
-            {% if collection.next_product %}
-              <a href="{{collection.next_product}}" title="{{ 'products.general.next_product_html' | t }}" class="breadcrumb_link">{{ 'products.general.next_product_html' | t }} <span class="icon-right-arrow"></span></a>
-            {% endif %}
-          </div>
-        {% endif %}
-
         {% if section.settings.product_breadcrumb %}
           {% render 'product__breadcrumb' %}
         {% endif %}
@@ -30,230 +15,347 @@
     {% endif %}
   </div>
 
-  {% comment %}Check to see if sidebar should be enabled{% endcomment %}
-  {% if section.blocks.size > 0 %}
-    {% assign sidebar = true %}
-  {% else %}
-    {% assign sidebar = false %}
-  {% endif %}
-
   <div class="product clearfix">
-    {% if sidebar %}
-      {% render 'sidebar' %}
-      <div class="twelve columns medium-down--one-whole sidebar--{{ sidebar }} product__container">
-    {% else %}
-      <div class="sixteen columns product__container">
-    {% endif %}
+    <div class="sixteen columns product__container">
+      <div  class="product-{{ product.id }}"
+            data-free-text="{{ settings.free_price_text }}"
+            >
+        <div class="section product_section clearfix js-product_section {% if section.settings.product_images_position == 'right' %}align_right--images{% endif %}" data-rv-handle="{{ product.handle }}">
 
-    <div  class="product-{{ product.id }}"
-          data-free-text="{{ settings.free_price_text }}"
-          >
-      <div class="section product_section clearfix js-product_section {% if section.settings.product_images_position == 'right' %}align_right--images{% endif %}" data-rv-handle="{{ product.handle }}">
+          <div class="eight product__images columns medium-down--one-whole {% if section.settings.product_images_position == 'left' %}alpha{% else %}omega{% endif %}">
+            {% render 'product-images',
+                    product: product,
+                    video_looping: section.settings.video_looping,
+                    set_product_height: section.settings.set_product_height
+            %}
+          </div>
 
-        <div class="nine product__images columns medium-down--one-whole {% if section.settings.product_images_position == 'left' %}alpha{% else %}omega{% endif %}">
-          {% render 'product-images',
-                  product: product,
-                  video_looping: section.settings.video_looping,
-                  set_product_height: section.settings.set_product_height
-          %}
+          <div class="seven product-info columns medium-down--one-whole  {% if section.settings.product_images_position == 'left' %}omega{% else %}alpha{% endif %}">
+
+            {% assign collection_handles = product.collections | map: 'handle' %}
+            {% assign variant = product.selected_or_first_available_variant %}
+
+            {% if product.available %}
+              {% if settings.sale_banner_enabled and product.compare_at_price_max > product.price %}
+                <div class="sale_banner_product">{{ 'collections.general.sale_html' | t }}</div>
+              {% endif %}
+            {% endif %}
+            {% if collection_handles contains 'new' %}
+              <div class="new_banner_product">{{ 'collections.general.new_html' | t }}</div>
+            {% endif %}
+            {% if collection_handles contains 'pre-order' %}
+              <div class="preorder_banner_product">{{ 'collections.general.pre_order' | t }}</div>
+            {% endif %}
+
+            {% if section.settings.display_vendor %}
+              <p class="vendor">
+                <span class="vendor">{{ product.vendor | link_to_vendor }}</span>
+              </p>
+            {% endif %}
+
+            
+            <h1 class="product_name">{{ product.title }}</h1>
+            <p class="sku"> SKU : <span>{{ variant.sku }}</span> </p>
+            <div class="relative">
+              {% if section.settings.enable_shopify_product_badges and settings.enable_shopify_review_comments %}
+              <div class="review">
+                <span class="stamped-product-reviews-badge stamped-main-badge" data-id="{{ product.id }}" style="display: inline-block;"></span> - <a href="#reviews" class="review_link" data-no-instant="true">Read</a>
+              </div>
+              
+              {% endif %}
+              
+              {% assign flag_status = false %}
+              {% for tag in product.tags %}
+                  {% assign tag_str = tag_str | append: tag %}
+                {% endfor %}
+                {% if product.available == false %}
+                  {% assign flag_status = true %}
+                {% elsif product.tags contains  'specs-Free Shipping-Yes' %}
+                  {% assign flag_status = true %}
+                {% endif %}
+                
+                {% for block in section.blocks %}
+                  {% if block.type == 'popup' and product.tags contains block.settings.tag %}
+                      {% assign flag_status = true %}
+                  {% endif %}
+                {% endfor %}
+              {% if flag_status %}
+                <div class="feature_divider"></div>
+                <ul class="tag-blocks">
+                  {% for tag in product.tags %}
+                    {% assign tag_str = tag_str | append: tag %}
+                  {% endfor %}
+                  {% if product.available == false %}
+                    <li class="out-stock"> <p> No Longer Available </p></li>
+                  {% elsif product.tags contains  'specs-Free Shipping-Yes' %}
+                    <li class="free-shipping">{% include 'icon-pack' with icon: 'free_shipping' %} <p> Free Shipping </p></li>
+                  {% else %}
+                    <li> </li>
+                  {% endif %}
+                  
+                  {% assign flag_status = false %}
+                  {% if product.selected_or_first_available_variant.inventory_quantity > 1 %}
+                    <li class="back-stock toggle_btn" style="background-color: #cbf3d0;"><p>In Stock</p></li>
+				          {% elsif product.selected_or_first_available_variant.inventory_quantity == 1 %}
+                    <li class="back-stock toggle_btn" style="background-color: #F7E9CE;"><p>One Left in Stock</p></li>
+                  {% elsif product.selected_or_first_available_variant.inventory_quantity < 1 %}
+                  {% for block in section.blocks %}
+                    {% if block.type == 'popup' and product.tags contains block.settings.tag %}
+                      <li class="back-stock toggle_btn" style="background-color: {{ block.settings.color }};">
+                        <p>{{ block.settings.title }}  </p>
+                        {% if block.settings.text != blank %}
+                        {% include 'icon-pack' with icon: 'question' %}
+                          <div class="toggle_content animated fadeInUp flex hide">
+                            <div class="icon">
+                              {{ block.settings.icon }}
+                            </div>
+                            <div class="info">
+                              <p>{{block.settings.text}}</p>
+                            </div>
+                          </div>
+                        {% endif %}
+                      </li>
+                      {% assign flag_status = true %}
+                    {% endif %}
+                  {% endfor %}
+				            {% unless flag_status %}
+                  	  {% assign message = 'More on the Way in 14 - 28 days' %}
+                		  <li class="back-stock toggle_btn" style="background-color: #F7E9CE;">{{ message }}</p></li>
+                    {% endunless %}
+			            {%endif %}
+                </ul>
+              {% endif %}
+
+              <div class="feature_divider"></div>
+
+              {% if collection_handles contains 'coming-soon' %}
+                <p class="modal_price">{{ 'collections.general.coming_soon_html' | t }}</p>
+              {% else %}
+                <div class="modal_price">
+                  {% unless product.available == false and settings.display_price == false %}
+                    <div class="price__container price__container--display-price-{{ settings.display_price }} {% if settings.display_price %}has-margin-right{% endif %}">
+                      <span content="{{ variant.price | money_without_currency | remove: "," }}" class="{% if variant.compare_at_price > variant.price %}sale{% endif %}">
+                        <span class="current_price">
+                          {% if variant.price > 0 %}
+                            <span class="money">{% render 'price-element', price: variant.price %}</span>
+                          {% else %}
+                            {{ settings.free_price_text }}
+                          {% endif %}
+                        </span>
+                      </span>
+                      <span class="was_price">
+                        {% if variant.price < variant.compare_at_price %}
+                          <span class="money">{% render 'price-element', price: variant.compare_at_price %}</span>
+                        {% endif %}
+                      </span>
+                      {% if section.settings.display_savings %}
+                        <span class="sale savings">
+                          {% if variant.price < variant.compare_at_price %}
+                            {{ 'products.product.savings_html' | t }}  {{ variant.compare_at_price | minus: variant.price | times: 100 | divided_by: variant.compare_at_price }}% (<span class="money">{% assign compare_at = variant.compare_at_price | minus: variant.price %}{% render 'price-element', price: compare_at %}</span>)
+                          {% endif %}
+                        </span>
+                    {% endif %}
+                    </div>
+                  {% endunless %}
+
+                  <div class="ca-promotional-widget" data-widget-type="product-widget-installments" data-widget-item-sku="{{ product.selected_or_first_available_variant.sku }}" 
+                    data-widget-item-price="{{ product.selected_or_first_available_variant.price | money_without_currency | remove: ',' }}" data-widget-financing-page-url="https://optcorp.com/pages/financing-info-page">
+                  </div>
+                  <div  class="guarantee">
+                    {% if section.settings.guarantee_link != blank %}
+                      <a href="{{section.settings.guarantee_link}}">
+                    {% endif %}
+                    
+                      
+                      <div class="icon">
+                        {% include 'icon-pack' with icon: '$' %}
+                      </div>
+                      <p>{{ 'products.product.guarantee' | t }}</p>
+
+                    {% if section.settings.guarntee_link != blank %}
+                      </a>
+                    {% endif %}
+                  </div>
+                  
+                  
+                </div>
+              {% endif %}
+
+              {% unless collection_handles contains 'coming-soon' %}
+                {% render 'product-form',
+                        context: 'product',
+                        collection_handles: collection_handles
+                %}
+            </div>
+              {% render 'product-notify-me', product: product %}
+            {% endunless %}
+            <div class="live-chart">
+                <p>{% render 'icon-pack' with icon: 'chart' %}{{ 'products.product.chart_html' | t }}</p>
+                
+            </div>
+            <div class="feature_divider"></div>
+
+
+            {% if product.description contains "<!-- split -->"  %}
+              <div class="section clearfix">
+                <div class="description">
+                  {% assign description = product.description | split: '<!-- split -->' %}
+                  {{ description[1] }}
+                </div>
+              </div>
+            {% endif %}
+
+
+            <div class="meta">
+              {% if section.settings.display_social_buttons %}
+                {% render 'social-buttons', context: 'product' %}
+              {% endif %}
+            </div>
+          </div>
+        </div>
+        <div class="recommend-block">
+          {% include 'cross-sell' %}
+        </div>
+        
+        
+
+        <div class="bottom-content">
+          <p class="heading text-center">{{ 'products.product.detail_header' | t }}</p>
+          <ul class="tabs">
+            <li><a class="active" href="#description">Description</a></li>
+            {% for tag in product.tags %}
+              {% assign tag_str = tag_str | append: tag %}
+            {% endfor %}
+            {% if tag_str contains 'specs-' %}
+            <li><a href="#specifications">Specifications</a></li>
+            {% endif %}
+            {% if product.description contains "<!-- split -->"%}
+              {% assign include_str = product.description | split: '<!-- split -->' | last %}
+              {% if include_str != blank %}
+                <li><a href="#included">Included Items</a></li>
+              {% endif %}
+            {% endif %}
+            <li><a href="#reviews">Reviews</a></li>
+          </ul>
+          <!--Start tab content-->
+          <ul class="tab-list"> 
+            <li id="description">
+              <div class="description bottom clearfix">
+                {{ product.description | split: '<!-- split -->' | first }}
+              </div>
+            </li>
+            {% for tag in product.tags %}
+              {% assign tag_str = tag_str | append: tag %}
+            {% endfor %}
+            {% if tag_str contains 'specs-' %}
+              <li id="specifications">
+                <p class="heading capitalize">specifications</p>
+                <!--<div class="specs-table"  itemprop="additionalProperty"  itemtype="http://schema.org/PropertyValue">-->
+                <div class="specs-table"  itemprop="additionalProperty">
+                  <table class="specifications">
+                    <tbody>
+                    {% for tag in product.tags %}
+                        {% if tag contains 'specs-' %}
+                          {% unless tag contains 'Price' %} 	
+                          {% assign tagx = tag | split: 'specs-' | last %}
+                            <tr>
+                              <td class="left">{{ tagx | split: '-' | first }}</td><td class="right">{{ tagx | split: '-' | last }}</td>
+                            </tr>
+                          {% endunless %}
+                        {% endif %}
+                    {% endfor %}
+                    </tbody>
+                  </table>
+                  <div class="clearfix"></div>
+                </div>
+              </li>
+            {% endif %}
+            
+            {% if product.description contains "<!-- split -->"%}
+              {% assign include_str = product.description | split: '<!-- split -->' | last %}
+              {% if include_str != blank %}
+                <li id="included">
+                  <p class="heading capitalize">included items</p>
+                  
+                    <div class="section clearfix">
+                      <div class="description">
+                        {{ include_str }}
+                      </div>
+                    </div>
+                </li>
+              {% endif %}
+            {% endif %}
+          </ul>
         </div>
 
-        <div class="seven columns medium-down--one-whole  {% if section.settings.product_images_position == 'left' %}omega{% else %}alpha{% endif %}">
-
-          {% assign collection_handles = product.collections | map: 'handle' %}
-          {% assign variant = product.selected_or_first_available_variant %}
-
-          {% if product.available %}
-            {% if settings.sale_banner_enabled and product.compare_at_price_max > product.price %}
-              <div class="sale_banner_product">{{ 'collections.general.sale_html' | t }}</div>
-            {% endif %}
-          {% endif %}
-          {% if collection_handles contains 'new' %}
-            <div class="new_banner_product">{{ 'collections.general.new_html' | t }}</div>
-          {% endif %}
-          {% if collection_handles contains 'pre-order' %}
-            <div class="preorder_banner_product">{{ 'collections.general.pre_order' | t }}</div>
-          {% endif %}
-
-          {% if section.settings.display_vendor %}
-            <p class="vendor">
-              <span class="vendor">{{ product.vendor | link_to_vendor }}</span>
-            </p>
-          {% endif %}
-
-          {% if variant.sku != blank and section.settings.display_sku %}
-            <p class="sku">
-              <span>{{ variant.sku }}</span>
-            </p>
-          {% endif %}
-          <h1 class="product_name">{{ product.title }}</h1>
-          {% if section.settings.enable_shopify_product_badges and settings.enable_shopify_review_comments %}
-            <span class="shopify-product-reviews-badge" data-id="{{ product.id }}"></span>
-          {% endif %}
-          <div class="feature_divider"></div>
-
-          {% assign product_tags = product.tags | join: ' ' %}
-          {% if product_tags contains 'meta-size-chart-' %}
-            {% for tag in product.tags %}
-              {% if tag contains 'meta-size-chart-' %}
-                <a href="javascript:;" class="size_chart" data-fancybox data-src="#size-chart{{product.id}}" data-type="inline" data-no-instant>{{ 'products.product.size_chart' | t }} <span class="icon-right-arrow"></span></a>
-                {% render 'popup-size-chart', product_id: product.id %}
-              {% endif %}
-            {% endfor %}
-          {% elsif settings.size_chart != blank %}
-            <a href="javascript:;" class="size_chart" data-fancybox data-src="#size-chart{{product.id}}" data-type="inline" data-no-instant>{{ 'products.product.size_chart' | t }} <span class="icon-right-arrow"></span></a>
-          {% endif %}
-
-          {% if collection_handles contains 'coming-soon' %}
-            <p class="modal_price">{{ 'collections.general.coming_soon_html' | t }}</p>
-          {% else %}
-            <div class="modal_price">
-              {% unless product.available == false and settings.display_price == false %}
-                <div class="price__container price__container--display-price-{{ settings.display_price }} {% if settings.display_price %}has-margin-right{% endif %}">
-                  <span content="{{ variant.price | money_without_currency | remove: "," }}" class="{% if variant.compare_at_price > variant.price %}sale{% endif %}">
-                    <span class="current_price">
-                      {% if variant.price > 0 %}
-                        <span class="money">{% render 'price-element', price: variant.price %}</span>
-                      {% else %}
-                        {{ settings.free_price_text }}
-                      {% endif %}
-                    </span>
-                  </span>
-                  <span class="was_price">
-                    {% if variant.price < variant.compare_at_price %}
-                      <span class="money">{% render 'price-element', price: variant.compare_at_price %}</span>
-                    {% endif %}
-                  </span>
-                  {% if section.settings.display_savings %}
-                    <span class="sale savings">
-                      {% if variant.price < variant.compare_at_price %}
-                        {{ 'products.product.savings_html' | t }}  {{ variant.compare_at_price | minus: variant.price | times: 100 | divided_by: variant.compare_at_price }}% (<span class="money">{% assign compare_at = variant.compare_at_price | minus: variant.price %}{% render 'price-element', price: compare_at %}</span>)
-                      {% endif %}
-                    </span>
-                {% endif %}
-                </div>
-              {% endunless %}
-              <div class="sold-out__container">
-                <span class="sold_out">{% if variant.available == false %}{{ settings.sold_out_text }}{% endif %}</span>
-              </div>
-            </div>
-          {% endif %}
-
-          {% if section.settings.product_description_position == "top" %}
-            {% if product.description != blank %}
-              <div class="description">
-                {{ product.description | split: '<!-- split -->' | first }}
-              </div>
-            {% endif %}
-          {% endif %}
-
-          {% unless collection_handles contains 'coming-soon' %}
-            {% render 'product-form',
-                    context: 'product',
-                    collection_handles: collection_handles
-            %}
-            {% render 'product-notify-me', product: product %}
-          {% endunless %}
-
-          {% if section.settings.product_description_position == "bottom" %}
-            {% if product.description != blank %}
-              <div class="description bottom">
-                {{ product.description | split: '<!-- split -->' | first }}
-              </div>
-            {% endif %}
-          {% endif %}
-
-          {% if section.settings.review_position == "next_to_gallery" %}
-            <div class="shopify-reviews reviewsVisibility--{{settings.enable_shopify_review_comments}}">
-              <div id="shopify-product-reviews" data-id="{{product.id}}">{{ product.metafields.spr.reviews }}</div>
-            </div>
-          {% endif %}
-
-          {% if section.settings.display_collections or section.settings.display_tags or section.settings.display_type %}
-            <div class="product_links">
-              {% if section.settings.display_collections %}
-                <p>
-                  <span class="label">{{ 'products.product.collections' | t }}:</span>
-                  <span>
-                    {% for col in product.collections %}
-                      <a href="{{ col.url }}" title="{{ col.title }}">{{ col.title }}</a>{% unless forloop.last %},{% endunless %}
-                    {% endfor %}
-                  </span>
-                </p>
-              {% endif %}
-
-              {% if section.settings.display_type %}
-                <p>
-                  <span class="label">{{ 'products.product.product_types' | t }}:</span>
-                  <span>{{ product.type | link_to_type }}</span>
-                </p>
-              {% endif %}
-
-              {% if section.settings.display_tags %}
-                <p>
-                 {% for tag in product.tags %}
-                   {% if forloop.first %}
-                     <span class="label">{{ 'products.product.tags' | t }}:</span>
-                   {% endif %}
-
-                   {% unless tag contains 'meta-' %}
-                     <span>
-                       <a href="{{ routes.collections_url }}/{% if collection %}{{ collection.handle }}{% else %}all{% endif %}/{{ tag | handle }}" title="{{ 'products.product.products_tagged' | t: tag: tag }}">{{ tag }}</a>{% unless forloop.last %},{% endunless %}
-                       </span>
-                   {% endunless %}
-                 {% endfor %}
-                </p>
-              {% endif %}
-            </div>
-          {% endif %}
-
-          <div class="meta">
-            {% if section.settings.display_social_buttons %}
-              {% render 'social-buttons', context: 'product' %}
-            {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% for block in section.blocks %}
+  {% if block.type == 'instagram' %}
+    <div class="instagram-section">
+      {% assign images_per_row = settings.grid-size %}
+    
+      {% if block.settings.wide_display == false %}
+      <div class="container">
+        <div class="sixteen columns">
+      {% endif %}
+      <div  id="gallery_section-{{block.id}}"
+            class=" gallery-section
+                    gallery-{{ block.settings.gallery_type }}
+                    {% if block.settings.wide_display %}
+                      gallery-full
+                    {% endif %}">
+    
+      {% if block.settings.title != blank %}
+        <div class="container">
+          <div class="sixteen columns">
+            <h2 class="title center">{{ block.settings.title | escape }}</h2>
+            {{ block.settings.sub_title }}
           </div>
+        </div>
+        {% endif %}
+    
+        <div class="gallery-break"></div>
+        <div id="stamped-reviews-widget" data-widget-type="instagram-feed" ></div>
+        </div>
+    
+      {% if block.settings.wide_display == false %}
         </div>
       </div>
-
-      {% if product.description contains "<!-- split -->"  %}
-        <br class="clear" />
-        <div class="section clearfix">
-          <div class="description">
-            {{ product.description | split: '<!-- split -->' | last }}
-          </div>
-        </div>
-      {% endif %}
-
-      {% if section.settings.review_position == "below_gallery" %}
-        <div class="shopify-reviews reviewsVisibility--{{settings.enable_shopify_review_comments}}">
-          <div id="shopify-product-reviews" data-id="{{product.id}}">{{ product.metafields.spr.reviews }}</div>
-        </div>
       {% endif %}
     </div>
+  {% endif %}
+{% endfor %}
 
-    {% if sidebar %}
-
-            {% if section.settings.display_recently_viewed %}
-              {% include 'include-recently-viewed' %}
-            {% endif %}
-
-            <div data-product-recommendations-container></div>
-          </div>
-        </div>
+<div id="reviews">
+  <div class="container">
+    <div class="page-content">
+      <div class="shopify-reviews reviewsVisibility--{{settings.enable_shopify_review_comments}}">
+        <h1 class="title">Product Reviews</h1>
+        <div id="stamped-main-widget" 
+          data-widget-style="standard"
+          data-product-id="{{ product.id }}" 
+          data-name="{{ product.title | escape }}" 
+          data-url="{{ shop.url }}{{ product.url }}" 
+          data-image-url="{{ product.featured_image | product_img_url: "large" |replace: '?', '%3F' | replace: '&','%26'}}" 
+          data-description="{{ product.description | escape }}" 
+          data-product-sku="{{product.handle}}"> 
+          {{ product.metafields.stamped.reviews }} 
+        </div>  
       </div>
+    </div>
+  </div>
+</div>
 
-    {% else %}
+{%- comment -%}
+{% if section.settings.display_recently_viewed %}
+  {% include 'include-recently-viewed' %}
+{% endif %}
+{%- endcomment -%}
 
-          </div>
-        </div>
-      </div>
-
-      {% if section.settings.display_recently_viewed %}
-        {% include 'include-recently-viewed' %}
-      {% endif %}
-      <div data-product-recommendations-container></div>
-
-    {% endif %}
+      
 
 {% if section.settings.set_product_height %}
   {% style %}
@@ -277,6 +379,138 @@
     ShopifyXR('addModels', {{ models }});
 </script>
 {% endif %}
+
+{% comment %}
+<script type="application/ld+json" data-creator_name="FeedArmy">
+{
+  "@context": "http://schema.org/",
+/*  "@type": "Product",
+  "name": "{{ product.title | strip_html | escape }}",
+  "url": "{{ shop.url }}{{ product.url }}",
+  {%- if product.variants.first.sku != blank -%}
+    "sku": "{{ product.variants.first.sku }}",
+  {%- else -%}
+    "sku": "{{ product.variants.first.id }}",
+  {%- endif -%}
+  {%- if product.variants.first.barcode.size == 12 -%}
+    "gtin12": {{ product.variants.first.barcode }},
+  {%- endif -%}
+  {%- if product.variants.first.barcode.size == 13 -%}
+    "gtin13": {{ product.variants.first.barcode }},
+  {%- endif -%}
+  {%- if product.variants.first.barcode.size == 14 -%}
+    "gtin14": {{ product.variants.first.barcode }},
+  {%- endif -%}
+    "productID": "{{ product.id }}",*/
+  "brand": {
+    "@type": "Thing",
+    "name": "{{ product.vendor | escape }}"
+  },
+  "description": {{ product.description | strip_html | json }},
+  "image": "https:{{ product.featured_image.src | img_url: 'grande' }}",
+  {%- if product.variants -%}
+  {%- assign fa_count = fa_count | plus: 1 -%}
+    "offers": {% if product.variants.size > 1 %}[{% endif %}
+      {
+        "@type" : "Offer",
+        "priceCurrency": "{{ cart.currency.iso_code }}",
+        "price": "{{ product.selected_or_first_available_variant.price | money_without_currency  | strip_html | remove: ',' }}",
+        "itemCondition" : "http://schema.org/NewCondition",
+        "availability" : "http://schema.org/{% if product.selected_or_first_available_variant.available %}InStock{% else %}OutOfStock{% endif %}",
+        "url" : "{{ shop.url }}{{ product.selected_or_first_available_variant.url }}",
+            {%- if product.selected_or_first_available_variant.image -%}
+              {% assign variant_image_size = product.selected_or_first_available_variant.image.width | append: 'x' %}
+              "image": "https:{{ product.selected_or_first_available_variant.image.src | img_url: variant_image_size }}",
+            {%- else -%}
+              "image": "https:{{ product.featured_image.src | img_url: 'grande' }}",
+            {%- endif -%}
+            {%- if product.selected_or_first_available_variant.title != 'Default Title' -%}
+              "name" : "{{ product.title | strip_html | escape }} - {{ product.selected_or_first_available_variant.title | escape }}",
+            {%- else -%}
+              "name" : "{{ product.title | strip_html | escape }}",
+            {%- endif -%}
+            {% if product.selected_or_first_available_variant.barcode.size == 12 %}
+              "gtin12": {{ product.selected_or_first_available_variant.barcode }},
+            {%- endif -%}
+            {%- if product.selected_or_first_available_variant.barcode.size == 13 -%}
+              "gtin13": {{ product.selected_or_first_available_variant.barcode }},
+            {%- endif -%}
+            {%- if product.selected_or_first_available_variant.barcode.size == 14 -%}
+              "gtin14": {{ product.selected_or_first_available_variant.barcode }},
+            {%- endif -%}
+            {%- if product.selected_or_first_available_variant.sku != blank -%}
+              "sku": "{{ product.selected_or_first_available_variant.sku }}",
+            {%- else -%}
+              "sku": "{{ product.selected_or_first_available_variant.id }}",
+            {%- endif -%}
+            {%- if product.description != blank -%}
+            "description" : {{ product.description | strip_html | json }},
+            {%- endif -%}
+          "priceValidUntil": "{{ 'now' | date: '%s' | plus: 31536000 | date: '%Y-%m-%d' | uri_encode | replace:'+','%20' }}"
+      }{%- if product.variants.size != 1 -%},{%- endif -%}
+      {%- for variant in product.variants -%}
+      {%- if variant != product.selected_or_first_available_variant -%}
+      {%- assign fa_count = fa_count | plus: 1 -%}
+        {
+          "@type" : "Offer",
+          "priceCurrency": "{{ cart.currency.iso_code }}",
+          "price": "{{ variant.price | money_without_currency  | strip_html | remove: ',' }}",
+          "itemCondition" : "http://schema.org/NewCondition",
+          "availability" : "http://schema.org/{% if variant.available %}InStock{% else %}OutOfStock{% endif %}",
+          "url" : "{{ shop.url }}{{ variant.url }}",
+              {%- if variant.image -%}
+                {% assign variant_image_size = variant.image.width | append: 'x' %}
+                "image": "http:{{ variant.image.src | img_url: variant_image_size }}",
+              {%- else -%}
+                "image": "https:{{ product.featured_image.src | img_url: 'grande' }}",
+              {%- endif -%}
+              {%- if variant.title != 'Default Title' -%}
+                "name" : "{{ product.title | strip_html | escape }} - {{ variant.title | escape }}",
+              {%- else -%}
+                "name" : "{{ product.title | strip_html | escape }}",
+              {%- endif -%}
+              {%- if variant.barcode.size == 12 -%}
+                "gtin12": {{ variant.barcode }},
+              {%- endif -%}
+              {%- if variant.barcode.size == 13 -%}
+                "gtin13": {{ variant.barcode }},
+              {%- endif -%}
+              {%- if variant.barcode.size == 14 -%}
+                "gtin14": {{ variant.barcode }},
+              {%- endif -%}
+              {%- if variant.sku != blank -%}
+                "sku": "{{ variant.sku }}",
+              {%- else -%}
+                "sku": "{{ variant.id }}",
+              {%- endif -%}
+              {%- if product.description != blank -%}
+              "description" : {{ product.description | strip_html | json }},
+              {%- endif -%}
+              "priceValidUntil": "{{ 'now' | date: '%s' | plus: 31536000 | date: '%Y-%m-%d' | uri_encode | replace:'+','%20' }}"
+          }
+          {%- if fa_count < fa_variant_count -%}
+         	{%- unless forloop.last -%},{%- endunless -%}
+          {%- endif -%}
+          {%- endif -%}
+      {%- endfor -%}
+    {%- if product.variants.size > 1 -%}],
+      "additionalProperty": [{
+        "@type": "PropertyValue",
+        "propertyID": "item_group_id",
+        "value": "{{ product.id }}"
+      }]
+      {%- endif -%}
+    {%- if product.metafields.stamped.reviews_count -%}
+    ,"aggregateRating": {
+     "@type": "AggregateRating",
+     "ratingValue": {{ product.metafields.stamped.reviews_average }},
+     "ratingCount": {{ product.metafields.stamped.reviews_count }}
+    }
+    {%- endif -%}
+  {%- endif -%}
+}
+</script>
+{% endcomment %}
 
 {% schema %}
 
@@ -384,39 +618,9 @@
     },
     {
       "type": "checkbox",
-      "id": "display_collections",
-      "label": "Show collections"
-    },
-    {
-      "type": "checkbox",
-      "id": "display_type",
-      "label": "Show type"
-    },
-    {
-      "type": "checkbox",
-      "id": "display_tags",
-      "label": "Show tags"
-    },
-    {
-      "type": "checkbox",
       "id": "display_social_buttons",
       "label": "Show social media share icons",
       "default": true
-    },
-    {
-      "type": "radio",
-      "id": "product_description_position",
-      "label": "Description position",
-      "options": [
-        {
-          "value": "top",
-          "label": "Above product form"
-        },
-        {
-          "value": "bottom",
-          "label": "Below product form"
-        }
-      ]
     },
     {
       "type": "checkbox",
@@ -492,22 +696,6 @@
       "default": false
     },
     {
-      "type": "radio",
-      "id": "review_position",
-      "label": "Reviews position",
-      "default": "next_to_gallery",
-      "options": [
-        {
-          "value": "next_to_gallery",
-          "label": "In product description area"
-        },
-        {
-          "value": "below_gallery",
-          "label": "Below image\/description"
-        }
-      ]
-    },
-    {
       "type": "header",
       "content": "Recently viewed products"
     },
@@ -544,6 +732,27 @@
       ]
     },
     {
+      "type": "checkbox",
+      "id": "description_status",
+      "label": "Description status",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "vendor_link_status",
+      "label": "Vendor link"
+    },
+    {
+      "type": "checkbox",
+      "id": "badges",
+      "label": "Product review"
+    },
+    {
+      "type": "checkbox",
+      "id": "add_cart_form",
+      "label": "Add cart form"
+    },
+    {
       "type": "range",
       "id": "rv_max_display",
       "label": "Products limit",
@@ -562,106 +771,66 @@
       "default": 4
     },
     {
-      "type": "header",
-      "content": "Sidebar"
-    },
-    {
-      "type": "paragraph",
-      "content": "Create a sidebar by adding content blocks."
-    },
-    {
-      "type": "checkbox",
-      "id": "toggle",
-      "label": "Toggle sidebar content",
-      "default": false
+      "type": "url",
+      "id": "guarantee_link",
+      "label": "Guarantee link"
     }
   ],
   "blocks": [
     {
-      "type": "filter_by_collection",
-      "name": "Collection list",
-      "limit": 1
-    },
-    {
-      "type": "menu",
-      "name": "Menu",
+      "type": "instagram",
+      "name": "Instagram",
       "settings": [
         {
-          "type": "link_list",
-          "id": "custom_menu_linklist",
-          "label": "Menu"
-        }
-      ]
-    },
-    {
-      "type": "page",
-      "name": "Page",
-      "settings": [
-        {
-          "type": "page",
-          "id": "content_page",
-          "label": "Page"
-        }
-      ]
-    },
-    {
-      "type": "recently_viewed",
-      "name": "Recently viewed products",
-      "limit": 1,
-      "settings": [
-        {
-          "type": "paragraph",
-          "content": "To test the recently viewed products, view your online store outside of the Editor and visit multiple product pages. [Learn more](https:\/\/help.outofthesandbox.com\/hc\/en-us\/articles\/115008765228)"
+          "type": "checkbox",
+          "id": "wide_display",
+          "label": "Wide display"
         },
-        {
-          "type": "text",
-          "id": "sidebar_rv_title",
-          "label": "Title",
-          "default": "Recently Viewed"
-        },
-        {
-          "type": "range",
-          "id": "sidebar_rv_per",
-          "label": "Products limit",
-          "min": 1,
-          "max": 4,
-          "step": 1,
-          "default": 3
-        }
-      ]
-    },
-    {
-      "type": "filter_by_tag",
-      "name": "Tag list",
-      "limit": 1
-    },
-    {
-      "type": "text",
-      "name": "Text",
-      "settings": [
         {
           "type": "text",
           "id": "title",
           "label": "Heading",
-          "default": "Heading"
+          "default": "Gallery"
         },
         {
           "type": "richtext",
-          "id": "text",
-          "label": "Text",
-          "default": "<p>Text area can be used for special announcements or general information.</p>"
+          "id": "sub_title",
+          "label": "Sub title"
         }
       ]
     },
     {
-      "type": "filter_by_type",
-      "name": "Type list",
-      "limit": 1
-    },
-    {
-      "type": "filter_by_vendor",
-      "name": "Vendor list",
-      "limit": 1
+      "type": "popup",
+      "name": "Popup message",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Back in stock soon"
+        },
+        {
+          "type": "text",
+          "id": "tag",
+          "label": "Tag"
+        },
+        {
+          "type": "html",
+          "id": "icon",
+          "label": "Icon"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Text"
+        },
+        {
+          "type": "color",
+          "id": "color",
+          "label": "Tag color",
+          "default": "#f7e9ce"
+        }
+      ]
     }
   ],
   "default": {

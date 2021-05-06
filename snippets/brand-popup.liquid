@@ -1,0 +1,65 @@
+<div id="brand_modal" class="modal">
+  <div class="modal-content">
+    <div class="heading">
+      <p>{{'general.browse_brand' | t }}</p>
+      {{ block.settings.modal_heading }}
+      <a href="#brand_modal" class="close">{% include 'icon-pack' with icon: 'close' %}</a>
+      <div class="search-form-content">
+        <input type="text" class="search-box" placeholder="Search brands…">
+        <span class="icon-search search-submit"></span>
+      </div>
+    </div>
+    <div class="body">
+      <div id="inline" class="lity-hide brand-list">
+        <div class="flex">
+          <div  class="brand-azlist">
+            <div id="top-jump"></div>
+            {% assign letter = "a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z" | split: ',' %}
+            {% for letter in letter %}
+            <p><a href="#sec-{{letter}}">{{letter}}</a></p>
+            {% endfor %}
+                
+          </div>
+          <div class="brand-content">
+            <a href="#top-jump" style="color: white;"><div class="btn brand-btn" style="">Top</div></a>
+            {% for product_vendor in shop.vendors %}
+              {% if product_vendor == 'vendor-unknown'  or product_vendor == 'Clyde' or product_vendor == 'Dot Line' or product_vendor == 'MoonLite Telescope Accessories' or product_vendor == 'Skyhound'  or product_vendor =='Spectrum Telescopes' or product_vendor == 'Printify' or product_vendor =="Alcor" or product_vendor =="V" or product_vendor =="Astro Haven" or product_vendor =="Astro-Haven" or product_vendor =="Astro-Tech" or product_vendor  =="Universe2go" or product_vendor  =="printzware" or product_vendor  =="Kowa" or product_vendor  =="Bushnell" or product_vendor == "Artesky Di Luca Seveso" or product_vendor == "Great American Eclipse" or product_vendor == "MOVA" or product_vendor =="PreciseParts" or product_vendor =="Tony Hallas" or product_vendor =="ScopeStuff" or product_vendor =="Starbound" or product_vendor =="Southern Stars" or product_vendor =="Moravian" %}
+              {% else %}
+                {% assign first_letter = product_vendor | downcase | slice: 0 %}
+    
+                {% if '0123456789' contains first_letter %}
+                  {% assign digit = true %}
+                {% else %}
+                  {% assign digit = false %}
+                {% endif %}
+    
+                {% if forloop.first %}
+                  {% if digit %} 
+                    <div class="brand-block">
+                    <p > {{first_letter }}</p>
+                  {% else %}
+                    <div class="brand-block">
+                    <p id="sec-{{first_letter}}"> {{first_letter }}</p>
+                  {%endif %}
+                  <ul>
+                {% elsif  current_letter != first_letter %}
+                  </ul>
+                  </div>
+                  <div class="brand-block">
+                    <p id="sec-{{first_letter}}">{{ first_letter }}</p>
+                  <ul>
+                {% endif %}
+                {% assign current_letter = first_letter %}
+                <li class="listing-brand"style="list-style-type: none;"><a href="/collections/{{ product_vendor | handleize }}">{{ product_vendor | downcase }}</a></li>
+                {% if forloop.last %}
+                  </ul>
+                  </div>
+                {% endif %}
+              {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> 

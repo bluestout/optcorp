@@ -1,0 +1,18 @@
+<div class="two-twelfths medium-down--one-whole column sidebar-menu wrapper">
+  <div class="select-box hide medium-down--show">
+    {% case type %}
+      {% when 'account' %}
+        {{ 'customer.account.title' | t }}
+      {% when 'wishlist' %}
+        {{'customer.wishlist.title' | t }}
+      {% when 'address' %}
+        {{ 'customer.addresses.title' | t }}
+    {% endcase %}
+  </div>
+  <ul>
+    <li class="capitalize {% if type == 'account' %}active{% endif %}"><a href="/account">{{ 'customer.account.title' | t }}</a></li>
+    <li class="capitalize {% if type == 'wishlist' %}active{% endif %}"><a href="/apps/iwish" target="_blank">{{'customer.wishlist.title' | t }}</a></li>
+    <li class="capitalize {% if type == 'address' %}active{% endif %}"><a href="/account/addresses">{{'customer.addresses.title' | t }}</a></li>
+    <li class="capitalize"><a href="/account/logout">{{'layout.customer.log_out' | t }}</a></li>
+  </ul>
+</div>

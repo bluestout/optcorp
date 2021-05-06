@@ -2,4 +2,9 @@
   The contents of the search.liquid template can be found in /sections/search-template.liquid
 {% endcomment %}
 
-{% section 'search-template' %}
+{% if search.types contains 'article' %}
+  {% section 'search-template' %}
+{% else %}
+  {% section 'search-section' %}
+{% endif %}
+

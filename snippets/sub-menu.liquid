@@ -3,27 +3,34 @@
     {% assign link_count = linklists[link.handle].links | size %}
     <div class="dropdown_container" data-dropdown="{{ link.handle }}">
       <div class="dropdown menu">
-        <div class="dropdown_content {% if link_count < 4 %}dropdown_narrow{% endif %}">
-          {% for sublink in linklists[link.handle].links %}
-            <div class="dropdown_column">
-              <ul class="{% if linklists[sublink.handle] != empty %}dropdown_title{% else %}dropdown_item{% endif %}">
-                <li>
-                  <a href="{{ sublink.url }}" class="{% if sublink.url == '#' %}url-deadlink{% endif %}">{{ sublink.title }}</a>
-                </li>
-              </ul>
-
-              {% if linklists[sublink.handle] != empty %}
-                <ul>
-                  {% for subsublink in linklists[sublink.handle].links %}
+        <div class="container">
+          <div class="grid">
+            <div class="dropdown_content grid__item ten {% if link_count < 4 %}dropdown_narrow{% endif %}">
+              {% for sublink in linklists[link.handle].links %}
+                <div class="dropdown_column">
+                  <ul class="{% if linklists[sublink.handle] != empty %}dropdown_title{% else %}dropdown_item{% endif %}">
                     <li>
-                      <a href="{{ subsublink.url }}" class="{% if subsublink.url == '#' %}url-deadlink{% endif %}">{{ subsublink.title }}</a>
+                      <a href="{{ sublink.url }}" class="{% if sublink.url == '#' %}url-deadlink{% endif %}">{{ sublink.title }}</a>
                     </li>
-                  {% endfor %}
-                </ul>
-              {% endif %}
+                  </ul>
+    
+                  {% if linklists[sublink.handle] != empty %}
+                    <ul>
+                      {% for subsublink in linklists[sublink.handle].links %}
+                        <li>
+                          <a href="{{ subsublink.url }}" class="{% if subsublink.url == '#' %}url-deadlink{% endif %}">{{ subsublink.title }}</a>
+                        </li>
+                      {% endfor %}
+                    </ul>
+                  {% endif %}
+                </div>
+                {% cycle link.handle: '', '', '', '', '<div class="dropdown_row"></div>' %}
+              {% endfor %}
             </div>
-            {% cycle link.handle: '', '', '', '', '<div class="dropdown_row"></div>' %}
-          {% endfor %}
+            <div class="banner_content gird__item six">
+
+            </div>
+          </div>
         </div>
       </div>
     </div>

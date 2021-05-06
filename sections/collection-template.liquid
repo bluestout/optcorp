@@ -4,6 +4,166 @@
 - Uses blocks
 {% endcomment %}
 
+{% assign temp = collection.description %}
+{% if temp contains '<!-- glossary -->' %}
+  {% assign temp_arr = temp | split: '<!-- glossary -->' %}
+  {% for value in temp_arr %}
+
+    {% if forloop.last == true %}
+      {% assign glossary_data = value %}
+    {% else %}
+      {% assign temp = value %}
+    {% endif %}
+  {% endfor %}
+
+  {% assign glossary_arr = glossary_data | split: '<p><strong>' %}
+
+  {% capture glossary_content %}
+    <div class="heading text-center">
+      <h1 class="headline">{{section.settings.glossary_title}}</h1>
+      {{ section.settings.glossary_desc }}
+    </div>
+    <div class="content">
+      <div class="container">
+        <div class="masonry  two-per-row">
+          {% for value in glossary_arr %}
+            {% if forloop.index != 1 %}
+              {% assign data = value | prepend: '<p><strong>' %}
+              <div class="one-whole column">
+                {{data}}
+              </div>
+            {% else %}
+              {{ value }}
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  {% endcapture %}
+{% endif %}
+
+{% if temp contains '<!-- faq -->' %}
+  {% assign temp_arr = temp | split: '<!-- faq -->' %}
+  {% for value in temp_arr %}
+
+    {% if forloop.last == true %}
+      {% assign faq_data = value %}
+    {% else %}
+      {% assign temp = value %}
+    {% endif %}
+  {% endfor %}
+
+  {% assign faq_arr = faq_data | split: '<p><strong>' %}
+
+  {% capture faq_content %}
+    <div class="heading text-center">
+      <h1 class="headline">{{section.settings.faq_title}}</h1>
+      {{ section.settings.faq_desc }}
+    </div>
+    <div class="content">
+      <div class="container">
+        <div class="masonry  two-per-row">
+          {% for value in faq_arr %}
+            {% if forloop.index != 1 %}
+              {% assign data = value | prepend: '<p><strong>' %}
+              <div class="one-whole column">
+                {{data}}
+              </div>
+            {% else %}
+              {{ value }}
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  {% endcapture %}
+{% endif %}
+
+{% if temp contains '<!-- blog -->' %}
+  {% assign temp_arr = temp | split: '<!-- blog -->' %}
+  {% for value in temp_arr %}
+    {% if forloop.last == true %}
+      {% assign blog_data = value %}
+    {% else %}
+      {% assign temp = value %}
+    {% endif %}
+  {% endfor %}
+
+  {% assign blog_arr = blog_data | split: '<h1>' %}
+  {% capture blog_content %}
+    <div class="content  {{section.settings.blog_style}} text-align-top">
+
+      {% if section.settings.blog_style == 'list'%}
+            {% assign cls = 'one-whole' %}
+        {% else %}
+            {% assign cls = 'one-half' %}
+        {% endif %}
+
+      <div class="container flex">
+        {% for item in blog_arr %}
+          {% if forloop.index != 1 %}
+            {% assign blog = item | prepend: '<h1>' %}
+              <div class="{{ cls }} medium-down--one-whole column">
+                <div class="info">
+                  {{ blog }}
+                </div>
+              </div>
+            {% else %}
+              {{ item }}
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+  {% endcapture %}
+{% endif %}
+
+
+{% if temp contains '<!-- blog banner -->' %}
+  {% assign temp_arr = temp | split: '<!-- blog banner -->' %}
+  {% for value in temp_arr %}
+    {% if forloop.last == true %}
+      {% assign blog_banner_data = value %}
+    {% else %}
+      {% assign temp = value %}
+    {% endif %}
+  {% endfor %}
+
+
+  {% assign blog_banner_arr = blog_banner_data | split: '<h1>' %}
+
+  {% assign description = blog_banner_arr[1] | prepend: '<h1 class="small-down--hide">' | split: '<!-- bottom text -->' | first %}
+  {% assign bottom_description = blog_banner_arr[1] | prepend: '<h1 class="small-down--hide">' | split: '<!-- bottom text -->' | last  %}
+  {% assign tmp = blog_banner_arr[1] | prepend: '<h1 class="hide small-down--show">' | split: '</h1>' %}
+  {% assign mobile_title = tmp[0] | append: '</h1><img' %}
+  {% assign image = blog_banner_arr[0] | replace: '<img', mobile_title %}
+  {% capture blog_banner_content %}
+    <div class="banner">
+      {{ image }}
+      <div class="caption captionOverlay--true">
+        {{ description }}
+      </div>
+    </div>
+    <div class="bottom-desc container">
+      {{ bottom_description }}
+    </div>
+    
+  {% endcapture %}
+{% endif %}
+
+{% if temp contains '<!-- sub description -->' %}
+  {% assign temp_arr = temp | split: '<!-- sub description -->' %}
+  {% for value in temp_arr %}
+    {% if forloop.last == true %}
+      {% assign sub_description = value %}
+    {% else %}
+      {% assign description = value %}
+    {% endif %}
+  {% endfor %}
+{% else %}
+  {% assign description = temp | strip_html | truncate: 300, '...' %}
+{% endif %}
+
+
 {% if section.settings.featured_collection_image %}
   {% if section.settings.wide_display == false %}
   <div class="container">
@@ -11,24 +171,60 @@
   {% endif %}
 
   <header class="banner center page-banner dark-overlay-{{ section.settings.image_darken }} full-width--{{ section.settings.wide_display }}">
-      {% if collection.image %}
-        {% assign image = collection.image %}
-      {%- elsif section.settings.image -%}
+      {%- if section.settings.image -%}
         {% assign image = section.settings.image %}
       {%- else %}
         {% assign image = collection.products.first.featured_image %}
+      {% endif %}
+
+      {%- if section.settings.mobile_image -%}
+        {% assign mobile_image = section.settings.mobile_image %}
+      {%- else %}
+        {% assign mobile_image = section.settings.image %}
       {% endif %}
 
       {% render 'image-element',
               image: image,
               alt: collection.title,
               stretch_width: true,
-              progressive: true
+              progressive: true,
+              additional_classes: 'small-down--hide'
+      %}
+
+      {% render 'image-element',
+              image: mobile_image,
+              alt: collection.title,
+              stretch_width: true,
+              progressive: true,
+              additional_classes: 'small-up--hide'
       %}
 
       {% if section.settings.display_collection_title %}
         <div class="caption captionOverlay--true">
-          <h1 class="headline">{{ collection.title }}</h1>
+          {% if collection.title != blank %}
+            {% assign title = collection.title %}
+          {% else %}
+            {% assign title = section.settings.title %}
+          {% endif %}
+
+          {% if description != blank %}
+              {% assign desc = description %}
+          {% else %}
+            {% assign desc = section.settings.sub_title %}
+          {% endif %}
+
+          <h1 class="headline text-center">{{ title }}</h1>
+          <p class="text-center">{{ desc }}</p>
+          {% if sub_description != blank %}
+          <div class="description_content flex">
+            {% if section.settings.icon != blank %}
+              <div class="icon">
+                {{ section.settings.icon }}
+              </div>
+            {% endif %}
+            {{ sub_description }}
+          </div>
+          {% endif %}
         </div>
       {% endif %}
   </header>
@@ -39,11 +235,44 @@
   {% endif %}
 {% endif %}
 
-<a name="pagecontent" id="pagecontent"></a>
+<div class="icon-bar-section">
+  <div class="container">
+    <div class="sixteen columns">
+      <div class="section clearfix">
+      {% if section.blocks.size > 0 %}
+        <div class="icon-bar container">
+          {% for block in section.blocks %}
+            <div class="icon-bar__item small-down--one-third" {{ block.shopify_attributes }}>
+              {% if block.settings.link != blank %}
+                <a href="{{ block.settings.link }}" class="icon-bar__link">
+              {% endif %}
+              {% if block.settings.image != blank %}
+                {% render 'image-element',
+                        image: block.settings.image,
+                        alt: block.settings.title
+                %}
+              {% elsif block.settings.svg != blank %}
+                {{ block.settings.svg }}
+              {% else %}
+                {{ 'logo' | placeholder_svg_tag: 'placeholder-svg' }}
+              {% endif %}
+              <p>{{block.settings.title}}</p>
+              {% if block.settings.link != blank %}
+                </a>
+              {% endif %}
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+      </div>
+    </div>
+  </div>    
+</div>
+
+
 
 <div class="container">
-  {% paginate collection.products by section.settings.pagination_limit %}
-    <div class="clearfix breadcrumb-collection">
+    <div class="clearfix breadcrumb-collection medium-down--hide">
       {% if section.settings.collection_breadcrumb %}
         <script type="application/ld+json">
           {
@@ -63,7 +292,7 @@
                 "position": 2,
                 "item": {
                   "@id": "{{ routes.collections_url }}/{% if collection.handle != blank %}{{ collection.handle }}{% else %}all{% endif %}",
-                  "name": "{{ collection.title }}"
+                  "name": "{{ collection.title | escape }}"
                 }
               }
               {% if current_tags %}
@@ -87,128 +316,80 @@
 
         <div class="eight columns breadcrumb_text medium-down--one-whole">
           <a href="{{ routes.root_url }}" title="{{ shop.name | escape }}">
-            <span>{{ 'general.breadcrumbs.home' | t }}</span>
+            <span>{% render 'icon-pack' with icon: 'home' %}</span>
           </a>
-          <span class="breadcrumb-divider">/</span>
+          <span class="breadcrumb-divider"></span>
           <a href="{{ collection.url }}" title="{{ collection.title | escape }}" class="breadcrumb_link">
             <span>{{ collection.title }}</span>
           </a>
           {% if current_tags %}
             {% for tag in current_tags %}
               {% unless tag contains 'meta-' %}
-                <span class="breadcrumb-divider">/</span>
+                <span class="breadcrumb-divider"></span>
                 <a href="{{ collection.url }}/{{ tag | handleize }}" title="{{ tag | escape }}">
                   <span>{{ tag }}</span>
                 </a>
               {% endunless %}
             {% endfor %}
           {% endif %}
-
-          {% if paginate.pages != 0 and settings.pagination_type != 'load_more' and settings.pagination_type != 'infinite_scroll' %}
-            <span class="breadcrumb-divider">/</span> {{ 'general.breadcrumbs.page' | t: current_page: paginate.current_page, pages: paginate.pages }}
-          {% endif %}
         </div>
       {% endif %}
     </div>
-    <div class="section clearfix">
-      {% if section.settings.display_collection_title and section.settings.featured_collection_image == false %}
-        <div class="eight columns">
-          <h1>{{ collection.title }}</h1>
+    {% if collection.title == 'Solar Cheat Sheet' %}
+        <!-- split -->
+        <div class="column solar-content">
+          {% include 'solar-cht-sht' %}
+        </div>
+    {% else %}
+      {% assign colx = collection.handle %}
+      {% if linklists[colx].links != blank %}
+        <div class="sub-collections">
+          {% for link in linklists[colx].links %}
+            {% assign collectionx = link.object %}
+              <div class="border-box one-sixth small-down--one-half medium-down--one-fourth column">
+              <a href="{{ link.url }}">
+                {% if link.url =="/pages/buyback-trade-in-used-telescope-equipment" %}
+                <img src="https://cdn.shopify.com/s/files/1/1594/4815/files/bigmoney.png?16845706893680816674" alt="{{ link.title }}" width="49" height="49" />
+                {% elsif collectionx.image.src == blank %}
+                <img src="{{ collectionx.featured_image.src | img_url: '100x100' }}" alt="{{ link.title }}" width="49" height="49" />
+                {% else %}
+                <img src="{{ collectionx.image.src | img_url: '200x' }}" alt="{{ link.title }}" width="49" height="49" />
+                {% endif %}
+                <p class="">{{ link.title }}</p>
+              </a>
+              </div>
+          {% endfor %}
         </div>
       {% endif %}
-      <div class="eight columns section_select medium-down--one-whole">
-        {% if collection.handle != blank and collection.products_count > 0 %}
-          {% if section.settings.collection_tags %}
-            {% for tag in collection.all_tags %}
-              {% if forloop.first %}
-                <select name="tag_filter" id="tag_filter" class="tag_filter" data-default-collection="{% if collection.handle == 'all' %}{{ routes.all_products_collection_url }}{% else %}{{ collection.url }}{% endif %}">
-                  <option {% unless current_tags %}selected="selected"{% endunless %} value="{% if collection.handle == "all" %}{{ routes.all_products_collection_url }}{% else %}{{ collection.url }}{% endif %}">{{ 'collections.general.all_collection_title' | t: title: collection.title }}</option>
-              {% endif %}
+      
 
-              {% unless tag contains 'meta-' %}
-                <option {% if current_tags contains tag %}selected="selected"{% endif %} value="{{ routes.collections_url }}/{% if collection.handle != blank %}{{ collection.handle }}{% else %}all{% endif %}/{{ tag | handleize }}">{{ tag }}</option>
-              {% endunless %}
-
-              {% if forloop.last %}
-                </select>
-              {% endif %}
-            {% endfor %}
-          {% endif %}
-
-          {% if section.settings.collection_sort %}
-            <select class="sort_by" id="sort-by" data-default-sort="{{ collection.sort_by | default: collection.default_sort_by  }}">
-              <option value="manual">{{ 'collections.sorting.featured' | t }}</option>
-              <option value="best-selling">{{ 'collections.sorting.best_selling' | t }}</option>
-              <option value="title-ascending">{{ 'collections.sorting.az' | t }}</option>
-              <option value="title-descending">{{ 'collections.sorting.za' | t }}</option>
-              <option value="price-ascending">{{ 'collections.sorting.price_ascending' | t }}</option>
-              <option value="price-descending">{{ 'collections.sorting.price_descending' | t }}</option>
-              <option value="created-descending">{{ 'collections.sorting.date_descending' | t }}</option>
-              <option value="created-ascending">{{ 'collections.sorting.date_ascending' | t }}</option>
-            </select>
-          {% endif %}
-        {% endif %}
+      <div class="collection_content" data-label="{{ section.settings.monthly_payment }}" >
+        <div class="snize" id="snize_results"></div>
       </div>
-    </div>
-    <div class="sixteen columns">
-      <div class="feature_divider"></div>
-    </div>
-
-    {% comment %}Check to see if sidebar should be enabled{% endcomment %}
-    {% if section.blocks.size > 0 and collection.handle != 'types' and collection.handle != 'vendors' %}
-      {% assign sidebar = true %}
-    {% else %}
-      {% assign sidebar = false %}
     {% endif %}
-
-    {% if sidebar %}
-      {% render 'sidebar' %}
-      <div class="twelve columns medium-down--one-whole">
-    {% else %}
-      <div class="sixteen columns">
-    {% endif %}
-
-      {% if collection.description != blank %}
-        <div class="section clearfix collection_description">
-          {{ collection.description }}
-        </div>
-      {% endif %}
-
-      {% if collection.products.size == 0 %}
-        <div class="section clearfix collection-matrix">
-          <p class="quote">{{ 'collections.general.no_matches' | t }}</p>
-        </div>
-      {% else %}
-        {% assign products_per_row = section.settings.products_per_row %}
-        {% render 'product-loop',
-                paginate: paginate,
-                products: products,
-                products_per_row: products_per_row,
-                sidebar: sidebar
-        %}
-      {% endif %}
-
-    {% if settings.pagination_type == 'basic_pagination' %}
-      {% render 'pagination', paginate: paginate %}
-    {% endif %}
-
-    </div>
-  {% endpaginate %}
-
 </div>
 
-{% comment %} Shopify-XR {% endcomment %}
-{% if product.media %}
-<script>
-  window.ShopifyXR=window.ShopifyXR||function(){(ShopifyXR.q=ShopifyXR.q||[]).push(arguments)}
-    {% assign models = product.media | where: 'media_type', 'model' | json %}
-    ShopifyXR('addModels', {{ models }});
-</script>
+{% if blog_banner_content != blank or blog_content != blank %}
+  <div class="collection-blog-section">
+    <div class="container">
+      {{ blog_banner_content }}
+      {{blog_content}}
+    </div>
+  </div>
 {% endif %}
 
-<script defer src="https://cdn.shopify.com/shopifycloud/shopify-xr-js/assets/v1.0/shopify-xr.en.js"></script>
-<script defer src="https://cdn.shopify.com/shopifycloud/model-viewer-ui/assets/v1.0/model-viewer-ui.en.js"></script>
 
+{% if faq_content != blank %}
+  <div class="collection-faq-section">
+    {{ faq_content }}
+  </div>
+{% endif %}
+
+{% if glossary_content != blank %}
+  <div class="collection-glossary-section">
+    {{ glossary_content }}
+  </div>
+{% endif %}
 
 {% schema %}
 
@@ -242,8 +423,52 @@
     {
       "type": "image_picker",
       "id": "image",
-      "label": "Image",
-      "info": "1800 x 1000px recommended"
+      "label": "Banner image",
+      "info": "1700 x 400px recommended"
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_image",
+      "label": "Mobile banner image",
+      "info": "414 x 200px recommended"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Moon photography"
+    },
+    {
+      "type": "text",
+      "id": "sub_title",
+      "label": "Sub title",
+      "default": "Equipment for creating a stunning moon photos. Right from the Earth."
+    },
+    {
+      "type": "html",
+      "id": "icon",
+      "label": "Icon"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description"
+    },
+    {
+      "type": "richtext",
+      "id": "mobile_description",
+      "label": "Mobile Description"
+    },
+    {
+      "type": "text",
+      "id": "button_title",
+      "label": "Button title",
+      "default": "Shop Guide"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
     },
     {
       "type": "checkbox",
@@ -258,13 +483,8 @@
     },
     {
       "type": "checkbox",
-      "id": "collection_tags",
-      "label": "Enable filtering by product tag"
-    },
-    {
-      "type": "checkbox",
-      "id": "collection_sort",
-      "label": "Enable collection sorting"
+      "id": "collection_filter_header",
+      "label": "Enable collection header"
     },
     {
       "type": "header",
@@ -289,129 +509,113 @@
       "default": 48
     },
     {
-      "type": "header",
-      "content": "Sidebar"
-    },
-    {
-      "type": "paragraph",
-      "content": "Create a sidebar by adding content blocks."
-    },
-    {
       "type": "checkbox",
-      "id": "toggle",
-      "label": "Toggle sidebar content",
-      "default": false
+      "id": "monthly_payment",
+      "label": "Show Monthly payment"
+    },
+    {
+      "type": "header",
+      "content": "PaginItems"
+    },
+    {
+      "type": "text",
+      "id": "pagination_label",
+      "label": "label",
+      "default": "Showing"
+    },
+    {
+      "type": "text",
+      "id": "pagination_item_1",
+      "label": "Item 1",
+      "default": "12"
+    },
+    {
+      "type": "text",
+      "id": "pagination_item_2",
+      "label": "Item 2",
+      "default": "24"
+    },
+    {
+      "type": "text",
+      "id": "pagination_item_3",
+      "label": "Item 3",
+      "default": "48"
+    },
+    {
+      "type": "header",
+      "content": "blog data"
+    },
+    {
+      "type": "select",
+      "id": "blog_style",
+      "label": "Blog list style",
+      "options": [
+          {
+              "value": "list",
+              "label": "List"
+          },
+          {
+              "value": "grid",
+              "label": "Grid"
+          }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "faq data"
+    },
+    {
+      "type": "text",
+      "id": "faq_title",
+      "label": "Faq title",
+      "default": "FAQs"
+    },
+    {
+      "type": "richtext",
+      "id": "faq_desc",
+      "label": "Faq description",
+      "default": "<p>Still have questions? We have answers.</p>"
+    },
+    {
+      "type": "text",
+      "id": "glossary_title",
+      "label": "Glossary title",
+      "default": "Glossarys"
+    },
+    {
+      "type": "richtext",
+      "id": "glossary_desc",
+      "label": "Glossary description",
+      "default": "<p>Still have questions? We have answers.</p>"
     }
   ],
   "blocks": [
     {
-      "type": "filter_by_collection",
-      "name": "Collection list",
-      "limit": 1
-    },
-    {
-      "type": "menu",
-      "name": "Menu",
+      "type": "logo_image",
+      "name": "Icon",
       "settings": [
         {
-          "type": "link_list",
-          "id": "custom_menu_linklist",
-          "label": "Menu"
-        }
-      ]
-    },
-    {
-      "type": "page",
-      "name": "Page",
-      "settings": [
-        {
-          "type": "page",
-          "id": "content_page",
-          "label": "Page"
-        }
-      ]
-    },
-    {
-      "type": "recently_viewed",
-      "name": "Recently viewed products",
-      "limit": 1,
-      "settings": [
-        {
-          "type": "paragraph",
-          "content": "To test the recently viewed products, view your online store outside of the Editor and visit multiple product pages. [Learn more](https:\/\/help.outofthesandbox.com\/hc\/en-us\/articles\/115008765228)"
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image",
+          "info": "400 x 300px recommended"
         },
         {
-          "type": "text",
-          "id": "sidebar_rv_title",
-          "label": "Title",
-          "default": "Recently Viewed"
+          "type": "html",
+          "id": "svg",
+          "label": "Svg"
         },
-        {
-          "type": "range",
-          "id": "sidebar_rv_per",
-          "label": "Products limit",
-          "min": 1,
-          "max": 4,
-          "step": 1,
-          "default": 3
-        }
-      ]
-    },
-    {
-      "type": "filter",
-      "name": "Tag filter",
-      "limit": 5,
-      "settings": [
-        {
-          "type": "text",
-          "id": "filter_name",
-          "label": "Title"
-        },
-        {
-          "type": "textarea",
-          "id": "filter_tags",
-          "label": "Filter tags",
-          "info": "Add a comma-separated list of product tags. Only the tags found in the collection will be displayed as filters. [Learn more](https://help.outofthesandbox.com/hc/en-us/articles/115008642047)"
-        },
-        {
-          "type": "checkbox",
-          "id": "enable_filter_swatches",
-          "label": "Display color swatches"
-        }
-      ]
-    },
-    {
-      "type": "filter_by_tag",
-      "name": "Tag list",
-      "limit": 1
-    },
-    {
-      "type": "text",
-      "name": "Text",
-      "settings": [
         {
           "type": "text",
           "id": "title",
-          "label": "Heading",
-          "default": "Heading"
+          "label": "Title"
         },
         {
-          "type": "richtext",
-          "id": "text",
-          "label": "Text",
-          "default": "<p>Text area can be used for special announcements or general information.</p>"
+          "type": "url",
+          "id": "link",
+          "label": "Link"
         }
       ]
-    },
-    {
-      "type": "filter_by_type",
-      "name": "Type list",
-      "limit": 1
-    },
-    {
-      "type": "filter_by_vendor",
-      "name": "Vendor list",
-      "limit": 1
     }
   ]
 }

@@ -1,0 +1,399 @@
+{% comment %}
+** Main blog page - default view **
+- Template section
+- Uses blocks
+{% endcomment %}
+<div class="two-twelfths medium-down--one-whole column sidebar-menu wrapper  hide medium-down--show">
+  <div class="select-box hide medium-down--show">
+    {% for block in section.blocks %}
+      {% assign blog_item = blogs[block.settings.blog] %}
+      {% if block.type == 'blog' and forloop.index == 1 %}
+        
+        {{block.settings.icon}} {{ block.settings.title  }}
+      {% endif %}
+    {% endfor %}
+  </div>
+  <ul>
+    {% for block in section.blocks %}
+      {% if block.type == 'blog' %}
+        {% assign blog_item = blogs[block.settings.blog] %}
+        <li class="capitalize {% if type == 'account' %}active{% endif %}"><a href="{{blog_item.url}}">{{block.settings.icon}} {{ block.settings.title  }}</a></li>
+      {% endif %}
+    {% endfor %}
+    <div class="bottom-links">
+      <li><a class="show_all">All Articles</a></li>
+      {% if section.settings.affiliate_link != blank %}
+        <li><a href="{{section.settings.affiliate_link}}">Browse by Affiliate</a></li>
+      {% endif %}
+    </div>
+  </ul>
+</div>
+{% if section.settings.wide_display == false %}
+<div class="container">
+  <div class="sixteen columns">
+{% endif %}
+
+{% if section.settings.image != nil %}
+  <div class="banner">
+    {% include 'image-element' with
+        image: section.settings.image,
+        additional_classes: 'medium-down--hide',
+        alt: section.settings.title
+    %}
+    {% render 'image-element',
+      image: section.settings.mobile_image,
+      additional_classes: 'hide medium-down--show',
+      alt: article.title
+    %}
+    <div class="caption">
+        <p class="pre_heading">
+            {{section.settings.pre_icon}}
+            {{section.settings.pre_heading}}
+        </p>
+        <h1>{{blog.title}}</h1>
+        {% if section.settings.search_status != blank %}
+        <div class="bottom-content">
+            <div data-autocomplete-{{ settings.enable_autocomplete }}>
+                <form class="blog_search search-box search__form" action="{{ routes.search_url }}">
+                    <input type="hidden" name="type" value="article" />
+                    <input type="text" name="q" class="search-field" placeholder="{{ 'general.search.title' | t }} {{ blog.title | escape }}..." autocapitalize="off" autocomplete="off" autocorrect="off" value="{{ search.terms }}" />
+                    <button type="submit" class="search-button"><span class="icon-search"></span></button>
+                </form>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+  </div>
+{% endif %}
+
+{% if section.settings.wide_display == false %}
+  </div>
+</div>
+{% endif %}
+
+
+<div class="container main">
+
+{% paginate blog.articles by section.settings.blog_posts_per_page %}
+
+
+  {% comment %}Check to see if sidebar should be enabled{% endcomment %}
+  {% if section.blocks.size > 0 %}
+    {% assign sidebar = true %}
+  {% else %}
+    {% assign sidebar = false %}
+  {% endif %}
+
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      "itemListElement": [
+        {% for article in blog.articles %}
+          {
+            "@type": "ListItem",
+            "position": "{{ forloop.index | json }}",
+            "url": "{{ shop.url }}{{ article.url }}",
+            "name": "{{ article.title }}"
+          } {%- unless forloop.last -%},{%- endunless -%}
+        {% endfor %}
+      ]
+    }
+  </script>
+  <div class="blog-links four medium-down--hide column">
+    {% for block in section.blocks %}
+      {% if block.type == 'blog' %}
+        {% assign blog_item = blogs[block.settings.blog] %}
+        <a href="{{blog_item.url}}">{{block.settings.icon}} {{ block.settings.title  }}</a>
+      {% endif %}
+    {% endfor %}
+    <div class="bottom-links">
+    {% if section.settings.all_link != blank %}
+      <a href="{{section.settings.all_link}}">All Articles</a>
+    {% endif %}
+    {% if section.settings.affiliate_link != blank %}
+      <a href="{{section.settings.affiliate_link}}">Browse by Affiliate</a>
+    {% endif %}
+    
+  </div>
+  </div>
+  <div class="articles fourteen medium-down--one-whole flex columns equal-columns--outside-trim equal-columns--clear">
+    {% for article in blog.articles %}
+      {% if section.settings.blog_posts_per_row == 1 %}
+        <div class="article-wrap">
+        {% if article.image %}
+          <div class="one-half columns alpha article_image medium-down--one-whole">
+            <a href="{{ article.url }}" title="{{ article.title | escape }}">
+              {% render 'image-element',
+                      image: article.image,
+                      alt: article.title
+              %}
+            </a>
+          </div>
+          <div class="one-half columns omega article medium-down--one-half">
+        {% else %}
+          <div class="{% if sidebar %}eight{% else %}sixteen{% endif %} columns alpha omega article">
+        {% endif %}
+      {% else %}
+      <div class="border-box 
+          {% if section.settings.blog_posts_per_row == 2 %}
+            eight columns
+          {% elsif section.settings.blog_posts_per_row == 3 %}
+            one-third column
+          {% else %}
+            four columns
+          {% endif %}
+          {% if section.settings.blog_posts_per_row == 1 %}
+            medium-down--one-whole
+          {% else %}
+            medium-down--one-half small-down--one-half
+          {% endif %}
+          article
+        ">
+
+        {% if article.image %}
+          <a href="{{ article.url }}" title="{{ article.title | escape }}">
+            {% render 'image-element',
+                    image: article.image,
+                    alt: article.title
+            %}
+          </a>
+        {% endif %}
+      {% endif %}
+
+
+        <h2 class="article__title"><a href="{{ article.url }}">{{ article.title }}</a></h2>
+        {% for tag in article.tags %}
+          {% if tag contains 'Aka:' %}
+          {% assign aka_name = tag | remove: 'Aka:' | prepend: 'Aka ' %}
+          {% endif %}
+          {% if tag contains 'Date:' %}
+          {% assign Date = tag | remove: 'Date:' | prepend: 'Member of OPTeam since ' %}
+          {% endif %}
+        {% endfor %}
+        <p >
+            <span>{{ aka_name }}</span>
+        </p>
+        
+        {% if article.excerpt != blank %}
+            <div class="excerpt medium-down--hide"> {{ article.excerpt }}</div>
+        {% endif %}
+
+        {% assign blog_str = 'telescopes-101,visual-astronomy,astronomy-events,what-s-in-the-sky,astro-photography-101,widefield-imaging,deep-sky-imaging,plenatary-imaging' %}
+        {% assign blog_list = blog_str | split: ',' %}
+        {% assign article_num= 0 %}
+        {% for related_blog in blog_list %}
+          {% assign blog = blogs[related_blog] %}
+          {% for a in blog.articles %}
+            {% assign skip_article = false %}
+            {% assign tag_str = '' %}
+            {% for tag in a.tags %}
+                {% assign tag_str = tag_str | append: tag %}
+            {% endfor %}
+            {% unless tag_str contains article.title %}
+                {% assign skip_article = true %}
+            {% endunless %}
+            {% unless skip_article %}
+                {% assign article_num = article_num | plus: 1 %}
+            {% endunless %}
+          {% endfor %}
+        {% endfor %}
+
+        <div class="bottom-pannel">
+          <p class="meta">
+            {% if section.settings.blog_date %}
+              <span>{{ article_num }} Articles</span>
+            {% endif %}
+          </p>
+          
+          
+          {% if section.settings.read_more_link %}
+            <a href="{{ article.url }}" title="{{ article.title | escape }}" class="{% if settings.read_more_style == 'button' %}action_button continue-button read-more-button{% else %}read-more-link{% endif %}">{{ 'blogs.general.continue_reading_html' | t }}</a>
+          {% endif %}
+        </div>
+        
+      </div>
+      {% if section.settings.blog_posts_per_row == 2 %}
+        {% cycle "article_row": '', '<br class="clear" />' %}
+      {% elsif section.settings.blog_posts_per_row == 3 %}
+        {% cycle "article_row": '', '', '<br class="clear" />' %}
+      {% elsif section.settings.blog_posts_per_row == 4 %}
+        {% cycle "article_row": '', '', '', '<br class="clear" />' %}
+      {% else %}
+        <br class="clear" />
+      {% endif %}
+      {% if section.settings.blog_posts_per_row == 1 %}
+        </div>
+      {% endif %}
+    {% else %}
+      <h2 class="empty-title text-center">This blog page is Empty.</h2>
+    {% endfor %}
+    <br class="clear" />
+    <div class="sixteen columns">
+      {% render 'pagination', paginate: paginate %}
+    </div>
+  </div>
+
+  
+{% endpaginate %}
+
+  </div>
+
+{% schema %}
+
+{
+  "name": "Blog",
+  "class": "blog-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "banner"
+    },
+    {
+      "type": "checkbox",
+      "id": "wide_display",
+      "label": "Wide display",
+      "default": true
+    },
+    {
+        "type": "image_picker",
+        "id": "image",
+        "label": "Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_image",
+      "label": "Mobile Image"
+    },
+    {
+        "type": "html",
+        "id": "pre_icon",
+        "label": "Icon"
+    },
+    {
+        "type": "text",
+        "id": "pre_heading",
+        "label": "Pre Heading"
+    },
+    {
+        "type": "checkbox",
+        "id": "search_status",
+        "label": "Search box statu"
+    },
+    {
+      "type": "header",
+      "content": "Blog links"
+    },
+    {
+      "type": "url",
+      "id": "all_link",
+      "label": "All link"
+    },
+    {
+      "type": "url",
+      "id": "affiliate_link",
+      "label": "Affiliate link"
+    },
+    {
+      "type": "header",
+      "content": "content"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subheading",
+      "default": "Subheading"
+    },
+    {
+      "type": "range",
+      "id": "blog_posts_per_row",
+      "label": "Blog posts per row",
+      "min": 1,
+      "max": 4,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "range",
+      "id": "blog_posts_per_page",
+      "label": "Blog posts per page",
+      "min": 1,
+      "max": 50,
+      "step": 1,
+      "default": 12
+    },
+    {
+     "type": "checkbox",
+     "id": "blog_tags",
+     "label": "Show blog post tags"
+    },
+    {
+     "type": "checkbox",
+     "id": "blog_author",
+     "label": "Show author"
+    },
+    {
+      "type": "checkbox",
+      "id": "read_time",
+      "label": "Show estimated read time",
+      "default": true
+    },
+    {
+     "type": "checkbox",
+     "id": "blog_date",
+     "label": "Show date",
+     "default": true
+    },
+    {
+     "type": "checkbox",
+     "id": "blog_comment_count",
+     "label": "Show comment count",
+     "default": true
+    },
+    {
+     "type": "checkbox",
+     "id": "read_more_link",
+     "label": "Show continue reading link for blog post excerpts",
+     "default": true
+    },
+    {
+     "type": "header",
+     "content": "Sidebar"
+    },
+    {
+      "type": "paragraph",
+      "content": "Create a sidebar by adding content blocks."
+    },
+    {
+      "type": "checkbox",
+      "id": "toggle",
+      "label": "Toggle sidebar content",
+      "default": false
+    }
+  ],
+  "blocks": [
+    {
+      "type": "blog",
+      "name": "Blog Link",
+      "settings": [
+        {
+          "type": "blog",
+          "id": "blog",
+          "label": "Blog"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title"
+        },
+        {
+          "type": "html",
+          "id": "icon",
+          "label": "Icon"
+        }
+      ]
+    }
+  ]
+}
+
+{% endschema %}

@@ -1,0 +1,146 @@
+<div class="pageloader">
+    <img src="https://cdn.shopify.com/s/files/1/1594/4815/files/menu-pro-services.png?13656282634927612838" class="slapypy animated infinite fadeIn" style="  display:block; margin:auto;">
+</div>
+
+<div class="page-width">
+    <div class="pro-container sec-1" aria-label="{{section.settings.title}}" style=" background-image: url({{section.settings.banner_image | img_url: '2048x'}});">
+        <div class="hide small-down--show">
+            {% render 'image-element',
+                image: section.settings.mobile_banner_image,
+                alt: section.settings.image.alt,
+                stretch_width: true
+            %}
+        </div>
+        <div class="title-sec-container">
+            <div class="title-wrap text-center">
+                <p class="uppercase sub-title">{{ section.settings.sub_title }}</p>
+                <h1 class="headline">{{ section.settings.title }}</h1>
+                {{ section.settings.desc }}
+            </div>
+
+            <div class="action-bottom">
+                <div class="sec-width fadeInUp flex">
+                    <button class="button button-full modal_button" href="#pro-contact-form">Contact</button>
+                    <a href="#google_form_1" class="button border-button one-half small-down--one-whole column modal_button">Capability Statement</a>
+                    
+                    <a href="#google_form_2" class="button border-button one-half small-down--one-whole column modal_button">W9 Form</a>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="pro-container sec-4  padding-contrl">
+        <div class="container">
+            <h3 class="heading center capitalize">{{ section.settings.logo_title }}</h3>
+            <div class="swiper-container-apv fadeInUp">
+                <div class="logo-slider slider-gallery">
+                    {% for block in section.blocks %}
+                        {% if block.type == 'logo' %}
+                            <div class="gallery-cell one-tenth medium-down--one-eighth small-down--one-fourth column">
+                                <div class="border-box">
+                                    {% include 'image-element' with 
+                                        image: block.settings.logo
+                                    %}
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="clearfix page-content">
+            {% for block in section.blocks %}
+                {% if block.type == 'text' %}
+                    <h1 class="heading center">{{ block.settings.title }}</h1>
+                    <p class="center">{{ block.settings.sub_title }}</p>
+                    <div class="content">
+                        {{ block.settings.content | replace: '<p', '<p class="one-half small-down--one-whole column"' }}
+                    </div>
+                    
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+{% schema %}
+{
+    "name": "Pro service template",
+    "class": "pro-service-section",
+    "settings": [
+        {
+            "type": "image_picker",
+            "id": "banner_image",
+            "label": "Banner image"
+        },
+        {
+            "type": "image_picker",
+            "id": "mobile_banner_image",
+            "label": "Mobile Banner image"
+        },
+        {
+            "type": "text",
+            "id": "title",
+            "label": "Title",
+            "default": "A World Leader in creating advanced astronomical systems"
+        },
+        {
+            "type": "text",
+            "id": "sub_title",
+            "label": "Sub title",
+            "default": "OPT PROFESSIONAL SERVICES & SOLUTIONS"
+        },
+        {
+            "type": "richtext",
+            "id": "desc",
+            "label": "Description"
+        },
+        {
+            "type": "header",
+            "content": "logo bar"   
+        },
+        {
+            "type": "text",
+            "id": "logo_title",
+            "label": "Title",
+            "default": "Authorized Dealer For"
+        }
+    ],
+    "blocks": [
+        {
+            "name": "Logo",
+            "type": "logo",
+            "settings": [
+                {
+                    "type": "image_picker",
+                    "id": "logo",
+                    "label": "Logo"
+                }
+            ]
+        },
+        {
+            "name": "text block",
+            "type": "text",
+            "settings": [
+                {
+                    "type": "text",
+                    "id": "title",
+                    "label": "TItle",
+                    "default": "Start to Finish"
+                },
+                {
+                    "type": "text",
+                    "id": "sub_title",
+                    "label": "Sub title",
+                    "default": "The One-Stop for Professional Astronomy Systems"
+                },
+                {
+                    "type": "richtext",
+                    "id": "content",
+                    "label": "Content"
+                }
+            ]
+        }
+    ]
+}
+{% endschema %}

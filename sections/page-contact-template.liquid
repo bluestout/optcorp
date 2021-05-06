@@ -1,0 +1,336 @@
+{% if section.blocks.size > 0 %}
+    {% assign sidebar = true %}
+{% else %}
+    {% assign sidebar = false %}
+{% endif %}
+
+<div class="container">
+    {% if sidebar %}
+        <div class="four medium-down--one-whole column sidebar">
+            {% for block in section.blocks %}
+                {% if block.type == 'sidebar' %}
+                    <div class="sidebar-block sidebar-menu wrapper">
+                    {% if block.settings.links != blank %}
+                        <div class="select-box hide medium-down--show">
+                        {% for link in linklists[block.settings.links].links %}
+                            {% if link.url contains page.handle %}
+                                {{link.title}}
+                            {% endif %} 
+                        {% endfor %}
+                        </div>
+                        <ul class="links">
+                            {% for link in linklists[block.settings.links].links %}
+                                {% if link.url contains page.handle %}
+                                    {% assign cls = 'active' %}
+                                {% else %}
+                                    {% assign cls = '' %}
+                                {% endif %} 
+                                <li class="{{cls}}"><a href="{{link.url}}">{{link.title}}</a></li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    {% endif %}
+    <div class="{% if sidebar %}twelve medium-down--one-whole relative flex {% else %}sixteen{% endif %} column main-content">
+        
+        {% if section.settings.title != blank %}
+            {% assign title = section.settings.title %}
+        {% else %}
+            {% assign title = page.title %}
+        {% endif %}
+
+        {% include 'heading-banner' with 
+            image: section.settings.image,
+            mobile_image: section.settings.banner_mobile_image,
+            sub_title: section.settings.sub_title,
+            title: title,
+            wide: section.settings.wide_display,
+        %}
+
+        <div class="content">
+            <div class="alert-message">
+                {{ section.settings.alert_text }}
+            </div>
+            {% form 'contact' %}
+            {% if form.posted_successfully? %}
+                <p class="quote">{{ 'contact.form.post_success' | t }}</p>
+            {% endif %}
+
+            {% if form.errors %}
+                <p class="quote">{{ 'general.forms.post_error' | t }}</p>
+            {% endif %}
+            {% endform %}
+            <div class="contanct-field flex">
+
+                {% assign status = true %}
+                {% for block in section.blocks %}
+                    {% if block.type == 'contact_form' %}
+                        {% if block.settings.mobile_title != blank %}
+                            {% assign mobile_title = block.settings.mobile_title %}
+                        {% else %}
+                            {% assign mobile_title = block.settings.title %}
+                        {% endif %}
+                        {% case block.settings.style %}
+                            {% when 'style_1' %}
+                                <div class="one-third small-down--one-whole column flex">
+                                    <div id="block-{{block.id}}" class="border-box bottom-pannel style_1">
+                                        <div class="info">
+                                            <div class="header_content">
+                                                {{ block.settings.icon }}
+                                                <h2 class="title medium-down--hide">{{ block.settings.title }}</h2>
+                                                <h2 class="title hide medium-down--show">{{ mobile_title }}</h2>
+                                                {{ block.settings.sub_title }}
+                                            </div> 
+                                            <div class="content-info">
+                                                {{ block.settings.content }}
+                                            </div>
+                                            <div class="action-bottom bottom-pannel">
+                                                {% if block.settings.button_1 != blank %}
+                                                    <a class="button button-full {{ block.settings.button_1_add_class }}" href="{{ block.settings.button_1_link }}" >{{ block.settings.button_1 }}</a>
+                                                {% endif %}
+                                                {% if block.settings.button_2 != blank %}
+                                                    <a class="button button-full border-button {{ block.settings.button_2_add_class }}" href="{{ block.settings.button_2_link }}" >{{ block.settings.button_2 }}</a>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% when 'style_2' %}
+                                {% if status %}
+                                    <div class="one-whole column tab-box">
+                                        <ul class="tabs">
+                                            {% assign tab_status = true %}
+                                            {% for item in section.blocks %}
+                                                {% if item.settings.style == 'style_2' %}
+                                                    {% if tab_status %}
+                                                        {% assign cls_tab = 'active' %}
+                                                        {% assign tab_status = false %}
+                                                    {% else %}
+                                                        {% assign cls_tab = '' %}
+                                                    {% endif %}
+                                                    {% if item.settings.mobile_title != blank %}
+                                                        {% assign mobile_title = item.settings.mobile_title %}
+                                                    {% else %}
+                                                        {% assign mobile_title = item.settings.title %}
+                                                    {% endif %}
+                                                    <li class="{{cls_tab}}"  data-target="#block-{{item.id}}">{{ item.settings.icon }} <h2 class="title medium-down--hide">{{ item.settings.title }}</h2><h2 class="title hide medium-down--show">{{ mobile_title }}</h2></li>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </ul>
+                                        {% assign content_status = true %}
+                                        {% for item in section.blocks %}
+                                            {% if item.settings.style == 'style_2' %}
+                                                {% if content_status %}
+                                                    {% assign cls_content = 'active' %}
+                                                    {% assign content_status = false %}
+                                                {% else %}
+                                                    {% assign cls_content = '' %}
+                                                    
+                                                {% endif %}
+                                                <div id="block-{{item.id}}" class="border-box tab-content style_2 {{cls_content}}">
+                                                    <div class="content-info flex">
+                                                        <div class="info">
+                                                            <div class="icon medium-down--show hide">
+                                                                {{ item.settings.icon }}
+                                                            </div>
+                                                            <div class="header_content">
+                                                                {{ item.settings.sub_title }}
+                                                            </div>
+                                                            {{ item.settings.content }}
+                                                        </div>
+                                                        <div class="button-block">
+                                                            {% if item.settings.button_1 != blank %}
+                                                                <a class="button {{ item.settings.button_1_add_class }}" href="{{ item.settings.button_1_link }}" >{{ item.settings.button_1 }}</a>
+                                                            {% endif %}
+                                                            {% if item.settings.button_2 != blank %}
+                                                                <a class="button border-button {{ item.settings.button_2_add_class }}" href="{{ item.settings.button_2_link }}" >{{ item.settings.button_2 }}</a>
+                                                            {% endif %}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                    {% assign status = false %}
+                                {% endif %}
+                            {% else %}
+                                <div class="one-whole column ">
+                                    <div id="block-{{block.id}}" class="border-box bg-blue style_3">
+                                        <div class="info text-center">
+                                            <div class="heqader_content">
+                                                {{ block.settings.icon }}
+                                                <h2 class="title">{{ block.settings.title }}</h2>
+                                                {{ block.settings.sub_title }}
+
+                                            </div>
+                                            
+                                            <div class="content-info text-center">
+                                                {{ block.settings.content }}
+                                                <div class="buttons flex">
+                                                    {% if block.settings.button_1 != blank %}
+                                                        <a class="button border-button {{ block.settings.button_1_add_class }}" target="_blank" href="{{ block.settings.button_1_link }}" >{{ block.settings.button_1 }}</a>
+                                                    {% endif %}
+                                                    {% if block.settings.button_2 != blank %}
+                                                        <a class="button border-button {{ block.settings.button_2_add_class }}" target="_blank" href="{{ block.settings.button_2_link }}" >{{ block.settings.button_2 }}</a>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                        {% endcase %}
+                    {% endif %}
+                {% endfor %}
+            </div>
+            <div class="closing-day">
+                <h5>{{ 'general.close_day_info' | t }}</h5>
+                {{ section.settings.close_day_info }}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% schema %}
+{
+    "name": "Contact Page template",
+    "class": "contact-page-section",
+    "settings": [
+        {
+            "type": "checkbox",
+            "id": "wide_display",
+            "label": "Wide display"
+        },
+        {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Image"
+        },
+        {
+            "type": "image_picker",
+            "id": "banner_mobile_image",
+            "label": "Mobile banner image"
+        },
+        {
+            "type": "text",
+            "id": "sub_title",
+            "label": "Sub title",
+            "default": "customer help"
+        },
+        {
+            "type": "text",
+            "id": "title",
+            "label": "Title"
+        },
+        {
+            "type": "header",
+            "content": "alert message"
+        },
+        {
+            "type": "richtext",
+            "id": "alert_text",
+            "label": "Alert text"
+        },
+        {
+            "type": "richtext",
+            "id": "close_day_info",
+            "label": "Close day"
+        }
+    ],
+    "blocks": [
+        {
+            "type": "sidebar",
+            "name": "Sidebar",
+            "settings": [
+                {
+                    "type": "link_list",
+                    "id": "links",
+                    "label": "Links"
+                }
+            ]
+        },
+        {
+            "type": "contact_form",
+            "name": "Contact form",
+            "settings": [
+                {
+                    "type": "select",
+                    "id": "style",
+                    "label": "From style",
+                    "options": [
+                        {
+                            "value": "style_1",
+                            "label": "Style 1"
+                        },
+                        {
+                            "value": "style_2",
+                            "label": "Style 2"
+                        },
+                        {
+                            "value": "style_3",
+                            "label": "Style 3"
+                        }
+                    ]
+                },
+                {
+                    "type": "html",
+                    "id": "icon",
+                    "label": "Icon"
+                },
+                {
+                    "type": "text",
+                    "id": "title",
+                    "label": "Title"
+                },
+                {
+                    "type": "text",
+                    "id": "mobile_title",
+                    "label": "Mobile Title"
+                },
+                {
+                    "type": "richtext",
+                    "id": "sub_title",
+                    "label": "Sub title"
+                },
+                {
+                    "type": "richtext",
+                    "id": "content",
+                    "label": "Content text"
+                },
+                {
+                    "type": "text",
+                    "id": "button_1",
+                    "label": "Button title"
+                },
+                {
+                    "type": "url",
+                    "id": "button_1_link",
+                    "label": "Button link"
+                },
+                {
+                    "type": "text",
+                    "id": "button_1_add_class",
+                    "label": "Button additional class"
+                },
+                {
+                    "type": "text",
+                    "id": "button_2",
+                    "label": "Button title"
+                },
+                {
+                    "type": "url",
+                    "id": "button_2_link",
+                    "label": "Button link"
+                },
+                {
+                    "type": "text",
+                    "id": "button_2_add_class",
+                    "label": "Button additional class"
+                }
+            ]
+        }
+    ]
+}
+{% endschema %}

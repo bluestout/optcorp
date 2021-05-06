@@ -1,0 +1,107 @@
+{% if section.settings.promo_status %}
+  {% if section.settings.button_link != blank and section.settings.button_title == blank %}
+    <a href="{{section.settings.button_link}}">
+  {% endif %}
+  <div class="container flex">
+    <h1 class="uppercase heading text-center promotion-title">{{section.settings.title}}</h1>
+    {% if section.settings.button_link != blank and section.settings.button_title != blank %}
+    <a href="{{section.settings.button_link}}" class="promotion-button button{% if section.settings.button_style == 'border' %} border-button{% endif %}
+    ">{{section.settings.button_title}}</a>
+    {% endif %}
+  </div>
+  {% if section.settings.button_link != blank and section.settings.button_title == blank %}
+  </a>
+  {% endif %}
+  <style>
+    {% if section.settings.button_style == "border" %}
+    .promo-banner-section .container .promotion-button {
+      border-color: {{section.settings.button_color}};
+      color: {{ section.settings.button_color }};
+    }
+    {% else %}
+    .promo-banner-section .container .promotion-button {
+      background-color: {{section.settings.button_bg_color}};
+      border-color: {{section.settings.button_bg_color}};
+      color: {{section.settings.button_color}};
+    }
+    {% endif %}
+
+    {% if section.settings.title_color != blank %}
+      .promotion-title {
+        color: {{ section.settings.title_color }};
+      }
+    {% endif %}
+    
+    .promo-banner-section{
+      {% if section.settings.bg_image != blank %}
+        background: url({{section.settings.bg_image | img_url: '2048x' }}) no-repeat center;
+        background-size: contain;
+      {% endif %}
+      {% if section.settings.bg_color != blank %}
+        background-color: {{section.settings.bg_color}};
+      {% endif %}
+    }
+    {% if section.settings.mobile_bg_image != blank %}
+      @media screen and (max-width: 767px) {
+        .promo-banner-section{
+          background: url({{section.settings.mobile_bg_image | img_url: '2048x' }}) no-repeat center;
+          background-size: contain;
+          {% if section.settings.bg_color != blank %}
+            background-color: {{section.settings.mobile_bg_color}};
+          {% endif %}
+        }
+      }
+    {% else %}
+      @media screen and (max-width: 767px) {
+        .promo-banner-section{
+          display: none;
+        }
+      }
+    {% endif %}
+  </style>
+{% else %}
+<style>
+.promo-banner-section {
+  display: none;
+}
+</style>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Promo Banner section",
+  "class": "promo-banner-section",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "promo_status",
+      "label": "Promo Banner status"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Link"
+    },
+    {
+      "type": "image_picker",
+      "id": "bg_image",
+      "label": "Background image"
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_bg_image",
+      "label": "Mobile background image"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background color"
+    },
+    {
+      "type": "color",
+      "id": "mobile_bg_color",
+      "label": "Mobile background color"
+    }
+  ]
+}
+{% endschema %}

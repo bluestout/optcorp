@@ -1,0 +1,30 @@
+{% if image != blank %}
+    <div class="page-banner pro-service-banner  full-width--{{ wide }}" aria-label="{{title}}">
+
+        <div class="caption">
+            {% if sub_title %}
+            <p class="center uppercase sub-title">{{sub_title}}</p>
+            {% endif %}
+            <h1 class="headline center">{{title | capitalize}}</h1>
+            {{ text }}
+            <div class="bottom-area">
+                {% if link and button %}
+                    <a href="{{link}}" class="button button-full center">{{button}}</a>
+                {% endif %}
+                {% if link and button %}
+                    <a href="{{link}}" class="button border-button nine column button-full center">{{button}}</a>
+                {% endif %}
+                {% if link and button %}
+                    <a href="{{link}}" class="button border-button nine column button-full center">{{button}}</a>
+                {% endif %}
+            </div>
+            
+        </div>
+    </div>
+
+    <style>
+        .pro-sevice-banner{
+            background: url(image);
+        }
+    </style>
+{% endif %}

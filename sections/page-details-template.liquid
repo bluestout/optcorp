@@ -4,8 +4,6 @@
 - Uses blocks
 {% endcomment %}
 
-<a name="pagecontent" id="pagecontent"></a>
-
 <div class="detail-sections">
 
 {% if section.blocks.size > 0 %}
@@ -51,7 +49,7 @@
                   {% if block.settings.image %}
                     {% render 'image-element',
                             image: block.settings.image,
-                            alt: block.settings.image.alt
+                            alt: block.settings.title
                     %}
                   {% else %}
                     {% capture i %}{% cycle "1", "2", "3", "4", "5", "6" %}{% endcapture %}

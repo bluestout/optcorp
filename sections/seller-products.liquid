@@ -1,0 +1,103 @@
+{% assign collection = collections[section.settings.collection] %}
+{% assign products = collection.products %}
+
+<div class="container">
+    <h2 class="heading text-center">{{ section.settings.title }}</h2>
+    <div class="swiper-container fadeInUp" style="margin-bottom:15px;">
+        <!-- Additional required wrapper -->
+        <div class="swiper-wrapper">
+            <!-- Slides -->
+            {% for product in products %}
+                <div class="swiper-slide">
+                    {% include 'seller_product' %}
+                </div>
+            {% endfor %}
+        </div>
+        <!-- If we need scrollbar -->
+        <div class="swiper-scrollbar"></div>
+    </div>
+    {% if  section.settings.bottom_title != blank %}
+        <div class="footer-description">
+            <h2 class="heading text-center">{{ section.settings.bottom_title }}</h2>
+            {% if collection.url != blank %}
+                <a href="{{collection.url}}" class="text-center">{{ 'general.learn_more' | t }}</a>
+            {% endif %}
+            
+        </div>
+    {% endif %}
+    
+</div>
+
+<style>
+    .seller-products{
+        background: {{ section.settings.bg_color }};
+    }
+</style>
+{% schema %}
+{
+    "name": "seller products",
+    "class": "seller-products",
+    "settings": [
+        {
+            "type": "text",
+            "id": "title",
+            "label": "Title",
+            "default": "Latest Used Gear"
+        },
+        {
+            "type": "text",
+            "id": "bottom_title",
+            "label": "Bottom title",
+            "default": "Sell or Trade-In Your Used Telescope Equipment"
+        },
+        {
+            "type": "color",
+            "id": "bg_color",
+            "label": "Background color",
+            "default": "#ECF1F7"
+        },
+        {
+            "type": "collection",
+            "id": "collection",
+            "label": "collection"
+        },
+        {
+            "type": "checkbox",
+            "id": "set_product_height",
+            "label": "Set height of product media",
+            "default": false
+        },
+        {
+            "type": "range",
+            "id": "product_height",
+            "label": "Product media height",
+            "min": 200,
+            "max": 800,
+            "step": 10,
+            "default": 500,
+            "unit": "px"
+        },
+        {
+            "type": "checkbox",
+            "id": "badges",
+            "label": "Reviews"
+        },
+        {
+            "type": "checkbox",
+            "id": "add_cart_form",
+            "label": "Add cart Form"
+        },
+        {
+            "type": "checkbox",
+            "id": "description_status",
+            "label": "Bottom line"
+        }
+    ],
+    "presets": [
+        {
+            "category": "Product",
+            "name":"Seller products"
+        }
+    ]
+}
+{% endschema %}

@@ -6,9 +6,7 @@
 
 {% assign sidebar = false %}
 
-<a name="pagecontent" id="pagecontent"></a>
-
-<div class="container main content product-name--{{ product.handle }}">
+<div class="container main product-name--{{ product.handle }}">
   <div class="sixteen columns">
     {% if collection.previous_product or collection.next_product or section.settings.product_breadcrumb %}
       <div class="clearfix breadcrumb-collection">
@@ -80,7 +78,7 @@
             {% endif %}
             <h1 class="product_name">{{ product.title }}</h1>
             {% if section.settings.enable_shopify_product_badges and settings.enable_shopify_review_comments %}
-              <span class="shopify-product-reviews-badge" data-id="{{ product.id }}"></span>
+            <span class=" stamped-product-reviews-badge" data-product-sku="{{ product.handle }}" data-id="{{ product.id }}" data-product-type="{{product.type}}" data-product-title="{{product.title}}"  style="display:block;">{{ product.metafields.stamped.badge }}</span>
             {% endif %}
             <div class="feature_divider"></div>
 
@@ -259,7 +257,7 @@
                       {% if block.settings.image %}
                         {% render 'image-element',
                                 image: block.settings.image,
-                                alt: block.settings.image.alt
+                                alt: block.settings.title
                         %}
                       {% else %}
                         {% capture i %}{% cycle "1", "2", "3", "4", "5", "6" %}{% endcapture %}

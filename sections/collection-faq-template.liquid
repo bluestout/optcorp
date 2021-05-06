@@ -1,0 +1,52 @@
+<div class="heading text-center">
+    <h1 class="headline">{{section.settings.title}}</h1>
+    {{ section.settings.desc }}
+</div>
+<div class="content">
+    <div class="container">
+        <div class="masonry  two-per-row">
+            {% for block in section.blocks %}
+                <div class="one-whole column">
+                    <p class="title">{{block.settings.title}}</p>
+                    {{ block.settings.desc }}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% schema %}
+{
+    "name": "collection faq section",
+    "class": "collection-faq-section",
+    "settings": [
+        {
+            "type": "text",
+            "id": "title",
+            "label": "Title"
+        },
+        {
+            "type": "richtext",
+            "id": "desc",
+            "label": "Description"
+        }
+    ],
+    "blocks" : [
+        {
+            "name": "Faq block",
+            "type": "faq",
+            "settings": [
+                {
+                    "type": "text",
+                    "id": "title",
+                    "label": "Title"
+                },
+                {
+                    "type": "richtext",
+                    "id": "desc",
+                    "label": "Description"
+                }
+            ]
+        }
+    ]
+}
+{% endschema %}

@@ -36,7 +36,7 @@
     {% assign forLimit = limit | plus: 1 %}
   {% endif %}
 {% endfor %}
-
+{{collection_height}}
 <div itemtype="http://schema.org/ItemList" class="product-list {{ matrixType }} clearfix equal-columns--clear equal-columns--outside-trim">
   {% for product in products limit: forLimit %}
     {% if product.id != skip_product.id %}
@@ -45,6 +45,8 @@
               products_per_row: products_per_row,
               collection_group_thumb: collection_group_thumb,
               collection_group_mobile: collection_group_mobile,
+              align_height: true,
+              collection_height: 220,
               sidebar: sidebar
       %}
     {% endif %}
