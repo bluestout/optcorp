@@ -4,7 +4,6 @@
 {% endcomment %}
 
 <div class="container main product-name--{{ product.handle }}">
-
   <div class="sixteen columns">
     {% if collection.previous_product or collection.next_product or section.settings.product_breadcrumb %}
       <div class="clearfix breadcrumb-collection">
@@ -187,7 +186,10 @@
                         collection_handles: collection_handles
                 %}
             </div>
-              {% render 'product-notify-me', product: product %}
+            {% if product.selected_or_first_available_variant.inventory_quantity < 1 %}
+              <a class="klaviyo-bis-trigger" href="#">Notify Me When Available</a>
+            {% endif % }
+            {% render 'product-notify-me', product: product %}
             {% endunless %}
             <div class="live-chart">
                 <p>{% render 'icon-pack' with icon: 'chart' %}{{ 'products.product.chart_html' | t }}</p>
